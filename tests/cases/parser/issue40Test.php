@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue40.php
  *
@@ -31,21 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue40Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue40() {
-
+class issue40Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue40()
+    {
 
         $parser = new PHPSQLParser();
 
@@ -55,7 +58,6 @@ class issue40Test extends \PHPUnit\Framework\TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'issue40a.serialized');
         $this->assertEquals($expected, $p, 'escaped characters 1');
 
-
         $sql = "select a from t where x = \"abcd\" and y = 'efgh'";
         $parser->parse($sql);
         $p = $parser->parsed;
@@ -64,4 +66,3 @@ class issue40Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

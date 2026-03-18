@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue67.php
  *
@@ -31,29 +33,30 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue67Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue67() {
+class issue67Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue67()
+    {
 
-
-        $sql = "SET SESSION group_concat_max_len = @@max_allowed_packet";
+        $sql = 'SET SESSION group_concat_max_len = @@max_allowed_packet';
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue67a.serialized');
         $this->assertEquals($expected, $p, '@ character after operator should not fail.');
 
-        $sql = "SET @a = 1";
+        $sql = 'SET @a = 1';
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue67b.serialized');
@@ -61,4 +64,3 @@ class issue67Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

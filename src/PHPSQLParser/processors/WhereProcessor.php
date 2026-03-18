@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * WhereProcessor.php
  *
@@ -46,9 +48,8 @@ namespace PHPSQLParser\processors;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class WhereProcessor extends ExpressionListProcessor {
-
+class WhereProcessor extends ExpressionListProcessor
+{
 }
-?>

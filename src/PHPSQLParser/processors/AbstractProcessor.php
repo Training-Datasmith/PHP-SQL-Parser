@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * AbstractProcessor.php
  *
@@ -52,8 +54,8 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-abstract class AbstractProcessor {
-
+abstract class AbstractProcessor
+{
     /**
      * @var Options
      */
@@ -73,13 +75,14 @@ abstract class AbstractProcessor {
      * This function implements the main functionality of a processor class.
      * Always use default valuses for additional parameters within overridden functions.
      */
-    public abstract function process($tokens);
+    abstract public function process($tokens);
 
     /**
      * this function splits up a SQL statement into easy to "parse"
      * tokens for the SQL processor
      */
-    public function splitSQLIntoTokens($sql) {
+    public function splitSQLIntoTokens($sql)
+    {
         $lexer = new PHPSQLLexer();
         return $lexer->split($sql);
     }
@@ -100,9 +103,10 @@ abstract class AbstractProcessor {
      * And you can use whitespace between the parts:
      *   a  .  `b` => [a,b]
      */
-    protected function revokeQuotation($sql) {
+    protected function revokeQuotation($sql)
+    {
         $tmp = trim($sql);
-        $result = array();
+        $result = [];
 
         $quote = false;
         $start = 0;
@@ -113,44 +117,44 @@ abstract class AbstractProcessor {
 
             $char = $tmp[$i];
             switch ($char) {
-            case '`':
-            case '\'':
-            case '"':
-                if ($quote === false) {
-                    // start
-                    $quote = $char;
-                    $start = $i + 1;
-                    break;
-                }
-                if ($quote !== $char) {
-                    break;
-                }
-                if (isset($tmp[$i + 1]) && ($quote === $tmp[$i + 1])) {
-                    // escaped
-                    $i++;
-                    break;
-                }
-                // end
-                $char = substr($tmp, $start, $i - $start);
-                $result[] = str_replace($quote . $quote, $quote, $char);
-                $start = $i + 1;
-                $quote = false;
-                break;
-
-            case '.':
-                if ($quote === false) {
-                    // we have found a separator
-                    $char = trim(substr($tmp, $start, $i - $start));
-                    if ($char !== '') {
-                        $result[] = $char;
+                case '`':
+                case '\'':
+                case '"':
+                    if ($quote === false) {
+                        // start
+                        $quote = $char;
+                        $start = $i + 1;
+                        break;
                     }
+                    if ($quote !== $char) {
+                        break;
+                    }
+                    if (isset($tmp[$i + 1]) && ($quote === $tmp[$i + 1])) {
+                        // escaped
+                        $i++;
+                        break;
+                    }
+                    // end
+                    $char = substr($tmp, $start, $i - $start);
+                    $result[] = str_replace($quote . $quote, $quote, $char);
                     $start = $i + 1;
-                }
-                break;
+                    $quote = false;
+                    break;
 
-            default:
-            // ignore
-                break;
+                case '.':
+                    if ($quote === false) {
+                        // we have found a separator
+                        $char = trim(substr($tmp, $start, $i - $start));
+                        if ($char !== '') {
+                            $result[] = $char;
+                        }
+                        $start = $i + 1;
+                    }
+                    break;
+
+                default:
+                    // ignore
+                    break;
             }
             $i++;
         }
@@ -162,14 +166,15 @@ abstract class AbstractProcessor {
             }
         }
 
-        return array('delim' => (count($result) === 1 ? false : '.'), 'parts' => $result);
+        return ['delim' => (count($result) === 1 ? false : '.'), 'parts' => $result];
     }
 
     /**
      * This method removes parenthesis from start of the given string.
      * It removes also the associated closing parenthesis.
      */
-    protected function removeParenthesisFromStart($token) {
+    protected function removeParenthesisFromStart($token)
+    {
         $parenthesisRemoved = 0;
 
         $trim = trim($token);
@@ -185,7 +190,7 @@ abstract class AbstractProcessor {
         $stringOpened = '';
         while ($i < strlen($trim)) {
 
-            if ($trim[$i] === "\\") {
+            if ($trim[$i] === '\\') {
                 $i += 2; // an escape character, the next character is irrelevant
                 continue;
             }
@@ -222,7 +227,8 @@ abstract class AbstractProcessor {
         return trim($trim);
     }
 
-    protected function getVariableType($expression) {
+    protected function getVariableType($expression)
+    {
         // $expression must contain only upper-case characters
         if ($expression[1] !== '@') {
             return ExpressionType::USER_VARIABLE;
@@ -231,75 +237,89 @@ abstract class AbstractProcessor {
         $type = substr($expression, 2, strpos($expression, '.', 2));
 
         switch ($type) {
-        case 'GLOBAL':
-            $type = ExpressionType::GLOBAL_VARIABLE;
-            break;
-        case 'LOCAL':
-            $type = ExpressionType::LOCAL_VARIABLE;
-            break;
-        case 'SESSION':
-        default:
-            $type = ExpressionType::SESSION_VARIABLE;
-            break;
+            case 'GLOBAL':
+                $type = ExpressionType::GLOBAL_VARIABLE;
+                break;
+            case 'LOCAL':
+                $type = ExpressionType::LOCAL_VARIABLE;
+                break;
+            case 'SESSION':
+            default:
+                $type = ExpressionType::SESSION_VARIABLE;
+                break;
         }
         return $type;
     }
 
-    protected function isCommaToken($token) {
+    protected function isCommaToken($token)
+    {
         return (trim($token) === ',');
     }
 
-    protected function isWhitespaceToken($token) {
+    protected function isWhitespaceToken($token)
+    {
         return (trim($token) === '');
     }
 
-    protected function isCommentToken($token) {
+    protected function isCommentToken($token)
+    {
         return isset($token[0]) && isset($token[1])
                 && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
     }
 
-    protected function isColumnReference(array $out) {
+    protected function isColumnReference(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF);
     }
 
-    protected function isReserved(array $out) {
+    protected function isReserved(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED);
     }
 
-    protected function isConstant(array $out) {
+    protected function isConstant(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT);
     }
 
-    protected function isAggregateFunction(array $out) {
+    protected function isAggregateFunction(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION);
     }
 
-    protected function isCustomFunction(array $out) {
+    protected function isCustomFunction(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CUSTOM_FUNCTION);
     }
 
-    protected function isFunction(array $out) {
+    protected function isFunction(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION);
     }
 
-    protected function isExpression(array $out) {
+    protected function isExpression(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION);
     }
 
-    protected function isBracketExpression(array $out) {
+    protected function isBracketExpression(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION);
     }
 
-    protected function isSubQuery(array $out) {
+    protected function isSubQuery(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY);
     }
 
-    protected function isComment(array $out) {
+    protected function isComment(array $out)
+    {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COMMENT);
     }
 
-    public function processComment($expression) {
-        $result = array();
+    public function processComment($expression)
+    {
+        $result = [];
         $result['expr_type'] = ExpressionType::COMMENT;
         $result['value'] = $expression;
         return $result;
@@ -308,8 +328,9 @@ abstract class AbstractProcessor {
     /**
      * translates an array of objects into an associative array
      */
-    public function toArray($tokenList) {
-        $expr = array();
+    public function toArray($tokenList)
+    {
+        $expr = [];
         foreach ($tokenList as $token) {
             if ($token instanceof \PHPSQLParser\utils\ExpressionToken) {
                 $expr[] = $token->toArray();
@@ -320,10 +341,10 @@ abstract class AbstractProcessor {
         return $expr;
     }
 
-    protected function array_insert_after($array, $key, $entry) {
+    protected function array_insert_after($array, $key, $entry)
+    {
         $idx = array_search($key, array_keys($array));
         return array_slice($array, 0, $idx + 1, true) + $entry
                 + array_slice($array, $idx + 1, count($array) - 1, true);
     }
 }
-?>

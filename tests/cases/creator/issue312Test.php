@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPSQLParser\Test\Creator;
 
 use PHPSQLParser\exceptions\UnsupportedFeatureException;
@@ -40,10 +42,10 @@ class issue312Test extends TestCase
     public function dataIssue312()
     {
         // [string $sql]
-        return array(
-            array('SELECT @a := 20'),
-            array('SELECT @a := 20, @a + 10 AS x'),
-            array('SELECT sum, @c := 40 FROM (SELECT @a := 10, @b := 20, @a + @b AS sum) AS x'),
-        );
+        return [
+            ['SELECT @a := 20'],
+            ['SELECT @a := 20, @a + 10 AS x'],
+            ['SELECT sum, @c := 40 FROM (SELECT @a := 10, @b := 20, @a + @b AS sum) AS x'],
+        ];
     }
 }

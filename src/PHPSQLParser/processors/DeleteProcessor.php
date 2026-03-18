@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * DeleteProcessor.php
  *
@@ -49,13 +51,14 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DeleteProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
-        $tables = array();
+class DeleteProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
+        $tables = [];
 
         foreach ($tokens['DELETE'] as $expression) {
-            if (strtoupper($expression) !== 'DELETE' && trim($expression, " \t\n\r\0\x0B.*") !== ""
+            if (strtoupper($expression) !== 'DELETE' && trim($expression, " \t\n\r\0\x0B.*") !== ''
                 && !$this->isCommaToken($expression)) {
                 $tables[] = trim($expression, " \t\n\r\0\x0B.*");
             }
@@ -69,15 +72,14 @@ class DeleteProcessor extends AbstractProcessor {
             unset($tokens['USING']);
         }
 
-        $options = array();
+        $options = [];
         if (isset($tokens['OPTIONS'])) {
             $options = $tokens['OPTIONS'];
             unset($tokens['OPTIONS']);
         }
 
-        $tokens['DELETE'] = array('options' => (empty($options) ? false : $options),
-                                  'tables' => (empty($tables) ? false : $tables));
+        $tokens['DELETE'] = ['options' => (empty($options) ? false : $options),
+                                  'tables' => (empty($tables) ? false : $tables)];
         return $tokens;
     }
 }
-?>

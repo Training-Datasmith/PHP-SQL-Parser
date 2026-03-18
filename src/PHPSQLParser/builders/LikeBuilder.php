@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * LikeBuilder.php
  *
@@ -31,38 +33,40 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 
 /**
- * This class implements the builder for the LIKE statement part of CREATE TABLE. 
+ * This class implements the builder for the LIKE statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class LikeBuilder implements Builder {
-
-    protected function buildTable(array $parsed, $index) {
+class LikeBuilder implements Builder
+{
+    protected function buildTable(array $parsed, $index)
+    {
         $builder = new TableBuilder();
         return $builder->build($parsed, $index);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $this->buildTable($parsed, 0);
         if (strlen($sql) === 0) {
-            throw new UnableToCreateSQLException('LIKE', "", $parsed, 'table');
+            throw new UnableToCreateSQLException('LIKE', '', $parsed, 'table');
         }
-        return "LIKE " . $sql;
+        return 'LIKE ' . $sql;
     }
 }
-?>

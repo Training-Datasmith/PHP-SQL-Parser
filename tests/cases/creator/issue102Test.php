@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue102.php
  *
@@ -31,21 +33,24 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue102Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue102() {
-        $sql = "SELECT IF(f = 0 || f = 1, 1, 0) FROM tbl";
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class issue102Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue102()
+    {
+        $sql = 'SELECT IF(f = 0 || f = 1, 1, 0) FROM tbl';
         $parser = new PHPSQLParser($sql, true);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
@@ -54,4 +59,3 @@ class issue102Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

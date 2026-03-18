@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * select.php
  *
@@ -31,25 +33,27 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class selectTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testSelect() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class selectTest extends \PHPUnit\Framework\TestCase
+{
+    public function testSelect()
+    {
         $parser = new PHPSQLParser();
 
         $sql = 'SELECT
         1';
-        $p=$parser->parse($sql);
+        $p = $parser->parse($sql);
 
         $this->assertEquals(1, count($p));
         $this->assertEquals(1, count($p['SELECT']));
@@ -57,7 +61,6 @@ class selectTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('const', $p['SELECT'][0]['expr_type']);
         $this->assertEquals('1', $p['SELECT'][0]['base_expr']);
         $this->assertEquals('', $p['SELECT'][0]['sub_tree']);
-
 
         $sql = 'SELECT 1+2 c1, 1+2 as c2, 1+2,  sum(a) sum_a_alias,a,a an_alias, a as another_alias,terminate
                   from some_table an_alias
@@ -68,7 +71,7 @@ class selectTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(3, count($p));
         $this->assertEquals(8, count($p['SELECT']));
 
-        $this->assertEquals('terminate', $p['SELECT'][count($p['SELECT'])-1]['base_expr']);
+        $this->assertEquals('terminate', $p['SELECT'][count($p['SELECT']) - 1]['base_expr']);
 
         $this->assertEquals(3, count($p));
         $this->assertEquals(1, count($p['FROM']));
@@ -77,13 +80,11 @@ class selectTest extends \PHPUnit\Framework\TestCase {
         $parser->parse('SELECT NOW( ),now(),sysdate( ),sysdate() as now');
         $this->assertEquals('sysdate', $parser->parsed['SELECT'][3]['base_expr']);
 
-
-        $sql = " SELECT a.*, surveyls_title, surveyls_description, surveyls_welcometext, surveyls_url  FROM SURVEYS AS a INNER JOIN SURVEYS_LANGUAGESETTINGS on (surveyls_survey_id=a.sid and surveyls_language=a.language)  order by active DESC, surveyls_title";
+        $sql = ' SELECT a.*, surveyls_title, surveyls_description, surveyls_welcometext, surveyls_url  FROM SURVEYS AS a INNER JOIN SURVEYS_LANGUAGESETTINGS on (surveyls_survey_id=a.sid and surveyls_language=a.language)  order by active DESC, surveyls_title';
         $parser->parse($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'select1.serialized');
         $this->assertEquals($expected, $p, 'a test for ref_clauses');
-
 
         $sql = "SELECT pl_namespace,pl_title FROM `pagelinks` WHERE pl_from = '1' FOR UPDATE";
         $parser->parse($sql);
@@ -93,4 +94,3 @@ class selectTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

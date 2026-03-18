@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue265.php
  *
@@ -8,7 +10,6 @@
 namespace PHPSQLParser\Test\Creator;
 
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
 class Issue365Test extends \PHPUnit\Framework\TestCase
 {
@@ -18,7 +19,7 @@ class Issue365Test extends \PHPUnit\Framework\TestCase
      */
     public function testIssue365()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS example (`type` CHARACTER (255) CHARACTER SET utf8)";
+        $sql = 'CREATE TABLE IF NOT EXISTS example (`type` CHARACTER (255) CHARACTER SET utf8)';
 
         $parser  = new PHPSQLParser($sql);
         $parsed = $parser->parsed;
@@ -29,14 +30,14 @@ class Issue365Test extends \PHPUnit\Framework\TestCase
         $expected_type = [
             'expr_type' => 'data-type',
             'base_expr' => 'CHARACTER',
-            'length' => 255
+            'length' => 255,
         ];
         $this->assertEquals($expected_type, $sub_tree['sub_tree'][0], 'CHARACTER data type definition');
     }
 
     public function testIssue365BonusCharset()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS example (`type` CHARACTER (255) CHARSET utf8)";
+        $sql = 'CREATE TABLE IF NOT EXISTS example (`type` CHARACTER (255) CHARSET utf8)';
 
         $parser  = new PHPSQLParser($sql);
         $parsed = $parser->parsed;

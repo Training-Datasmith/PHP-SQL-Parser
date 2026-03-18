@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue131.php
  *
@@ -31,23 +33,24 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue131Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue131() {
+class issue131Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue131()
+    {
 
-
-        $sql = "create unique index i1 using BTREE on t1 (c1(5) DESC, `col 2`(8) ASC) ALGORITHM=DEFAULT using hash LOCK=SHARED";
+        $sql = 'create unique index i1 using BTREE on t1 (c1(5) DESC, `col 2`(8) ASC) ALGORITHM=DEFAULT using hash LOCK=SHARED';
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue131.serialized');
@@ -55,4 +58,3 @@ class issue131Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * SelectStatement.php
  *
@@ -31,12 +33,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
@@ -47,86 +49,95 @@ namespace PHPSQLParser\builders;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class SelectStatementBuilder implements Builder {
-
-    protected function buildSELECT(array $parsed) {
+class SelectStatementBuilder implements Builder
+{
+    protected function buildSELECT(array $parsed)
+    {
         $builder = new SelectBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM(array $parsed) {
+    protected function buildFROM(array $parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWHERE(array $parsed) {
+    protected function buildWHERE(array $parsed)
+    {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildGROUP(array $parsed) {
+    protected function buildGROUP(array $parsed)
+    {
         $builder = new GroupByBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildHAVING(array $parsed) {
+    protected function buildHAVING(array $parsed)
+    {
         $builder = new HavingBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildORDER(array $parsed) {
+    protected function buildORDER(array $parsed)
+    {
         $builder = new OrderByBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildLIMIT(array $parsed) {
+    protected function buildLIMIT(array $parsed)
+    {
         $builder = new LimitBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildUNION(array $parsed) {
-    	$builder = new UnionStatementBuilder();
-    	return $builder->build($parsed);
-    }
-    
-    protected function buildUNIONALL(array $parsed) {
-    	$builder = new UnionAllStatementBuilder();
-    	return $builder->build($parsed);
+
+    protected function buildUNION(array $parsed)
+    {
+        $builder = new UnionStatementBuilder();
+        return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
-        $sql = "";
+    protected function buildUNIONALL(array $parsed)
+    {
+        $builder = new UnionAllStatementBuilder();
+        return $builder->build($parsed);
+    }
+
+    public function build(array $parsed)
+    {
+        $sql = '';
         if (isset($parsed['SELECT'])) {
             $sql .= $this->buildSELECT($parsed['SELECT']);
         }
         if (isset($parsed['FROM'])) {
-            $sql .= " " . $this->buildFROM($parsed['FROM']);
+            $sql .= ' ' . $this->buildFROM($parsed['FROM']);
         }
         if (isset($parsed['WHERE'])) {
-            $sql .= " " . $this->buildWHERE($parsed['WHERE']);
+            $sql .= ' ' . $this->buildWHERE($parsed['WHERE']);
         }
         if (isset($parsed['GROUP'])) {
-            $sql .= " " . $this->buildGROUP($parsed['GROUP']);
+            $sql .= ' ' . $this->buildGROUP($parsed['GROUP']);
         }
         if (isset($parsed['HAVING'])) {
-            $sql .= " " . $this->buildHAVING($parsed['HAVING']);
+            $sql .= ' ' . $this->buildHAVING($parsed['HAVING']);
         }
         if (isset($parsed['ORDER'])) {
-            $sql .= " " . $this->buildORDER($parsed['ORDER']);
+            $sql .= ' ' . $this->buildORDER($parsed['ORDER']);
         }
         if (isset($parsed['LIMIT'])) {
-            $sql .= " " . $this->buildLIMIT($parsed['LIMIT']);
-        }       
+            $sql .= ' ' . $this->buildLIMIT($parsed['LIMIT']);
+        }
         if (isset($parsed['UNION'])) {
-            $sql .= " " . $this->buildUNION($parsed);
+            $sql .= ' ' . $this->buildUNION($parsed);
         }
         if (isset($parsed['UNION ALL'])) {
-        	$sql .= " " . $this->buildUNIONALL($parsed);
+            $sql .= ' ' . $this->buildUNIONALL($parsed);
         }
         return $sql;
     }
 
 }
-?>

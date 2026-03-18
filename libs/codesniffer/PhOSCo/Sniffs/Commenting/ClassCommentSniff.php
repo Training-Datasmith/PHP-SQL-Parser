@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Parses and verifies the doc comments for classes.
  *
@@ -46,15 +48,16 @@ if (class_exists('PhOSCo_Sniffs_Commenting_FileCommentSniff', true) === false) {
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commenting_FileCommentSniff {
-
+class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commenting_FileCommentSniff
+{
     /**
      * Returns an array of tokens this test wants to listen for.
      *
      * @return array
      */
-    public function register() {
-        return array(T_CLASS, T_INTERFACE,);
+    public function register()
+    {
+        return [T_CLASS, T_INTERFACE,];
 
     }//end register()
 
@@ -67,14 +70,15 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr) {
+    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
 
         $this->currentFile = $phpcsFile;
 
         $tokens = $phpcsFile->getTokens();
         $type = strtolower($tokens[$stackPtr]['content']);
-        $errorData = array($type);
-        $find = array(T_ABSTRACT, T_WHITESPACE, T_FINAL,);
+        $errorData = [$type];
+        $find = [T_ABSTRACT, T_WHITESPACE, T_FINAL,];
 
         // Extract the class comment docblock.
         $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
@@ -83,7 +87,7 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
             $error = 'You must use "/**" style comments for a %s comment';
             $phpcsFile->addError($error, $stackPtr, 'WrongStyle', $errorData);
             return;
-        } else if ($commentEnd === false || $tokens[$commentEnd]['code'] !== T_DOC_COMMENT) {
+        } elseif ($commentEnd === false || $tokens[$commentEnd]['code'] !== T_DOC_COMMENT) {
             $phpcsFile->addError('Missing %s doc comment', $stackPtr, 'Missing', $errorData);
             return;
         }
@@ -100,11 +104,21 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
                 $prevComment = $phpcsFile->findPrevious(T_DOC_COMMENT, ($prevNonComment - 1));
                 if ($prevComment === false) {
                     // There is only 1 doc comment between open tag and class token.
-                    $newlineToken = $phpcsFile->findNext(T_WHITESPACE, ($commentEnd + 1), $stackPtr, false,
-                        $phpcsFile->eolChar);
+                    $newlineToken = $phpcsFile->findNext(
+                        T_WHITESPACE,
+                        ($commentEnd + 1),
+                        $stackPtr,
+                        false,
+                        $phpcsFile->eolChar
+                    );
                     if ($newlineToken !== false) {
-                        $newlineToken = $phpcsFile->findNext(T_WHITESPACE, ($newlineToken + 1), $stackPtr, false,
-                            $phpcsFile->eolChar);
+                        $newlineToken = $phpcsFile->findNext(
+                            T_WHITESPACE,
+                            ($newlineToken + 1),
+                            $stackPtr,
+                            false,
+                            $phpcsFile->eolChar
+                        );
 
                         if ($newlineToken !== false) {
                             // Blank line between the class and the doc block.
@@ -188,17 +202,18 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
      *
      * @return void
      */
-    protected function processVersion($errorPos) {
+    protected function processVersion($errorPos)
+    {
         $version = $this->commentParser->getVersion();
         if ($version !== null) {
             $content = $version->getContent();
-            $matches = array();
+            $matches = [];
             if (empty($content) === true) {
                 $error = 'Content missing for @version tag in doc comment';
                 $this->currentFile->addError($error, $errorPos, 'EmptyVersion');
-            } else if ((strstr($content, 'Release:') === false)) {
+            } elseif ((strstr($content, 'Release:') === false)) {
                 $error = 'Invalid version "%s" in doc comment; consider "Release: <package_version>" instead';
-                $data = array($content);
+                $data = [$content];
                 $this->currentFile->addWarning($error, $errorPos, 'InvalidVersion', $data);
             }
         }
@@ -206,5 +221,3 @@ class PhOSCo_Sniffs_Commenting_ClassCommentSniff extends PhOSCo_Sniffs_Commentin
     }//end processVersion()
 
 }//end class
-
-?>

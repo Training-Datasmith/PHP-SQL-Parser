@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * show.php
  *
@@ -31,34 +33,35 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class showTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testShow() {
-        $sql = "show columns from `foo.bar`";
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class showTest extends \PHPUnit\Framework\TestCase
+{
+    public function testShow()
+    {
+        $sql = 'show columns from `foo.bar`';
         $parser = new PHPSQLParser($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show1.serialized');
         $this->assertEquals($expected, $p, 'show columns from');
 
-
-        $sql = "show CREATE DATABASE `foo`";
+        $sql = 'show CREATE DATABASE `foo`';
         $parser = new PHPSQLParser($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show2.serialized');
         $this->assertEquals($expected, $p, 'show create database');
 
-        $sql = "show CREATE SCHEMA `foo`";
+        $sql = 'show CREATE SCHEMA `foo`';
         $parser = new PHPSQLParser($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show7.serialized');
@@ -69,20 +72,18 @@ class showTest extends \PHPUnit\Framework\TestCase {
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show3.serialized');
         $this->assertEquals($expected, $p, 'show databases like');
-        
+
         $sql = "show SCHEMAS LIKE '%bar%'";
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show6.serialized');
         $this->assertEquals($expected, $p, 'show schemas like');
 
-
-        $sql = "SHOW ENGINE foo STATUS";
+        $sql = 'SHOW ENGINE foo STATUS';
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show4.serialized');
         $this->assertEquals($expected, $p, 'show engine status');
-
 
         $sql = "SHOW FULL COLUMNS FROM `foo.bar` FROM hohoho LIKE '%xmas%'";
         $parser = new PHPSQLParser($sql, true);
@@ -92,4 +93,3 @@ class showTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * TableBuilder.php
  *
@@ -40,6 +42,7 @@
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\utils\ExpressionType;
 
 /**
@@ -50,34 +53,40 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class TableBuilder implements Builder {
-
-    protected function buildAlias(array $parsed) {
+class TableBuilder implements Builder
+{
+    protected function buildAlias(array $parsed)
+    {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexHintList(array $parsed) {
+    protected function buildIndexHintList(array $parsed)
+    {
         $builder = new IndexHintListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildJoin($parsed) {
+    protected function buildJoin($parsed)
+    {
         $builder = new JoinBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildRefType($parsed) {
+    protected function buildRefType($parsed)
+    {
         $builder = new RefTypeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildRefClause(array $parsed) {
+    protected function buildRefClause(array $parsed)
+    {
         $builder = new RefClauseBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed, $index = 0) {
+    public function build(array $parsed, $index = 0)
+    {
         if ($parsed['expr_type'] !== ExpressionType::TABLE) {
             return '';
         }
@@ -94,4 +103,3 @@ class TableBuilder implements Builder {
         return $sql;
     }
 }
-?>

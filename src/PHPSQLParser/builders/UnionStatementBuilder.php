@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace PHPSQLParser\builders;
 
 /**
@@ -9,23 +12,22 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UnionStatementBuilder implements Builder {
+class UnionStatementBuilder implements Builder
+{
+    public function build(array $parsed)
+    {
+        $sql = '';
+        $select_builder = new SelectStatementBuilder();
+        $first = true;
+        foreach ($parsed['UNION'] as $clause) {
+            if (!$first) {
+                $sql .= ' UNION ';
+            } else {
+                $first = false;
+            }
 
-	public function build(array $parsed)
-	{
-		$sql = '';
-		$select_builder = new SelectStatementBuilder();
-		$first = true;
-		foreach ($parsed['UNION'] as $clause) {
-			if (!$first) {
-				$sql .= " UNION ";
-			}
-			else {
-				$first = false;
-			}
-
-			$sql .= $select_builder->build($clause);
-		}
-		return $sql;
-	}
+            $sql .= $select_builder->build($clause);
+        }
+        return $sql;
+    }
 }

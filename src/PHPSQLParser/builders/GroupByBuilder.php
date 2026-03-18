@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * GroupByBuilder.php
  *
@@ -31,54 +33,61 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 
 /**
- * This class implements the builder for the GROUP-BY clause. 
+ * This class implements the builder for the GROUP-BY clause.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class GroupByBuilder implements Builder {
-
-    protected function buildColRef(array $parsed) {
+class GroupByBuilder implements Builder
+{
+    protected function buildColRef(array $parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildPosition(array $parsed) {
+    protected function buildPosition(array $parsed)
+    {
         $builder = new PositionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction(array $parsed) {
+    protected function buildFunction(array $parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildGroupByAlias(array $parsed) {
+    protected function buildGroupByAlias(array $parsed)
+    {
         $builder = new GroupByAliasBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildGroupByExpression(array $parsed) {
-    	$builder = new GroupByExpressionBuilder();
+
+    protected function buildGroupByExpression(array $parsed)
+    {
+        $builder = new GroupByExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
-        $sql = "";
+    public function build(array $parsed)
+    {
+        $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -86,16 +95,15 @@ class GroupByBuilder implements Builder {
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildGroupByExpression($v);
             $sql .= $this->buildGroupByAlias($v);
-            
+
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('GROUP', $k, $v, 'expr_type');
             }
 
-            $sql .= ", ";
+            $sql .= ', ';
         }
         $sql = substr($sql, 0, -2);
-        return "GROUP BY " . $sql;
+        return 'GROUP BY ' . $sql;
     }
 
 }
-?>

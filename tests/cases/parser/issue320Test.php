@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue320.php
  *
@@ -37,9 +39,10 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
 class issue320Test extends \PHPUnit\Framework\TestCase
 {

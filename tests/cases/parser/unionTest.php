@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * unionTest.php
  *
@@ -31,18 +33,19 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
-use PHPUnit\Framework\TestCase;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
+
 use Analog\Analog;
+use PHPSQLParser\PHPSQLParser;
+use PHPUnit\Framework\TestCase;
 
 class UnionTest extends TestCase
 {
@@ -59,10 +62,10 @@ class UnionTest extends TestCase
         $expected = getExpectedValue(dirname(__FILE__), 'union1.serialized');
         $this->assertEquals($expected, $p, 'simple union');
     }
-    
+
     public function testUnion2()
     {
-    	$parser = new PHPSQLParser();
+        $parser = new PHPSQLParser();
         $sql = '(SELECT colA From test a)
                 union all
                 (SELECT colB from test b) order by 1';
@@ -74,7 +77,7 @@ class UnionTest extends TestCase
 
     public function testUnion3()
     {
-        $sql = "SELECT x FROM ((SELECT y FROM  z  WHERE (y > 2) ) UNION ALL (SELECT a FROM z WHERE (y < 2))) as f ";
+        $sql = 'SELECT x FROM ((SELECT y FROM  z  WHERE (y > 2) ) UNION ALL (SELECT a FROM z WHERE (y < 2))) as f ';
         $parser = new PHPSQLParser();
         $p = $parser->parse($sql, true);
         $expected = getExpectedValue(dirname(__FILE__), 'union3.serialized');
@@ -98,4 +101,3 @@ class UnionTest extends TestCase
         $this->assertEquals($expected, $p, 'simple union with order by and no brackets');
     }
 }
-?>

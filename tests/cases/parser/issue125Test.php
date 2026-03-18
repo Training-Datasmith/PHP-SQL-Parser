@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue125.php
  *
@@ -31,23 +33,24 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue125Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue125() {
+class issue125Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue125()
+    {
 
-
-        $sql = "select t1.* from t1 left outer join t2 on left(t1.c1,6) = t2.c2";
+        $sql = 'select t1.* from t1 left outer join t2 on left(t1.c1,6) = t2.c2';
         $parser = new PHPSQLParser($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue125.serialized');
@@ -55,4 +58,3 @@ class issue125Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue56.php
  *
@@ -31,21 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue56Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue56() {
-
+class issue56Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue56()
+    {
 
         // optimizer/index hints
         // TODO: not solved
@@ -66,10 +69,10 @@ class issue56Test extends \PHPUnit\Framework\TestCase {
 
         // inline comment
         // TODO: not solved
-        $sql = "SELECT acol -- an inline comment
+        $sql = 'SELECT acol -- an inline comment
         FROM --another comment
         table
-        WHERE x = 1";
+        WHERE x = 1';
         $parser->parse($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue56b.serialized');
@@ -77,10 +80,10 @@ class issue56Test extends \PHPUnit\Framework\TestCase {
 
         // inline comment
         // TODO: not solved
-        $sql = "SELECT acol -- an /*inline comment
+        $sql = 'SELECT acol -- an /*inline comment
         FROM --another */comment
         table
-        WHERE x = 1";
+        WHERE x = 1';
         $parser->parse($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue56b1.serialized');
@@ -88,4 +91,3 @@ class issue56Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

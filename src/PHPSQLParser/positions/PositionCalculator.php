@@ -1,8 +1,10 @@
 <?php
+
+declare(strict_types=1);
 /**
  * PositionCalculator.php
  *
- * This class implements the calculator for the string positions of the 
+ * This class implements the calculator for the string positions of the
  * base_expr elements within the output of the PHPSQLParser.
  *
  * PHP version 5
@@ -32,36 +34,37 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2015 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\positions;
-use PHPSQLParser\utils\PHPSQLParserConstants;
+
 use PHPSQLParser\exceptions\UnableToCalculatePositionException;
 use PHPSQLParser\utils\ExpressionType;
+use PHPSQLParser\utils\PHPSQLParserConstants;
 
 /**
- * This class implements the calculator for the string positions of the 
+ * This class implements the calculator for the string positions of the
  * base_expr elements within the output of the PHPSQLParser.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class PositionCalculator {
-
-    protected static $allowedOnOperator = array("\t", "\n", "\r", " ", ",", "(", ")", "_", "'", "\"", "?", "@", "0",
-                                                "1", "2", "3", "4", "5", "6", "7", "8", "9");
-    protected static $allowedOnOther = array("\t", "\n", "\r", " ", ",", "(", ")", "<", ">", "*", "+", "-", "/", "|",
-                                             "&", "=", "!", ";");
+class PositionCalculator
+{
+    protected static $allowedOnOperator = ["\t", "\n", "\r", ' ', ',', '(', ')', '_', "'", '"', '?', '@', '0',
+                                                '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    protected static $allowedOnOther = ["\t", "\n", "\r", ' ', ',', '(', ')', '<', '>', '*', '+', '-', '/', '|',
+                                             '&', '=', '!', ';'];
 
     protected $flippedBacktrackingTypes;
-    protected static $backtrackingTypes = array(ExpressionType::EXPRESSION, ExpressionType::SUBQUERY,
+    protected static $backtrackingTypes = [ExpressionType::EXPRESSION, ExpressionType::SUBQUERY,
                                                 ExpressionType::BRACKET_EXPRESSION, ExpressionType::TABLE_EXPRESSION,
                                                 ExpressionType::RECORD, ExpressionType::IN_LIST,
                                                 ExpressionType::MATCH_ARGUMENTS, ExpressionType::TABLE,
@@ -90,44 +93,48 @@ class PositionCalculator {
                                                 ExpressionType::SUBPARTITION_HASH, ExpressionType::SUBPARTITION_COUNT,
                                                 ExpressionType::CHARSET, ExpressionType::ENGINE, ExpressionType::QUERY,
                                                 ExpressionType::INDEX_ALGORITHM, ExpressionType::INDEX_LOCK,
-    											ExpressionType::SUBQUERY_FACTORING, ExpressionType::CUSTOM_FUNCTION,
-                                                ExpressionType::SIMPLE_FUNCTION
-    );
+                                                ExpressionType::SUBQUERY_FACTORING, ExpressionType::CUSTOM_FUNCTION,
+                                                ExpressionType::SIMPLE_FUNCTION,
+    ];
 
     /**
      * Constructor.
-     * 
+     *
      * It initializes some fields.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->flippedBacktrackingTypes = array_flip(self::$backtrackingTypes);
     }
 
-    protected function printPos($text, $sql, $charPos, $key, $parsed, $backtracking) {
+    protected function printPos($text, $sql, $charPos, $key, $parsed, $backtracking)
+    {
         if (!isset($_SERVER['DEBUG'])) {
             return;
         }
 
-        $spaces = "";
+        $spaces = '';
         $caller = debug_backtrace();
         $i = 1;
         while ($caller[$i]['function'] === 'lookForBaseExpression') {
-            $spaces .= "   ";
+            $spaces .= '   ';
             $i++;
         }
-        $holdem = substr($sql, 0, $charPos) . "^" . substr($sql, $charPos);
-        echo $spaces . $text . " key:" . $key . "  parsed:" . $parsed . " back:" . serialize($backtracking) . " "
+        $holdem = substr($sql, 0, $charPos) . '^' . substr($sql, $charPos);
+        echo $spaces . $text . ' key:' . $key . '  parsed:' . $parsed . ' back:' . serialize($backtracking) . ' '
             . $holdem . "\n";
     }
 
-    public function setPositionsWithinSQL($sql, $parsed) {
+    public function setPositionsWithinSQL($sql, $parsed)
+    {
         $charPos = 0;
-        $backtracking = array();
+        $backtracking = [];
         $this->lookForBaseExpression($sql, $charPos, $parsed, 0, $backtracking);
         return $parsed;
     }
 
-    protected function findPositionWithinString($sql, $value, $expr_type) {
+    protected function findPositionWithinString($sql, $value, $expr_type)
+    {
         if ($value === '') {
             return false;
         }
@@ -138,21 +145,21 @@ class PositionCalculator {
 
             $pos = strpos($sql, $value, $offset);
             // error_log("pos:$pos value:$value sql:$sql");
-            
+
             if ($pos === false) {
                 break;
             }
 
-            $before = "";
+            $before = '';
             if ($pos > 0) {
                 $before = $sql[$pos - 1];
             }
 
             // if we have a quoted string, we every character is allowed after it
             // see issues 137 and 361
-            $quotedBefore = in_array($sql[$pos], array('`', '('), true);
-            $quotedAfter = in_array($sql[$pos + strlen($value) - 1], array('`', ')'), true);
-            $after = "";
+            $quotedBefore = in_array($sql[$pos], ['`', '('], true);
+            $quotedAfter = in_array($sql[$pos + strlen($value) - 1], ['`', ')'], true);
+            $after = '';
             if (isset($sql[$pos + strlen($value)])) {
                 $after = $sql[$pos + strlen($value)];
             }
@@ -161,12 +168,12 @@ class PositionCalculator {
             // whitespace, comma, parenthesis, digit or letter, end_of_string
             // an operator should not be surrounded by another operator
 
-            if (in_array($expr_type,array('operator','column-list'),true)) {
+            if (in_array($expr_type, ['operator','column-list'], true)) {
 
-                $ok = ($before === "" || in_array($before, self::$allowedOnOperator, true))
+                $ok = ($before === '' || in_array($before, self::$allowedOnOperator, true))
                     || (strtolower($before) >= 'a' && strtolower($before) <= 'z');
                 $ok = $ok
-                    && ($after === "" || in_array($after, self::$allowedOnOperator, true)
+                    && ($after === '' || in_array($after, self::$allowedOnOperator, true)
                         || (strtolower($after) >= 'a' && strtolower($after) <= 'z'));
 
                 if (!$ok) {
@@ -180,10 +187,10 @@ class PositionCalculator {
             // in all other cases we accept
             // whitespace, comma, operators, parenthesis and end_of_string
 
-            $ok = ($before === "" || in_array($before, self::$allowedOnOther, true)
+            $ok = ($before === '' || in_array($before, self::$allowedOnOther, true)
                 || ($quotedBefore && (strtolower($before) >= 'a' && strtolower($before) <= 'z')));
             $ok = $ok
-                && ($after === "" || in_array($after, self::$allowedOnOther, true)
+                && ($after === '' || in_array($after, self::$allowedOnOther, true)
                     || ($quotedAfter && (strtolower($after) >= 'a' && strtolower($after) <= 'z')));
 
             if ($ok) {
@@ -196,7 +203,8 @@ class PositionCalculator {
         return $pos;
     }
 
-    protected function lookForBaseExpression($sql, &$charPos, &$parsed, $key, &$backtracking) {
+    protected function lookForBaseExpression($sql, &$charPos, &$parsed, $key, &$backtracking)
+    {
         if (!is_numeric($key)) {
             if (($key === 'UNION' || $key === 'UNION ALL')
                 || ($key === 'expr_type' && isset($this->flippedBacktrackingTypes[$parsed]))
@@ -243,8 +251,11 @@ class PositionCalculator {
                 //$this->printPos("0", $sql, $charPos, $key, $value, $backtracking);
 
                 $subject = substr($sql, $charPos);
-                $pos = $this->findPositionWithinString($subject, $value,
-                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias');
+                $pos = $this->findPositionWithinString(
+                    $subject,
+                    $value,
+                    isset($parsed['expr_type']) ? $parsed['expr_type'] : 'alias'
+                );
                 if ($pos === false) {
                     throw new UnableToCalculatePositionException($value, $subject);
                 }
@@ -267,5 +278,3 @@ class PositionCalculator {
         }
     }
 }
-
-?>

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Test case for PHPSQLParser.
  *
@@ -35,6 +37,7 @@
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
  */
+
 namespace PHPSQLParser\Test\Parser;
 
 use PHPSQLParser\PHPSQLParser;

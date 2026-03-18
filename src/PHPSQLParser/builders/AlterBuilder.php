@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace PHPSQLParser\builders;
 
 /**
@@ -7,7 +10,7 @@ namespace PHPSQLParser\builders;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
 class AlterBuilder implements Builder
 {

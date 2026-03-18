@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * HavingProcessor.php
  *
@@ -31,35 +33,37 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\processors;
+
 use PHPSQLParser\utils\ExpressionType;
 
 /**
- * This class implements the processor for the HAVING statement. 
+ * This class implements the processor for the HAVING statement.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class HavingProcessor extends ExpressionListProcessor {
-	
-    public function process($tokens, $select = array()) {
+class HavingProcessor extends ExpressionListProcessor
+{
+    public function process($tokens, $select = [])
+    {
         $parsed = parent::process($tokens);
 
         foreach ($parsed as $k => $v) {
             if ($v['expr_type'] === ExpressionType::COLREF) {
                 foreach ($select as $clause) {
                     if (!isset($clause['alias'])) {
-                    	continue;
+                        continue;
                     }
                     if (!$clause['alias']) {
                         continue;
@@ -75,5 +79,3 @@ class HavingProcessor extends ExpressionListProcessor {
         return $parsed;
     }
 }
-
-?>

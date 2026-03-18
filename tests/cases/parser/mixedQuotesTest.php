@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * mixedQuotesTest.php
  *
@@ -38,18 +40,20 @@
  * @version   SVN: $Id$
  *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class mixedQuotesTest extends \PHPUnit\Framework\TestCase {
-
-    public function testMixedQuotes() {
+class mixedQuotesTest extends \PHPUnit\Framework\TestCase
+{
+    public function testMixedQuotes()
+    {
         $parser = new PHPSQLParser();
 
         $sql = 'SELECT ISNULL(\'"\') AS foo FROM bar;';
         $parser->parse($sql);
 
-        $this->assertEquals('\'"\'', $parser->parsed['SELECT'][0]['sub_tree'][0]['base_expr'], "Mixed quotes test failed");
+        $this->assertEquals('\'"\'', $parser->parsed['SELECT'][0]['sub_tree'][0]['base_expr'], 'Mixed quotes test failed');
     }
 }

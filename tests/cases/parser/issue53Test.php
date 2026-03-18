@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue53.php
  *
@@ -31,39 +33,38 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue53Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue53() {
-
+class issue53Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue53()
+    {
 
         $parser = new PHPSQLParser();
 
-        $sql = "SELECT * FROM table WHERE a=1 ORDER BY c DESC LIMIT 10 OFFSET 20";
+        $sql = 'SELECT * FROM table WHERE a=1 ORDER BY c DESC LIMIT 10 OFFSET 20';
         $parser->parse($sql, false);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue53a.serialized');
         $this->assertEquals($expected, $p, 'limit with offset');
 
-
-        $sql = "SELECT * FROM table WHERE a=1 ORDER BY c DESC LIMIT 20, 10";
+        $sql = 'SELECT * FROM table WHERE a=1 ORDER BY c DESC LIMIT 20, 10';
         $parser->parse($sql, false);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue53a.serialized');
         $this->assertEquals($expected, $p, 'limit with comma-separated offset');
 
-
-        $sql = "SELECT * FROM table WHERE a=1 ORDER BY c DESC LIMIT 10";
+        $sql = 'SELECT * FROM table WHERE a=1 ORDER BY c DESC LIMIT 10';
         $parser->parse($sql, false);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue53b.serialized');
@@ -71,4 +72,3 @@ class issue53Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

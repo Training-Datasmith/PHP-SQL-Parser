@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * IndexCommentBuilder.php
  *
@@ -31,39 +33,43 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 use PHPSQLParser\utils\ExpressionType;
 
 /**
- * This class implements the builder for the index comment of CREATE INDEX statement. 
+ * This class implements the builder for the index comment of CREATE INDEX statement.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class IndexCommentBuilder implements Builder {
-
-    protected function buildReserved(array $parsed) {
+class IndexCommentBuilder implements Builder
+{
+    protected function buildReserved(array $parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant(array $parsed) {
+    protected function buildConstant(array $parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::COMMENT) {
             return '';
         }
@@ -82,4 +88,3 @@ class IndexCommentBuilder implements Builder {
         return substr($sql, 0, -1);
     }
 }
-?>

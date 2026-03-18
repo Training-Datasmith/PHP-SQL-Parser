@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * ExplainProcessor.php
  *
@@ -48,11 +50,10 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DescribeProcessor extends ExplainProcessor {
-
-    protected function isStatement($keys, $needle = "DESCRIBE") {
+class DescribeProcessor extends ExplainProcessor
+{
+    protected function isStatement($keys, $needle = 'DESCRIBE')
+    {
         return parent::isStatement($keys, $needle);
     }
 }
-
-?>

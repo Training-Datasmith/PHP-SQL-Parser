@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue50.php
  *
@@ -31,21 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue50Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue50() {
-
+class issue50Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue50()
+    {
 
         // TODO: not solved, charsets are not possible at the moment
         $parser = new PHPSQLParser();
@@ -57,19 +60,17 @@ class issue50Test extends \PHPUnit\Framework\TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'issue50.serialized');
         $this->assertEquals($expected, $p, 'does not die if query contains _utf8');
 
-
         $sql = "SELECT _utf8'hi' COLLATE latin1_german1_ci";
         $parser->parse($sql, false);
         $p = $parser->parsed;
 
         // hex value
         $sql = "SELECT _utf8 x'AABBCC'";
-        $sql = "SELECT _utf8 0xAABBCC";
+        $sql = 'SELECT _utf8 0xAABBCC';
 
         // binary value
         $sql = "SELECT _utf8 b'0001'";
-        $sql = "SELECT _utf8 0b0001";
+        $sql = 'SELECT _utf8 0b0001';
 
     }
 }
-

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * ReplaceStatement.php
  *
@@ -31,12 +33,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
@@ -47,31 +49,36 @@ namespace PHPSQLParser\builders;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class ReplaceStatementBuilder implements Builder {
-
-    protected function buildVALUES(array $parsed) {
+class ReplaceStatementBuilder implements Builder
+{
+    protected function buildVALUES(array $parsed)
+    {
         $builder = new ValuesBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildREPLACE(array $parsed) {
+    protected function buildREPLACE(array $parsed)
+    {
         $builder = new ReplaceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSELECT(array $parsed) {
+    protected function buildSELECT(array $parsed)
+    {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildSET(array $parsed) {
+
+    protected function buildSET(array $parsed)
+    {
         $builder = new SetBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+
+    public function build(array $parsed)
+    {
         // TODO: are there more than one tables possible (like [REPLACE][1])
         $sql = $this->buildREPLACE($parsed['REPLACE']);
         if (isset($parsed['VALUES'])) {
@@ -86,4 +93,3 @@ class ReplaceStatementBuilder implements Builder {
         return $sql;
     }
 }
-?>

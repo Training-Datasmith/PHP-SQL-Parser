@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * IntoProcessor.php
  *
@@ -33,19 +35,20 @@
 namespace PHPSQLParser\processors;
 
 /**
- * 
+ *
  * This class processes the INTO statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
-class IntoProcessor extends AbstractProcessor {
-
+class IntoProcessor extends AbstractProcessor
+{
     /**
      * TODO: This is a dummy function, we cannot parse INTO as part of SELECT
      * at the moment
      */
-    public function process($tokenList) {
+    public function process($tokenList)
+    {
         $unparsed = $tokenList['INTO'];
         foreach ($unparsed as $k => $token) {
             if ($this->isWhitespaceToken($token) || $this->isCommaToken($token)) {
@@ -56,4 +59,3 @@ class IntoProcessor extends AbstractProcessor {
         return $tokenList;
     }
 }
-?>

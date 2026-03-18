@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue76.php
  *
@@ -31,28 +33,31 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue76Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue76() {
-        $sql = "SELECT AVG(2.0 * foo) FROM bar";
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class issue76Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue76()
+    {
+        $sql = 'SELECT AVG(2.0 * foo) FROM bar';
         $parser = new PHPSQLParser($sql, true);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
         $expected = getExpectedValue(dirname(__FILE__), 'issue76a.sql', false);
         $this->assertSame($expected, $created, 'Expressions in functions and aggregates.');
 
-        $sql = "SELECT AVG(2.0 * foo, x) FROM bar";
+        $sql = 'SELECT AVG(2.0 * foo, x) FROM bar';
         $parser = new PHPSQLParser($sql, true);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
@@ -61,4 +66,3 @@ class issue76Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

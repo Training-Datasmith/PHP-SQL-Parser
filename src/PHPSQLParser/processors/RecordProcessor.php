@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * RecordProcessor.php
  *
@@ -49,23 +51,24 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RecordProcessor extends AbstractProcessor {
-
-    protected function processExpressionList($unparsed) {
+class RecordProcessor extends AbstractProcessor
+{
+    protected function processExpressionList($unparsed)
+    {
         $processor = new ExpressionListProcessor($this->options);
         return $processor->process($unparsed);
     }
 
-    public function process($unparsed) {
+    public function process($unparsed)
+    {
         $unparsed = $this->removeParenthesisFromStart($unparsed);
         $values = $this->splitSQLIntoTokens($unparsed);
 
         foreach ($values as $k => $v) {
             if ($this->isCommaToken($v)) {
-                $values[$k] = "";
+                $values[$k] = '';
             }
         }
         return $this->processExpressionList($values);
     }
 }
-?>

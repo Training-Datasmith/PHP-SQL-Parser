@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * SubTreeBuilder.php
  *
@@ -40,6 +42,7 @@
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 
 /**
@@ -50,68 +53,80 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SubTreeBuilder implements Builder {
-
-    protected function buildColRef(array $parsed) {
+class SubTreeBuilder implements Builder
+{
+    protected function buildColRef(array $parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction(array $parsed) {
+    protected function buildFunction(array $parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator(array $parsed) {
+    protected function buildOperator(array $parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant(array $parsed) {
+    protected function buildConstant(array $parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildInList(array $parsed) {
+    protected function buildInList(array $parsed)
+    {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved(array $parsed) {
+    protected function buildReserved(array $parsed)
+    {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery(array $parsed) {
+    protected function buildSubQuery(array $parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildQuery(array $parsed) {
+    protected function buildQuery(array $parsed)
+    {
         $builder = new QueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression(array $parsed) {
+    protected function buildSelectBracketExpression(array $parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariable(array $parsed) {
+    protected function buildUserVariable(array $parsed)
+    {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSign(array $parsed) {
+    protected function buildSign(array $parsed)
+    {
         $builder = new SignBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed, $delim = " ") {
+    public function build(array $parsed, $delim = ' ')
+    {
         if ($parsed['sub_tree'] === '' || $parsed['sub_tree'] === false) {
-            return "";
+            return '';
         }
-        $sql = "";
+        $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildColRef($v);
@@ -139,4 +154,3 @@ class SubTreeBuilder implements Builder {
         return substr($sql, 0, -strlen($delim));
     }
 }
-?>

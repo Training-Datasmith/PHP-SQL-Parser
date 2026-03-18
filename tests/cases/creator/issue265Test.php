@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue265.php
  *
@@ -7,8 +9,8 @@
 
 namespace PHPSQLParser\Test\Creator;
 
-use PHPSQLParser\PHPSQLParser;
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
 class Issue265Test extends \PHPUnit\Framework\TestCase
 {
@@ -18,7 +20,7 @@ class Issue265Test extends \PHPUnit\Framework\TestCase
      */
     public function testIssue265()
     {
-        $sql = "CREATE TABLE IF NOT EXISTS example (`type` varchar (255) CHARACTER SET utf8 NOT NULL) DEFAULT CHARACTER SET utf8";
+        $sql = 'CREATE TABLE IF NOT EXISTS example (`type` varchar (255) CHARACTER SET utf8 NOT NULL) DEFAULT CHARACTER SET utf8';
 
         $parser  = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);

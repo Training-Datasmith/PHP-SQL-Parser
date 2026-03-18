@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * inlist.php
  *
@@ -31,20 +33,23 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class inlistTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testInlist() {
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class inlistTest extends \PHPUnit\Framework\TestCase
+{
+    public function testInlist()
+    {
         $sql = "SELECT * FROM contacts WHERE contacts.id IN (SELECT email_addr_bean_rel.bean_id FROM email_addr_bean_rel, email_addresses WHERE email_addresses.id = email_addr_bean_rel.email_address_id AND email_addr_bean_rel.deleted = 0 AND email_addr_bean_rel.bean_module = 'Contacts' AND email_addresses.email_address IN (\"test@example.com\"))";
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
@@ -54,7 +59,8 @@ class inlistTest extends \PHPUnit\Framework\TestCase {
 
     }
 
-    public function testInSubtree() {
+    public function testInSubtree()
+    {
         $sql = 'SELECT CASE WHEN 2 IN (2, 3) THEN "yes" ELSE "no" END';
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);

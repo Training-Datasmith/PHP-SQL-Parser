@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue112.php
  *
@@ -31,20 +33,23 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue112Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue112() {
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class issue112Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue112()
+    {
         $sql = 'SELECT user, MAX(salary) FROM users GROUP BY user HAVING MAX(salary) > 10';
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
@@ -54,4 +59,3 @@ class issue112Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

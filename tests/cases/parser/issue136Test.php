@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue136.php
  *
@@ -31,20 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\utils\ExpressionType;
 
-class Issue136Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue136a() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class Issue136Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue136a()
+    {
         $sql = "WITH myTableName AS (
                 select firstname, lastname from employee where lastname = 'test'
                 )
@@ -55,7 +59,8 @@ class Issue136Test extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $p, 'ORACLE\'s WITH statement');
     }
 
-    public function testIssue136b() {
+    public function testIssue136b()
+    {
         $sql = "WITH myTableName AS (
                 select firstname, lastname from employee where lastname = 'test'
                 ), another_table AS (
@@ -68,4 +73,3 @@ class Issue136Test extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $p, 'ORACLE\'s WITH statement');
     }
 }
-?>

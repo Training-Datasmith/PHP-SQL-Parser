@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
 class issue355Test extends \PHPUnit\Framework\TestCase
 {
-	public function testIssue322()
-	{
-        $sql = "
+    public function testIssue322()
+    {
+        $sql = '
             CREATE TABLE `test_alias` (
               `a` INTEGER,
               `b` CHARACTER(10),
@@ -21,8 +23,8 @@ class issue355Test extends \PHPUnit\Framework\TestCase
               `i` FLOAT8,
               `j` MIDDLEINT
             );
-        ";
-		$parser = new PHPSQLParser();
+        ';
+        $parser = new PHPSQLParser();
         $parser->parse($sql, true);
         // We expect to see 10 parsed columns
         $this->assertEquals(
@@ -32,4 +34,3 @@ class issue355Test extends \PHPUnit\Framework\TestCase
 
     }
 }
-

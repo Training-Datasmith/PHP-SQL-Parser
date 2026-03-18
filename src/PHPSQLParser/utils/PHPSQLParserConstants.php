@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * constants.php
  *
@@ -31,12 +33,13 @@
  */
 
 namespace PHPSQLParser\utils;
-class PHPSQLParserConstants {
 
+class PHPSQLParserConstants
+{
     private static $inst;
 
-    protected $customFunctions = array();
-    protected $reserved = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST', 'ASCII',
+    protected $customFunctions = [];
+    protected $reserved = ['ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST', 'ASCII',
                                 'ASIN', 'ATAN', 'AVG', 'BENCHMARK', 'BIN', 'BIT_AND', 'BIT_OR', 'BITCOUNT',
                                 'BITLENGTH', 'CAST', 'CEILING', 'CHAR', 'CHAR_LENGTH', 'CHARACTER_LENGTH', 'CHARSET',
                                 'COALESCE', 'COERCIBILITY', 'COLLATION', 'COMPRESS', 'CONCAT', 'CONCAT_WS',
@@ -93,9 +96,9 @@ class PHPSQLParserConstants {
                                 'TINYINT', 'TINYTEXT', 'TO', 'TRAILING', 'UNDO', 'UNION', 'UNIQUE', 'UNLOCK',
                                 'UNSIGNED', 'UPDATE', 'USAGE', 'USE', 'USER_RESOURCES', 'USING', 'UTC_DATE',
                                 'UTC_TIME', 'UTC_TIMESTAMP', 'VALUES', 'VARBINARY', 'VARCHAR', 'VARCHARACTER',
-                                'VARYING', 'WHEN', 'WHERE', 'WHILE', 'WITH', 'WRITE', 'XOR', 'YEAR_MONTH', 'ZEROFILL');
+                                'VARYING', 'WHEN', 'WHERE', 'WHILE', 'WITH', 'WRITE', 'XOR', 'YEAR_MONTH', 'ZEROFILL'];
 
-    protected $parameterizedFunctions = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT',
+    protected $parameterizedFunctions = ['ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT',
                                               'AGAINST', 'ASCII', 'ASIN', 'ATAN', 'AVG', 'BENCHMARK', 'BIN', 'BIT_AND',
                                               'BIT_OR', 'BITCOUNT', 'BITLENGTH', 'CAST', 'CEILING', 'CHAR',
                                               'CHAR_LENGTH', 'CHARACTER_LENGTH', 'CHARSET', 'COALESCE', 'COERCIBILITY',
@@ -122,9 +125,9 @@ class PHPSQLParserConstants {
                                               'TIMESTAMPDIFF', 'TIME_FORMAT', 'TIME_TO_SEC', 'TO_DAYS', 'TRIM',
                                               'TRUNCATE', 'UCASE', 'UNCOMPRESS', 'UNCOMPRESSED_LENGTH', 'UNHEX',
                                               'UPPER', 'VAR_POP', 'VAR_SAMP', 'VARIANCE', 'WEEK', 'WEEKDAY',
-                                              'WEEKOFYEAR', 'YEAR', 'YEARWEEK');
+                                              'WEEKOFYEAR', 'YEAR', 'YEARWEEK'];
 
-    protected $functions = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST', 'ASCII',
+    protected $functions = ['ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST', 'ASCII',
                                  'ASIN', 'ATAN', 'AVG', 'BENCHMARK', 'BIN', 'BIT_AND', 'BIT_OR', 'BITCOUNT',
                                  'BITLENGTH', 'CAST', 'CEILING', 'CHAR', 'CHAR_LENGTH', 'CHARACTER_LENGTH', 'CHARSET',
                                  'COALESCE', 'COERCIBILITY', 'COLLATION', 'COMPRESS', 'CONCAT', 'CONCAT_WS',
@@ -150,18 +153,19 @@ class PHPSQLParserConstants {
                                  'TIME_FORMAT', 'TIME_TO_SEC', 'TO_DAYS', 'TRIM', 'TRUNCATE', 'UCASE', 'UNCOMPRESS',
                                  'UNCOMPRESSED_LENGTH', 'UNHEX', 'UNIX_TIMESTAMP', 'UPPER', 'USER', 'UTC_DATE',
                                  'UTC_TIME', 'UTC_TIMESTAMP', 'UUID', 'VAR_POP', 'VAR_SAMP', 'VARIANCE', 'VERSION',
-                                 'WEEK', 'WEEKDAY', 'WEEKOFYEAR', 'YEAR', 'YEARWEEK');
+                                 'WEEK', 'WEEKDAY', 'WEEKOFYEAR', 'YEAR', 'YEARWEEK'];
 
-    protected $aggregateFunctions = array('AVG', 'SUM', 'COUNT', 'MIN', 'MAX', 'STD', 'STDDEV', 'STDDEV_SAMP',
+    protected $aggregateFunctions = ['AVG', 'SUM', 'COUNT', 'MIN', 'MAX', 'STD', 'STDDEV', 'STDDEV_SAMP',
                                           'STDDEV_POP', 'VARIANCE', 'VAR_SAMP', 'VAR_POP', 'GROUP_CONCAT', 'BIT_AND',
-                                          'BIT_OR', 'BIT_XOR');
+                                          'BIT_OR', 'BIT_XOR'];
 
     /**
      * Call this method to get singleton
      *
      * @return PHPSQLParserConstants
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (!isset(self::$inst)) {
             self::$inst = new PHPSQLParserConstants();
         }
@@ -172,48 +176,57 @@ class PHPSQLParserConstants {
      * Private ctor so nobody else can instance it
      *
      */
-    private function __construct() {
+    private function __construct()
+    {
         $this->reserved = array_flip($this->reserved);
         $this->aggregateFunctions = array_flip($this->aggregateFunctions);
         $this->functions = array_flip($this->functions);
         $this->parameterizedFunctions = array_flip($this->parameterizedFunctions);
     }
 
-    private function __clone() {
+    private function __clone()
+    {
     }
 
-    public function isAggregateFunction($token) {
+    public function isAggregateFunction($token)
+    {
         return isset($this->aggregateFunctions[$token]);
     }
 
-    public function isReserved($token) {
+    public function isReserved($token)
+    {
         return isset($this->reserved[$token]);
     }
 
-    public function isFunction($token) {
+    public function isFunction($token)
+    {
         return isset($this->functions[$token]);
     }
 
-    public function isParameterizedFunction($token) {
+    public function isParameterizedFunction($token)
+    {
         return isset($this->parameterizedFunctions[$token]);
     }
 
-    public function isCustomFunction($token) {
+    public function isCustomFunction($token)
+    {
         return isset($this->customFunctions[$token]);
     }
 
-    public function addCustomFunction($token) {
+    public function addCustomFunction($token)
+    {
         $token = strtoupper(trim($token));
         $this->customFunctions[$token] = true;
     }
 
-    public function removeCustomFunction($token) {
+    public function removeCustomFunction($token)
+    {
         $token = strtoupper(trim($token));
         unset($this->customFunctions[$token]);
     }
 
-    public function getCustomFunctions() {
+    public function getCustomFunctions()
+    {
         return array_keys($this->customFunctions);
     }
 }
-?>

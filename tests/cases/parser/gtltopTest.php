@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * gtltop.php
  *
@@ -31,20 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class gtltopTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testGtltop() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class gtltopTest extends \PHPUnit\Framework\TestCase
+{
+    public function testGtltop()
+    {
         $parser = new PHPSQLParser();
 
         $sql = 'SELECT c1
@@ -57,4 +61,3 @@ class gtltopTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

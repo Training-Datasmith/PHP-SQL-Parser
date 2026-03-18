@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * LimitProcessor.php
  *
@@ -43,36 +45,37 @@ namespace PHPSQLParser\processors;
 
 /**
  * This class processes the LIMIT statements.
- * 
+ *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- * 
+ *
  */
-class LimitProcessor extends AbstractProcessor {
-
-    public function process($tokens) {
-        $rowcount = "";
-        $offset = "";
+class LimitProcessor extends AbstractProcessor
+{
+    public function process($tokens)
+    {
+        $rowcount = '';
+        $offset = '';
 
         $comma = -1;
         $exchange = false;
-        
-        $comments = array();
-        
+
+        $comments = [];
+
         foreach ($tokens as &$token) {
             if ($this->isCommentToken($token)) {
-                 $comments[] = parent::processComment($token);
-                 $token = '';
+                $comments[] = parent::processComment($token);
+                $token = '';
             }
         }
-        
+
         for ($i = 0; $i < count($tokens); ++$i) {
             $trim = strtoupper(trim($tokens[$i]));
-            if ($trim === ",") {
+            if ($trim === ',') {
                 $comma = $i;
                 break;
             }
-            if ($trim === "OFFSET") {
+            if ($trim === 'OFFSET') {
                 $comma = $i;
                 $exchange = true;
                 break;
@@ -95,11 +98,10 @@ class LimitProcessor extends AbstractProcessor {
             }
         }
 
-        $return = array('offset' => trim($offset), 'rowcount' => trim($rowcount));
+        $return = ['offset' => trim($offset), 'rowcount' => trim($rowcount)];
         if (count($comments)) {
             $return['comments'] = $comments;
         }
         return $return;
     }
 }
-?>

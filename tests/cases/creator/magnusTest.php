@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * magnus.php
  *
@@ -31,21 +33,24 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class magnusTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testMagnus() {
-        $sql = "SELECT
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class magnusTest extends \PHPUnit\Framework\TestCase
+{
+    public function testMagnus()
+    {
+        $sql = 'SELECT
          u.`id` AS userid,
         u.`user` AS username,
          u.`firstname`,
@@ -55,7 +60,7 @@ class magnusTest extends \PHPUnit\Framework\TestCase {
          FROM
         `user` u
          ORDER BY
-         u.`user` DESC";
+         u.`user` DESC';
 
         $parser = new PHPSQLParser();
         $parsed = $parser->parse($sql);
@@ -66,4 +71,3 @@ class magnusTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

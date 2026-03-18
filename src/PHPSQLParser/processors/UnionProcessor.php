@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * WhereProcessor.php
  *
@@ -48,20 +50,23 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UnionProcessor extends AbstractProcessor {
-
-    protected function processDefault($token) {
+class UnionProcessor extends AbstractProcessor
+{
+    protected function processDefault($token)
+    {
         $processor = new DefaultProcessor($this->options);
         return $processor->process($token);
     }
 
-    protected function processSQL($token) {
+    protected function processSQL($token)
+    {
         $processor = new SQLProcessor($this->options);
         return $processor->process($token);
     }
 
-    public static function isUnion(array $queries) {
-        $unionTypes = array('UNION', 'UNION ALL');
+    public static function isUnion(array $queries)
+    {
+        $unionTypes = ['UNION', 'UNION ALL'];
         foreach ($unionTypes as $unionType) {
             if (!empty($queries[$unionType])) {
                 return true;
@@ -80,8 +85,9 @@ class UnionProcessor extends AbstractProcessor {
      * is supported in each UNION block. (select)(select)union(select) is not legal.
      * The extra queries will be silently ignored.
      */
-    protected function processMySQLUnion(array $queries) {
-        $unionTypes = array('UNION', 'UNION ALL');
+    protected function processMySQLUnion(array $queries)
+    {
+        $unionTypes = ['UNION', 'UNION ALL'];
         foreach ($unionTypes as $unionType) {
 
             if (empty($queries[$unionType])) {
@@ -91,12 +97,12 @@ class UnionProcessor extends AbstractProcessor {
             foreach ($queries[$unionType] as $key => $tokenList) {
                 foreach ($tokenList as $token) {
                     $token = trim($token);
-                    if ($token === "") {
+                    if ($token === '') {
                         continue;
                     }
 
                     // starts with "(select"
-                    if (preg_match("/^\\(\\s*select\\s*/i", $token)) {
+                    if (preg_match('/^\\(\\s*select\\s*/i', $token)) {
                         $queries[$unionType][$key] = $this->processDefault($this->removeParenthesisFromStart($token));
                         break;
                     }
@@ -122,7 +128,7 @@ class UnionProcessor extends AbstractProcessor {
         $finalQueryFound = false;
         if (count($outputArray) === 1) {
             $tokenAsArray = str_split(trim($outputArray[0]));
-            if ($tokenAsArray[0] == '(' && $tokenAsArray[count($tokenAsArray)-1] == ')') {
+            if ($tokenAsArray[0] == '(' && $tokenAsArray[count($tokenAsArray) - 1] == ')') {
                 $queries[$unionType][] = $outputArray;
                 $finalQueryFound = true;
             }
@@ -138,7 +144,6 @@ class UnionProcessor extends AbstractProcessor {
                 }
             }
         }
-
 
         $finalQueryString = trim(implode('', $finalQuery));
 
@@ -157,8 +162,9 @@ class UnionProcessor extends AbstractProcessor {
         return $queries;
     }
 
-    public function process($inputArray) {
-        $outputArray = array();
+    public function process($inputArray)
+    {
+        $outputArray = [];
 
         // ometimes the parser needs to skip ahead until a particular
         // oken is found
@@ -171,14 +177,14 @@ class UnionProcessor extends AbstractProcessor {
 
         // ometimes a "query" consists of more than one query (like a UNION query)
         // his array holds all the queries
-        $queries = array();
+        $queries = [];
 
         foreach ($inputArray as $key => $token) {
             $trim = trim($token);
 
             // overread all tokens till that given token
             if ($skipUntilToken) {
-                if ($trim === "") {
+                if ($trim === '') {
                     continue; // read the next token
                 }
                 if (strtoupper($trim) === $skipUntilToken) {
@@ -187,29 +193,29 @@ class UnionProcessor extends AbstractProcessor {
                 }
             }
 
-            if (strtoupper($trim) !== "UNION") {
+            if (strtoupper($trim) !== 'UNION') {
                 $outputArray[] = $token; // here we get empty tokens, if we remove these, we get problems in parse_sql()
                 continue;
             }
 
-            $unionType = "UNION";
+            $unionType = 'UNION';
 
             // we are looking for an ALL token right after UNION
             for ($i = $key + 1; $i < count($inputArray); ++$i) {
-                if (trim($inputArray[$i]) === "") {
+                if (trim($inputArray[$i]) === '') {
                     continue;
                 }
-                if (strtoupper($inputArray[$i]) !== "ALL") {
+                if (strtoupper($inputArray[$i]) !== 'ALL') {
                     break;
                 }
                 // the other for-loop should overread till "ALL"
-                $skipUntilToken = "ALL";
-                $unionType = "UNION ALL";
+                $skipUntilToken = 'ALL';
+                $unionType = 'UNION ALL';
             }
 
             // store the tokens related to the unionType
             $queries[$unionType][] = $outputArray;
-            $outputArray = array();
+            $outputArray = [];
         }
 
         // the query tokens after the last UNION or UNION ALL
@@ -225,4 +231,3 @@ class UnionProcessor extends AbstractProcessor {
         return $this->processMySQLUnion($queries);
     }
 }
-?>

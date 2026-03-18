@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue78.php
  *
@@ -31,28 +33,31 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue78Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue78() {
-        $sql = "show columns from `foo.bar`";
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class issue78Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue78()
+    {
+        $sql = 'show columns from `foo.bar`';
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
         $expected = getExpectedValue(dirname(__FILE__), 'issue78a.sql', false);
         $this->assertSame($expected, $created, 'show columns from');
 
-        $sql = "show CREATE DATABASE `foo`";
+        $sql = 'show CREATE DATABASE `foo`';
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
@@ -66,7 +71,7 @@ class issue78Test extends \PHPUnit\Framework\TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'issue78c.sql', false);
         $this->assertSame($expected, $created, 'show databases like');
 
-        $sql = "SHOW ENGINE foo STATUS";
+        $sql = 'SHOW ENGINE foo STATUS';
         $parser = new PHPSQLParser($sql, true);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
@@ -82,4 +87,3 @@ class issue78Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue36.php
  *
@@ -31,21 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue36Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue36() {
-
+class issue36Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue36()
+    {
 
         $parser = new PHPSQLParser();
 
@@ -55,13 +58,11 @@ class issue36Test extends \PHPUnit\Framework\TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'issue36a.serialized');
         $this->assertEquals($expected, $p, 'INSERT statement with escaped quotes and multiple records');
 
-
         $sql = "INSERT INTO test (`name`, `test`) VALUES ('\'Superman\'', '')";
         $parser->parse($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue36b.serialized');
         $this->assertEquals($expected, $p, 'INSERT statement with escaped quotes and one record');
-
 
         $sql = "INSERT INTO test (`name`, `test`) VALUES ('\'Superman\'', ''), ('\'sdfsd\'', '')";
         $parser->parse($sql);
@@ -71,4 +72,3 @@ class issue36Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

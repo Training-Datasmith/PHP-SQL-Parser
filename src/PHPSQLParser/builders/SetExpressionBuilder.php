@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * SetExpressionBuilder.php
  *
@@ -31,59 +33,67 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 use PHPSQLParser\utils\ExpressionType;
 
 /**
- * This class implements the builder for the SET part of INSERT statement. 
+ * This class implements the builder for the SET part of INSERT statement.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class SetExpressionBuilder implements Builder {
-
-    protected function buildColRef(array $parsed) {
+class SetExpressionBuilder implements Builder
+{
+    protected function buildColRef(array $parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant(array $parsed) {
+    protected function buildConstant(array $parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildOperator(array $parsed) {
+
+    protected function buildOperator(array $parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildFunction(array $parsed) {
+
+    protected function buildFunction(array $parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildBracketExpression(array $parsed) {
+
+    protected function buildBracketExpression(array $parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildSign(array $parsed) {
+
+    protected function buildSign(array $parsed)
+    {
         $builder = new SignBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+
+    public function build(array $parsed)
+    {
         if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
             return '';
         }
@@ -96,14 +106,14 @@ class SetExpressionBuilder implements Builder {
             $sql .= $this->buildOperator($v);
             $sql .= $this->buildFunction($v);
             $sql .= $this->buildBracketExpression($v);
-                        
-            // we don't need whitespace between the sign and 
+
+            // we don't need whitespace between the sign and
             // the following part
             if ($this->buildSign($v) !== '') {
                 $delim = '';
             }
             $sql .= $this->buildSign($v);
-            
+
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('SET expression subtree', $k, $v, 'expr_type');
             }
@@ -113,4 +123,3 @@ class SetExpressionBuilder implements Builder {
         return substr($sql, 0, -1);
     }
 }
-?>

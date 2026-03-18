@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue299.php
  *
@@ -38,9 +40,11 @@
  * @version   SVN: $Id$
  *
  */
+
 namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
+
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
 class issue316Test extends \PHPUnit\Framework\TestCase
 {

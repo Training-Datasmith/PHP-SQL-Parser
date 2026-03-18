@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * SelectExpressionProcessor.php
  *
@@ -31,6 +33,7 @@
  */
 
 namespace PHPSQLParser\processors;
+
 use PHPSQLParser\utils\ExpressionType;
 
 /**
@@ -40,9 +43,10 @@ use PHPSQLParser\utils\ExpressionType;
  * @author arothe
  *
  */
-class SelectExpressionProcessor extends AbstractProcessor {
-
-    protected function processExpressionList($unparsed) {
+class SelectExpressionProcessor extends AbstractProcessor
+{
+    protected function processExpressionList($unparsed)
+    {
         $processor = new ExpressionListProcessor($this->options);
         return $processor->process($unparsed);
     }
@@ -52,7 +56,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
      * We determine what (if any) alias
      * is provided, and we set the type of expression.
      */
-    public function process($expression) {
+    public function process($expression)
+    {
         $tokens = $this->splitSQLIntoTokens($expression);
         $token_count = count($tokens);
         if ($token_count === 0) {
@@ -64,8 +69,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
          * If AS is found, then the next non-whitespace token is captured as the alias.
          * The tokens after (and including) the AS are removed.
          */
-        $base_expr = "";
-        $stripped = array();
+        $base_expr = '';
+        $stripped = [];
         $capture = false;
         $alias = false;
         $processed = false;
@@ -75,8 +80,8 @@ class SelectExpressionProcessor extends AbstractProcessor {
             $upper = strtoupper($token);
 
             if ($upper === 'AS') {
-                $alias = array('as' => true, "name" => "", "base_expr" => $token);
-                $tokens[$i] = "";
+                $alias = ['as' => true, 'name' => '', 'base_expr' => $token];
+                $tokens[$i] = '';
                 $capture = true;
                 continue;
             }
@@ -93,7 +98,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
                     array_pop($stripped);
                 }
                 $alias['base_expr'] .= $token;
-                $tokens[$i] = "";
+                $tokens[$i] = '';
                 continue;
             }
 
@@ -123,11 +128,11 @@ class SelectExpressionProcessor extends AbstractProcessor {
 
             if ($this->isReserved($prev) || $this->isConstant($prev) || $this->isAggregateFunction($prev)
                     || $this->isFunction($prev) || $this->isExpression($prev) || $this->isSubQuery($prev)
-                    || $this->isColumnReference($prev) || $this->isBracketExpression($prev)|| $this->isCustomFunction($prev)) {
+                    || $this->isColumnReference($prev) || $this->isBracketExpression($prev) || $this->isCustomFunction($prev)) {
 
-                $alias = array('as' => false, 'name' => trim($last['base_expr']),
+                $alias = ['as' => false, 'name' => trim($last['base_expr']),
                                'no_quotes' => $this->revokeQuotation($last['base_expr']),
-                               'base_expr' => trim($last['base_expr']));
+                               'base_expr' => trim($last['base_expr'])];
                 // remove the last token
                 array_pop($tokens);
             }
@@ -150,7 +155,7 @@ class SelectExpressionProcessor extends AbstractProcessor {
             }
         }
 
-        $result = array();
+        $result = [];
         $result['expr_type'] = $type;
         $result['alias'] = $alias;
         $result['base_expr'] = trim($base_expr);
@@ -162,4 +167,3 @@ class SelectExpressionProcessor extends AbstractProcessor {
     }
 
 }
-?>

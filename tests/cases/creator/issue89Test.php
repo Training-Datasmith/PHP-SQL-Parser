@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue89.php
  *
@@ -31,20 +33,23 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue89Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue89() {
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class issue89Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue89()
+    {
         $sql = "select ut.id, ut.numero_cartella, ut.nome, ut.cognome, floor(DATEDIFF(de.`data`,ut.data_di_nascita)/365) as eta,
         sx.valore as sesso, cd.valore as diagnosi_prevalente, co.valore as consapevolezza,
         DATEDIFF(de.`data`,az.data_inizio_assistenza) as durata_assistenza_giorni, ld.valore as luogo_decesso,
@@ -59,4 +64,3 @@ class issue89Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

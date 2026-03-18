@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @author     mfris
  *
@@ -13,7 +15,6 @@ namespace PHPSQLParser;
  */
 final class Options
 {
-
     /**
      * @var array
      */
@@ -22,12 +23,12 @@ final class Options
     /**
      * @const string
      */
-    const CONSISTENT_SUB_TREES = 'consistent_sub_trees';
+    public const CONSISTENT_SUB_TREES = 'consistent_sub_trees';
 
     /**
      * @const string
      */
-    const ANSI_QUOTES = 'ansi_quotes';
+    public const ANSI_QUOTES = 'ansi_quotes';
 
     /**
      * Options constructor.

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue108.php
  *
@@ -31,35 +33,36 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
 use PHPSQLParser\utils\ExpressionType;
 
-
-class issue108Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue108() {
+class issue108Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue108()
+    {
         try {
-            $sql = "CREATE TABLE IF NOT EXISTS `engine4_urdemo_causebug` (
+            $sql = 'CREATE TABLE IF NOT EXISTS `engine4_urdemo_causebug` (
           `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
           `extra` int(11)  NOT NULL DEFAULT 56,
           PRIMARY KEY (`id`),
           INDEX client_idx (id)
-        ) ENGINE=InnoDB;";
+        ) ENGINE=InnoDB;';
             $parser = new PHPSQLParser($sql, true);
             $p = $parser->parsed;
         } catch (\Exception $e) {
-            $p = array();
+            $p = [];
         }
 
         $this->assertSame(ExpressionType::INDEX, $p['TABLE']['create-def']['sub_tree'][3]['expr_type'], 'position calculation should handle INDEX');
     }
 }
-

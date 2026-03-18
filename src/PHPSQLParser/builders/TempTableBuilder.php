@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * TempTableBuilder.php
  *
@@ -31,48 +33,54 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\utils\ExpressionType;
 
 /**
- * This class implements the builder for the temporary table name and join options. 
+ * This class implements the builder for the temporary table name and join options.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class TempTableBuilder implements Builder {
-
-    protected function buildAlias(array $parsed) {
+class TempTableBuilder implements Builder
+{
+    protected function buildAlias(array $parsed)
+    {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildJoin($parsed) {
+    protected function buildJoin($parsed)
+    {
         $builder = new JoinBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildRefType($parsed) {
+    protected function buildRefType($parsed)
+    {
         $builder = new RefTypeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildRefClause(array $parsed) {
+    protected function buildRefClause(array $parsed)
+    {
         $builder = new RefClauseBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed, $index = 0) {
+    public function build(array $parsed, $index = 0)
+    {
         if ($parsed['expr_type'] !== ExpressionType::TEMPORARY_TABLE) {
             return '';
         }
@@ -88,4 +96,3 @@ class TempTableBuilder implements Builder {
         return $sql;
     }
 }
-?>

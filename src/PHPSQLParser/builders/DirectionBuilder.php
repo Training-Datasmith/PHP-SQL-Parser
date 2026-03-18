@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * DirectionBuilder.php
  *
@@ -31,31 +33,31 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
 
 /**
- * This class implements the builder for directions (e.g. of the order-by clause). 
+ * This class implements the builder for directions (e.g. of the order-by clause).
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class DirectionBuilder implements Builder {
-
-    public function build(array $parsed) {
+class DirectionBuilder implements Builder
+{
+    public function build(array $parsed)
+    {
         if (!isset($parsed['direction']) || $parsed['direction'] === false) {
-            return "";
+            return '';
         }
-        return (" " . $parsed['direction']);
+        return (' ' . $parsed['direction']);
     }
 }
-?>

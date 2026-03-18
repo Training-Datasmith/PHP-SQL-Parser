@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * insert.php
  *
@@ -31,20 +33,23 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class insertTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testInsert() {
+namespace PHPSQLParser\Test\Creator;
+
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+
+class insertTest extends \PHPUnit\Framework\TestCase
+{
+    public function testInsert()
+    {
         $sql = "INSERT INTO test (`name`, `test`) VALUES ('\'Superman\'', ''), ('\'Superman\'', '')";
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
@@ -52,14 +57,12 @@ class insertTest extends \PHPUnit\Framework\TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'insert1.sql', false);
         $this->assertSame($expected, $created, 'multiple records within INSERT');
 
-
         $sql = "INSERT INTO test (`name`, `test`) VALUES ('\'Superman\'', '')";
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;
         $expected = getExpectedValue(dirname(__FILE__), 'insert2.sql', false);
         $this->assertSame($expected, $created, 'a simple INSERT statement');
-
 
         $sql = "INSERT INTO test (`name`, `test`) VALUES ('\'Superman\'', ''), ('\'sdfsd\'', '')";
         $parser = new PHPSQLParser($sql);
@@ -70,4 +73,3 @@ class insertTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

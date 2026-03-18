@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * nestedTest.php
  *
@@ -31,20 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class NestedTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testNested1() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class NestedTest extends \PHPUnit\Framework\TestCase
+{
+    public function testNested1()
+    {
         $parser = new PHPSQLParser();
 
         $sql = 'SELECT *
@@ -56,11 +60,12 @@ class NestedTest extends \PHPUnit\Framework\TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'nested1.serialized');
         $this->assertEquals($expected, $p, 'nested left joins');
     }
-    
-    public function testNested2() {
-    	$parser = new PHPSQLParser();
-        $sql = "SELECT * FROM t1 LEFT JOIN (t2, t3, t4)
-                         ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c)";
+
+    public function testNested2()
+    {
+        $parser = new PHPSQLParser();
+        $sql = 'SELECT * FROM t1 LEFT JOIN (t2, t3, t4)
+                         ON (t2.a=t1.a AND t3.b=t1.b AND t4.c=t1.c)';
         $parser->parse($sql);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'nested2.serialized');
@@ -68,4 +73,3 @@ class NestedTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-?>

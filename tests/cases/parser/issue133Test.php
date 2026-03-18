@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue133.php
  *
@@ -31,29 +33,30 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue133Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue133() {
+class issue133Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue133()
+    {
 
-
-        $sql = "SELECT x,y,z FROM MDR1.Particles85 WHERE RAND(154321) <= 2.91E-5";
+        $sql = 'SELECT x,y,z FROM MDR1.Particles85 WHERE RAND(154321) <= 2.91E-5';
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue133a.serialized');
         $this->assertEquals($expected, $p, 'scientific numbers');
 
-        $sql = "SELECT x,y,z FROM MDR1.Particles85 WHERE RAND(154321) <= 2E+5";
+        $sql = 'SELECT x,y,z FROM MDR1.Particles85 WHERE RAND(154321) <= 2E+5';
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue133b.serialized');
@@ -61,4 +64,3 @@ class issue133Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

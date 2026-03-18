@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue62.php
  *
@@ -31,42 +33,40 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue62Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue62() {
-
+class issue62Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue62()
+    {
 
         $sql = "SELECT CAST((CONCAT(table1.col1,' ',time_start)) AS DATETIME) FROM table1";
-        $parser = new PHPSQLParser($sql,true);
+        $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue62a.serialized');
         $this->assertEquals($expected, $p, 'CAST expression');
 
-
-        $sql = "UPDATE vtiger_tab set isentitytype=? WHERE tabid=?";
-        $parser = new PHPSQLParser($sql,true);
+        $sql = 'UPDATE vtiger_tab set isentitytype=? WHERE tabid=?';
+        $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue62b.serialized');
         $this->assertEquals($expected, $p, '? after operand');
 
-
-        $sql = "SELECT * FROM table1 IGNORE INDEX(PRIMARY)";
-        $parser = new PHPSQLParser($sql,false);
+        $sql = 'SELECT * FROM table1 IGNORE INDEX(PRIMARY)';
+        $parser = new PHPSQLParser($sql, false);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'issue62c.serialized');
         $this->assertEquals($expected, $p, 'IGNORE INDEX within FROM clause');
 
     }
 }
-

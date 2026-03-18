@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * DropIndexBuilder.php
  *
@@ -45,19 +47,20 @@ namespace PHPSQLParser\builders;
  * This class implements the builder for the DROP INDEX statement. You can overwrite
  * all functions to achieve another handling.
  */
-class DropIndexBuilder implements Builder {
+class DropIndexBuilder implements Builder
+{
+    protected function buildIndexTable(array $parsed)
+    {
+        $builder = new DropIndexTableBuilder();
+        return $builder->build($parsed);
+    }
 
-	protected function buildIndexTable(array $parsed) {
-		$builder = new DropIndexTableBuilder();
-		return $builder->build($parsed);
-	}
-
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $parsed['name'];
-	    $sql = trim($sql);
-	    $sql .= ' ' . $this->buildIndexTable($parsed);
+        $sql = trim($sql);
+        $sql .= ' ' . $this->buildIndexTable($parsed);
         return trim($sql);
     }
 
 }
-?>

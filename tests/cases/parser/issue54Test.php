@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue54.php
  *
@@ -31,25 +33,27 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue54Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue54() {
-
+class issue54Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue54()
+    {
 
         $errorNumber = 0;
 
-        function issue54ErrorHandler($errno, $errstr, $errfile, $errline) {
+        function issue54ErrorHandler($errno, $errstr, $errfile, $errline)
+        {
             global $errorNumber;
             $errorNumber = $errno;
             return true;
@@ -57,7 +61,7 @@ class issue54Test extends \PHPUnit\Framework\TestCase {
         $old_error_handler = set_error_handler(__NAMESPACE__ . "\issue54ErrorHandler");
 
         $parser = new PHPSQLParser();
-        $sql = "SELECT schema.`table`.c as b, sum(id + 5 * (5 + 5)) as p FROM schema.table WHERE a=1 GROUP BY c HAVING p > 10 ORDER BY p DESC";
+        $sql = 'SELECT schema.`table`.c as b, sum(id + 5 * (5 + 5)) as p FROM schema.table WHERE a=1 GROUP BY c HAVING p > 10 ORDER BY p DESC';
         $parser->parse($sql);
         $p = $parser->parsed;
 
@@ -69,4 +73,3 @@ class issue54Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

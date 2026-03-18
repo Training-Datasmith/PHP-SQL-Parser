@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * backtick.php
  *
@@ -31,20 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class backtickTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testBacktick() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class backtickTest extends \PHPUnit\Framework\TestCase
+{
+    public function testBacktick()
+    {
         $parser = new PHPSQLParser();
 
         $sql = 'SELECT c1.`some_column` or `c1`.`another_column` or c1.`some column` as `an alias`
@@ -55,7 +59,6 @@ class backtickTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('c1.`some column`', $parser->parsed['SELECT'][0]['sub_tree'][4]['base_expr']);
         $this->assertEquals('alias', $parser->parsed['GROUP'][0]['expr_type']);
 
-
         $sql = "INSERT INTO test (`name`) VALUES ('ben\\'s test containing an escaped quote')";
         $parser->parse($sql);
         $p = $parser->parsed;
@@ -64,4 +67,3 @@ class backtickTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

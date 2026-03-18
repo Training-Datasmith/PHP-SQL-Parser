@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * PEAR_Sniffs_Functions_FunctionDeclarationSniff.
  *
@@ -25,8 +27,8 @@
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffer_Sniff {
-
+class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffer_Sniff
+{
     /**
      * The number of spaces code should be indented.
      *
@@ -39,8 +41,9 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return array
      */
-    public function register() {
-        return array(T_FUNCTION, T_CLOSURE,);
+    public function register()
+    {
+        return [T_FUNCTION, T_CLOSURE,];
 
     }//end register()
 
@@ -53,7 +56,8 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr) {
+    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
         $tokens = $phpcsFile->getTokens();
 
         $spaces = 0;
@@ -63,7 +67,7 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
 
         if ($spaces !== 1) {
             $error = 'Expected 1 space after FUNCTION keyword; %s found';
-            $data = array($spaces);
+            $data = [$spaces];
             $phpcsFile->addError($error, $stackPtr, 'SpaceAfterFunction', $data);
         }
 
@@ -75,7 +79,7 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
             if ($use !== false) {
                 if ($tokens[($use + 1)]['code'] !== T_WHITESPACE) {
                     $length = 0;
-                } else if ($tokens[($use + 1)]['content'] === "\t") {
+                } elseif ($tokens[($use + 1)]['content'] === "\t") {
                     $length = '\t';
                 } else {
                     $length = strlen($tokens[($use + 1)]['content']);
@@ -83,13 +87,13 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
 
                 if ($length !== 1) {
                     $error = 'Expected 1 space after USE keyword; found %s';
-                    $data = array($length);
+                    $data = [$length];
                     $phpcsFile->addError($error, $use, 'SpaceAfterUse', $data);
                 }
 
                 if ($tokens[($use - 1)]['code'] !== T_WHITESPACE) {
                     $length = 0;
-                } else if ($tokens[($use - 1)]['content'] === "\t") {
+                } elseif ($tokens[($use - 1)]['content'] === "\t") {
                     $length = '\t';
                 } else {
                     $length = strlen($tokens[($use - 1)]['content']);
@@ -97,7 +101,7 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
 
                 if ($length !== 1) {
                     $error = 'Expected 1 space before USE keyword; found %s';
-                    $data = array($length);
+                    $data = [$length];
                     $phpcsFile->addError($error, $use, 'SpaceBeforeUse', $data);
                 }
             }//end if
@@ -143,10 +147,12 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return void
      */
-    public function processSingleLineDeclaration(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens) {
+    public function processSingleLineDeclaration(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens)
+    {
         if (class_exists('Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff', true) === false) {
             throw new PHP_CodeSniffer_Exception(
-                'Class Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff not found');
+                'Class Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff not found'
+            );
         }
 
         $sniff = new Generic_Sniffs_Functions_OpeningFunctionBraceKernighanRitchieSniff();
@@ -165,7 +171,8 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
      *
      * @return void
      */
-    public function processMultiLineDeclaration(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens) {
+    public function processMultiLineDeclaration(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $tokens)
+    {
         // We need to work out how far indented the function
         // declaration itself is, so we can work out how far to
         // indent parameters.
@@ -237,7 +244,7 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
 
                 if ($expectedIndent !== $foundIndent) {
                     $error = 'Multi-line function declaration not indented correctly; expected %s spaces but found %s';
-                    $data = array($expectedIndent, $foundIndent,);
+                    $data = [$expectedIndent, $foundIndent,];
                     $phpcsFile->addError($error, $i, 'Indent', $data);
                 }
 
@@ -258,14 +265,14 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
             $next = $tokens[($closeBracket + 1)];
             if ($next['code'] !== T_WHITESPACE) {
                 $length = 0;
-            } else if ($next['content'] === $phpcsFile->eolChar) {
+            } elseif ($next['content'] === $phpcsFile->eolChar) {
                 $length = -1;
             } else {
                 $length = strlen($next['content']);
             }
 
             if ($length !== 1) {
-                $data = array($length);
+                $data = [$length];
                 $code = 'SpaceBeforeOpenBrace';
 
                 $error = 'There must be a single space between the closing parenthesis and the opening brace of a multi-line function declaration; found ';
@@ -292,5 +299,3 @@ class PhOSCo_Sniffs_Functions_FunctionDeclarationSniff implements PHP_CodeSniffe
     }//end processMultiLineDeclaration()
 
 }//end class
-
-?>

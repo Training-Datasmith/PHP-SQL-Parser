@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Class Declaration Test.
  *
@@ -27,8 +29,8 @@
  * @version   Release: 1.5.1
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sniff {
-
+class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sniff
+{
     /**
      * The number of spaces code should be indented.
      *
@@ -41,8 +43,9 @@ class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sni
      *
      * @return array
      */
-    public function register() {
-        return array(T_CLASS, T_INTERFACE,);
+    public function register()
+    {
+        return [T_CLASS, T_INTERFACE,];
 
     }//end register()
 
@@ -55,9 +58,10 @@ class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sni
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr) {
+    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
         $tokens = $phpcsFile->getTokens();
-        $errorData = array($tokens[$stackPtr]['content']);
+        $errorData = [$tokens[$stackPtr]['content']];
 
         if (isset($tokens[$stackPtr]['scope_opener']) === false) {
             $error = 'Possible parse error: %s missing opening or closing brace';
@@ -87,7 +91,7 @@ class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sni
             $expected = 1;
             if ($spaces !== $expected) {
                 $error = 'Expected %s spaces before opening brace; %s found';
-                $data = array($expected, $spaces,);
+                $data = [$expected, $spaces,];
                 $phpcsFile->addError($error, $curlyBrace, 'SpaceBeforeBrace', $data);
             }
         }
@@ -95,5 +99,3 @@ class PhOSCo_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniffer_Sni
     }//end process()
 
 }//end class
-
-?>

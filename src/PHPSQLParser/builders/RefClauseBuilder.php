@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * RefClauseBuilder.php
  *
@@ -40,6 +42,7 @@
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 
 /**
@@ -50,49 +53,58 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RefClauseBuilder implements Builder {
-
-    protected function buildInList(array $parsed) {
+class RefClauseBuilder implements Builder
+{
+    protected function buildInList(array $parsed)
+    {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColRef(array $parsed) {
+    protected function buildColRef(array $parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator(array $parsed) {
+    protected function buildOperator(array $parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction(array $parsed) {
+    protected function buildFunction(array $parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant(array $parsed) {
+    protected function buildConstant(array $parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildBracketExpression(array $parsed) {
+    protected function buildBracketExpression(array $parsed)
+    {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColumnList(array $parsed) {
+    protected function buildColumnList(array $parsed)
+    {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery(array $parsed) {
+    protected function buildSubQuery(array $parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed === false) {
             return '';
         }
@@ -117,4 +129,3 @@ class RefClauseBuilder implements Builder {
         return substr($sql, 0, -1);
     }
 }
-?>

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * CreateTableDefinitionBuilder.php
  *
@@ -31,36 +33,37 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
 
 /**
- * This class implements the builder for the create definitions of CREATE TABLE. 
+ * This class implements the builder for the create definitions of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class CreateTableDefinitionBuilder implements Builder {
-
-    protected function buildTableBracketExpression(array $parsed) {
+class CreateTableDefinitionBuilder implements Builder
+{
+    protected function buildTableBracketExpression(array $parsed)
+    {
         $builder = new TableBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if ($parsed['create-def'] === false) {
-            return "";
+            return '';
         }
         return $this->buildTableBracketExpression($parsed['create-def']);
     }
 }
-?>

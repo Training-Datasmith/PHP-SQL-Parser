@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue44Test.php
  *
@@ -31,20 +33,23 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use Analog\Analog;
 
-class Issue44Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue44() {
+namespace PHPSQLParser\Test\Parser;
+
+use Analog\Analog;
+use PHPSQLParser\PHPSQLParser;
+
+class Issue44Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue44()
+    {
         $parser = new PHPSQLParser();
 
         $sql = "SELECT m.id, m.title, m.module, m.position, m.content, m.showtitle, m.params, mm.menuid
@@ -60,4 +65,3 @@ class Issue44Test extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($expected, $p, 'issue 44 position problem');
     }
 }
-?>

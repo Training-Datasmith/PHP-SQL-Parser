@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * inlist.php
  *
@@ -31,20 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class inlistTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testInlist() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class inlistTest extends \PHPUnit\Framework\TestCase
+{
+    public function testInlist()
+    {
         $parser = new PHPSQLParser();
 
         $sql = "SELECT q.qid, question, gid FROM questions as q WHERE (select count(*) from answers as a where a.qid=q.qid and scale_id=0)=0 and sid=11929 AND type IN ('F', 'H', 'W', 'Z', '1') and q.parent_qid=0";
@@ -54,4 +58,3 @@ class inlistTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

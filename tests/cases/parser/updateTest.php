@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * update.php
  *
@@ -31,20 +33,22 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
-namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class updateTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testUpdate() {
+namespace PHPSQLParser\Test\Parser;
+
+use PHPSQLParser\PHPSQLParser;
+
+class updateTest extends \PHPUnit\Framework\TestCase
+{
+    public function testUpdate()
+    {
         $parser = new PHPSQLParser();
 
         $sql = "UPDATE table1 SET field1='foo' WHERE field2='bar' AND id=(SELECT id FROM test1 t where t.field1=(SELECT id from test2 t2 where t2.field = 'foo'))";
@@ -52,7 +56,6 @@ class updateTest extends \PHPUnit\Framework\TestCase {
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'update1.serialized');
         $this->assertEquals($expected, $p, 'update with a sub-select');
-
 
         $sql = "update SETTINGS_GLOBAL set stg_value='' where stg_name='force_ssl'";
         $parser->parse($sql);
@@ -62,4 +65,3 @@ class updateTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

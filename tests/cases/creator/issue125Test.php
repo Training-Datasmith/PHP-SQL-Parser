@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
+
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
 class issue125Test extends \PHPUnit\Framework\TestCase
 {
@@ -46,10 +49,10 @@ class issue125Test extends \PHPUnit\Framework\TestCase
 
     public function indexHintsDataProvider()
     {
-        return array(
-            array('USE'),
-            array('FORCE'),
-            array('IGNORE')
-        );
+        return [
+            ['USE'],
+            ['FORCE'],
+            ['IGNORE'],
+        ];
     }
 }

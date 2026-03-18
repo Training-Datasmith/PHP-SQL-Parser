@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * manual.php
  *
@@ -31,26 +33,28 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
+
 use PHPSQLParser\exceptions\UnableToCalculatePositionException;
+use PHPSQLParser\PHPSQLParser;
 
-
-class manualTest extends \PHPUnit\Framework\TestCase {
-	
-    public function testManual() {
+class manualTest extends \PHPUnit\Framework\TestCase
+{
+    public function testManual()
+    {
         // that is an issue written as comment into the ParserManual...
-        $sql = "SELECT FROM some_table a LEFT JOIN another_table AS b ON FIND_IN_SET(a.id, b.ids_collection)";
+        $sql = 'SELECT FROM some_table a LEFT JOIN another_table AS b ON FIND_IN_SET(a.id, b.ids_collection)';
 
         try {
-        	$parser = new PHPSQLParser($sql, true);
+            $parser = new PHPSQLParser($sql, true);
         } catch (UnableToCalculatePositionException $e) {
             echo $e->getMessage();
         }
@@ -61,4 +65,3 @@ class manualTest extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * WhereBuilder.php
  *
@@ -40,6 +42,7 @@
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 
 /**
@@ -50,60 +53,71 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class WhereBuilder implements Builder {
-
-    protected function buildColRef(array $parsed) {
+class WhereBuilder implements Builder
+{
+    protected function buildColRef(array $parsed)
+    {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant(array $parsed) {
+    protected function buildConstant(array $parsed)
+    {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator(array $parsed) {
+    protected function buildOperator(array $parsed)
+    {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction(array $parsed) {
+    protected function buildFunction(array $parsed)
+    {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery(array $parsed) {
+    protected function buildSubQuery(array $parsed)
+    {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildInList(array $parsed) {
+    protected function buildInList(array $parsed)
+    {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWhereExpression(array $parsed) {
+    protected function buildWhereExpression(array $parsed)
+    {
         $builder = new WhereExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWhereBracketExpression(array $parsed) {
+    protected function buildWhereBracketExpression(array $parsed)
+    {
         $builder = new WhereBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariable(array $parsed) {
+    protected function buildUserVariable(array $parsed)
+    {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved(array $parsed) {
-      $builder = new ReservedBuilder();
-      return $builder->build($parsed);
+    protected function buildReserved(array $parsed)
+    {
+        $builder = new ReservedBuilder();
+        return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
-        $sql = "WHERE ";
+    public function build(array $parsed)
+    {
+        $sql = 'WHERE ';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
 
@@ -117,15 +131,14 @@ class WhereBuilder implements Builder {
             $sql .= $this->buildWhereBracketExpression($v);
             $sql .= $this->buildUserVariable($v);
             $sql .= $this->buildReserved($v);
-            
+
             if (strlen($sql) == $len) {
                 throw new UnableToCreateSQLException('WHERE', $k, $v, 'expr_type');
             }
 
-            $sql .= " ";
+            $sql .= ' ';
         }
         return substr($sql, 0, -1);
     }
 
 }
-?>

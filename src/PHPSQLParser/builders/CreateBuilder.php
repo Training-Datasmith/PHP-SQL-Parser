@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * CreateBuilder.php
  *
@@ -31,15 +33,16 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\utils\ExpressionType;
 
 /**
@@ -48,26 +51,30 @@ use PHPSQLParser\utils\ExpressionType;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class CreateBuilder implements Builder {
-
-    protected function buildCreateTable(array $parsed) {
+class CreateBuilder implements Builder
+{
+    protected function buildCreateTable(array $parsed)
+    {
         $builder = new CreateTableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCreateIndex(array $parsed) {
+    protected function buildCreateIndex(array $parsed)
+    {
         $builder = new CreateIndexBuilder();
         return $builder->build($parsed);
     }
-    
-    protected function buildSubTree(array $parsed) {
+
+    protected function buildSubTree(array $parsed)
+    {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $create = $parsed['CREATE'];
         $sql = $this->buildSubTree($create);
 
@@ -80,8 +87,7 @@ class CreateBuilder implements Builder {
         }
 
         // TODO: add more expr_types here (like VIEW), if available in parser output
-        return "CREATE " . $sql;
+        return 'CREATE ' . $sql;
     }
 
 }
-?>

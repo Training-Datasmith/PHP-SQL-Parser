@@ -1,8 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace PHPSQLParser\Test\Creator;
 
-use PHPSQLParser\PHPSQLParser;
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
 class AlterTest extends \PHPUnit\Framework\TestCase
 {
@@ -18,8 +21,8 @@ class AlterTest extends \PHPUnit\Framework\TestCase
 
     public function testAlterAddColumn()
     {
-        $sql = "ALTER TABLE `my_table`
-                 ADD COLUMN `updated_by` SMALLINT unsigned AFTER `date_created`";
+        $sql = 'ALTER TABLE `my_table`
+                 ADD COLUMN `updated_by` SMALLINT unsigned AFTER `date_created`';
         $parser = new PHPSQLParser($sql);
         $creator = new PHPSQLCreator($parser->parsed);
         $created = $creator->created;

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue38.php
  *
@@ -31,23 +33,24 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
+
 namespace PHPSQLParser\Test\Parser;
+
 use PHPSQLParser\PHPSQLParser;
-use PHPSQLParser\PHPSQLCreator;
 
-class issue38Test extends \PHPUnit\Framework\TestCase {
-	
-    public function testIssue38() {
+class issue38Test extends \PHPUnit\Framework\TestCase
+{
+    public function testIssue38()
+    {
 
-
-        $sql = "SELECT * FROM `table` `t` WHERE ( ( UNIX_TIMESTAMP() + 3600 ) > `t`.`expires` ) ";
+        $sql = 'SELECT * FROM `table` `t` WHERE ( ( UNIX_TIMESTAMP() + 3600 ) > `t`.`expires` ) ';
         $parser = new PHPSQLParser();
         $parser->parse($sql);
         $p = $parser->parsed;
@@ -56,4 +59,3 @@ class issue38Test extends \PHPUnit\Framework\TestCase {
 
     }
 }
-

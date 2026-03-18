@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
+
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
 class issue319Test extends \PHPUnit\Framework\TestCase
 {

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * issue322.php
  *
@@ -38,24 +40,25 @@
  * @version   SVN: $Id$
  *
  */
+
 namespace PHPSQLParser\Test\Parser;
-use PHPSQLParser\PHPSQLParser;
+
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
 class issue322Test extends \PHPUnit\Framework\TestCase
 {
- /**
-  * @doesNotPerformAssertions
-  */
+    /**
+     * @doesNotPerformAssertions
+     */
 
-	public function testIssue322()
-	{
-    $sql = "SELECT IF(createdAt >= CURRENT_DATE(), '1', '0') FROM f_another_table WHERE id in(SELECT id FROM f_table WHERE createdAt > NOW())";
-		$parser = new PHPSQLParser();
-		$parsed = $parser->parse($sql, true);
-		$creator = new PHPSQLCreator();
-		$sql = $creator->create($parsed);
+    public function testIssue322()
+    {
+        $sql = "SELECT IF(createdAt >= CURRENT_DATE(), '1', '0') FROM f_another_table WHERE id in(SELECT id FROM f_table WHERE createdAt > NOW())";
+        $parser = new PHPSQLParser();
+        $parsed = $parser->parse($sql, true);
+        $creator = new PHPSQLCreator();
+        $sql = $creator->create($parsed);
 
-  }
+    }
 }
-

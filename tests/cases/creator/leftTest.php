@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * left.php
  *
@@ -38,13 +40,16 @@
  * @version   SVN: $Id$
  *
  */
+
 namespace PHPSQLParser\Test\Creator;
-use PHPSQLParser\PHPSQLParser;
+
 use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
 
-class leftTest extends \PHPUnit\Framework\TestCase {
-
-    public function testLeft() {
+class leftTest extends \PHPUnit\Framework\TestCase
+{
+    public function testLeft()
+    {
         $sql = 'SELECT *
             FROM (t1 LEFT JOIN t2 ON t1.a=t2.a)
                  LEFT JOIN t3
@@ -56,10 +61,11 @@ class leftTest extends \PHPUnit\Framework\TestCase {
         $this->assertSame($expected, $created, 'left joins and table-expression');
 
     }
-/**
- * @doesNotPerformAssertions
-*/
-    public function testLeftIn() {
+    /**
+     * @doesNotPerformAssertions
+    */
+    public function testLeftIn()
+    {
         $sql = 'SELECT *
             FROM (t1 LEFT JOIN t2 ON t1.a=t2.a)
                  LEFT JOIN t3
@@ -69,4 +75,3 @@ class leftTest extends \PHPUnit\Framework\TestCase {
         $created = $creator->created;
     }
 }
-

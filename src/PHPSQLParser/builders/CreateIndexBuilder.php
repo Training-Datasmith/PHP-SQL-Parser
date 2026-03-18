@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * CreateIndex.php
  *
@@ -31,12 +33,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
@@ -47,26 +49,30 @@ namespace PHPSQLParser\builders;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class CreateIndexBuilder implements Builder {
-
-    protected function buildIndexType(array $parsed) {
+class CreateIndexBuilder implements Builder
+{
+    protected function buildIndexType(array $parsed)
+    {
         $builder = new CreateIndexTypeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexTable(array $parsed) {
+    protected function buildIndexTable(array $parsed)
+    {
         $builder = new CreateIndexTableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexOptions(array $parsed) {
+    protected function buildIndexOptions(array $parsed)
+    {
         $builder = new CreateIndexOptionsBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = $parsed['name'];
         $sql .= ' ' . $this->buildIndexType($parsed);
         $sql = trim($sql);
@@ -77,4 +83,3 @@ class CreateIndexBuilder implements Builder {
     }
 
 }
-?>

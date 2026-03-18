@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * CreateTableOptionsBuilder.php
  *
@@ -31,38 +33,42 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
+
 use PHPSQLParser\exceptions\UnableToCreateSQLException;
 
 /**
- * This class implements the builder for the table-options statement part of CREATE TABLE. 
+ * This class implements the builder for the table-options statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class CreateTableOptionsBuilder implements Builder {
-
-    protected function buildExpression(array $parsed) {
+class CreateTableOptionsBuilder implements Builder
+{
+    protected function buildExpression(array $parsed)
+    {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCharacterSet(array $parsed) {
+    protected function buildCharacterSet(array $parsed)
+    {
         $builder = new CharacterSetBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCollation(array $parsed) {
+    protected function buildCollation(array $parsed)
+    {
         $builder = new CollationBuilder();
         return $builder->build($parsed);
     }
@@ -70,20 +76,22 @@ class CreateTableOptionsBuilder implements Builder {
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
-     * 
+     *
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter(array $parsed) {
+    protected function getDelimiter(array $parsed)
+    {
         return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         if (!isset($parsed['options']) || $parsed['options'] === false) {
-            return "";
+            return '';
         }
         $options = $parsed['options'];
-        $sql = "";
+        $sql = '';
         foreach ($options as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->buildExpression($v);
@@ -96,7 +104,6 @@ class CreateTableOptionsBuilder implements Builder {
 
             $sql .= $this->getDelimiter($v);
         }
-        return " " . substr($sql, 0, -1);
+        return ' ' . substr($sql, 0, -1);
     }
 }
-?>

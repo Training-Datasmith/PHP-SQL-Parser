@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * PHPSQLParser.php
  *
@@ -40,6 +42,7 @@
  */
 
 namespace PHPSQLParser;
+
 use PHPSQLParser\positions\PositionCalculator;
 use PHPSQLParser\processors\DefaultProcessor;
 use PHPSQLParser\utils\PHPSQLParserConstants;
@@ -51,8 +54,8 @@ use PHPSQLParser\utils\PHPSQLParserConstants;
  * @author  André Rothe <arothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
-class PHPSQLParser {
-
+class PHPSQLParser
+{
     public $parsed;
 
     /**
@@ -67,7 +70,8 @@ class PHPSQLParser {
      * @param String|bool  $sql           The SQL statement.
      * @param bool $calcPositions True, if the output should contain [position], false otherwise.
      */
-    public function __construct($sql = false, $calcPositions = false, array $options = array()) {
+    public function __construct($sql = false, $calcPositions = false, array $options = [])
+    {
         $this->options = new Options($options);
 
         if ($sql) {
@@ -88,7 +92,8 @@ class PHPSQLParser {
      *
      * @return array An associative array with all meta information about the SQL statement.
      */
-    public function parse($sql, $calcPositions = false) {
+    public function parse($sql, $calcPositions = false)
+    {
 
         $processor = new DefaultProcessor($this->options);
         $queries = $processor->process($sql);
@@ -109,7 +114,8 @@ class PHPSQLParser {
      *
      * @param String $token The name of the function to add
      */
-    public function addCustomFunction($token) {
+    public function addCustomFunction($token)
+    {
         PHPSQLParserConstants::getInstance()->addCustomFunction($token);
     }
 
@@ -118,7 +124,8 @@ class PHPSQLParser {
      *
      * @param String $token The name of the function to remove
      */
-    public function removeCustomFunction($token) {
+    public function removeCustomFunction($token)
+    {
         PHPSQLParserConstants::getInstance()->removeCustomFunction($token);
     }
 
@@ -127,8 +134,8 @@ class PHPSQLParser {
      *
      * @return array Returns an array of all custom functions
      */
-    public function getCustomFunctions() {
+    public function getCustomFunctions()
+    {
         return PHPSQLParserConstants::getInstance()->getCustomFunctions();
     }
 }
-?>

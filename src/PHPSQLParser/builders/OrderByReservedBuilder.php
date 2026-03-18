@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * OrderByReservedBuilder.php
  *
@@ -31,33 +33,35 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
 
 /**
- * This class implements the builder for reserved keywords within the ORDER-BY part. 
- * It must contain the direction. 
+ * This class implements the builder for reserved keywords within the ORDER-BY part.
+ * It must contain the direction.
  * You can overwrite all functions to achieve another handling.
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class OrderByReservedBuilder extends ReservedBuilder {
-
-    protected function buildDirection(array $parsed) {
+class OrderByReservedBuilder extends ReservedBuilder
+{
+    protected function buildDirection(array $parsed)
+    {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
+    public function build(array $parsed)
+    {
         $sql = parent::build($parsed);
         if ($sql !== '') {
             $sql .= $this->buildDirection($parsed);
@@ -66,4 +70,3 @@ class OrderByReservedBuilder extends ReservedBuilder {
     }
 
 }
-?>

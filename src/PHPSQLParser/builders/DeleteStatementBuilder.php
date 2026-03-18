@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * DeleteStatementBuilder.php
  *
@@ -31,12 +33,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
@@ -47,32 +49,35 @@ namespace PHPSQLParser\builders;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class DeleteStatementBuilder implements Builder {
-
-    protected function buildWHERE(array $parsed) {
+class DeleteStatementBuilder implements Builder
+{
+    protected function buildWHERE(array $parsed)
+    {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM(array $parsed) {
+    protected function buildFROM(array $parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildDELETE(array $parsed) {
+    protected function buildDELETE(array $parsed)
+    {
         $builder = new DeleteBuilder();
         return $builder->build($parsed);
     }
 
-    public function build(array $parsed) {
-        $sql = $this->buildDELETE($parsed['DELETE']) . " " . $this->buildFROM($parsed['FROM']);
+    public function build(array $parsed)
+    {
+        $sql = $this->buildDELETE($parsed['DELETE']) . ' ' . $this->buildFROM($parsed['FROM']);
         if (isset($parsed['WHERE'])) {
-            $sql .= " " . $this->buildWHERE($parsed['WHERE']);
+            $sql .= ' ' . $this->buildWHERE($parsed['WHERE']);
         }
         return $sql;
     }
 
 }
-?>

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * SQLChunkProcessor.php
  *
@@ -48,17 +50,19 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SQLChunkProcessor extends AbstractProcessor {
-
-    protected function moveLIKE(&$out) {
+class SQLChunkProcessor extends AbstractProcessor
+{
+    protected function moveLIKE(&$out)
+    {
         if (!isset($out['TABLE']['like'])) {
             return;
         }
-        $out = $this->array_insert_after($out, 'TABLE', array('LIKE' => $out['TABLE']['like']));
+        $out = $this->array_insert_after($out, 'TABLE', ['LIKE' => $out['TABLE']['like']]);
         unset($out['TABLE']['like']);
     }
 
-    public function process($out) {
+    public function process($out)
+    {
         if (!$out) {
             return false;
         }
@@ -71,8 +75,8 @@ class SQLChunkProcessor extends AbstractProcessor {
 
             unset($processedBracket[0]['remaining_expressions']);
 
-            if(!empty($remainingExpressions)) {
-                foreach($remainingExpressions as $key=>$expression) {
+            if (!empty($remainingExpressions)) {
+                foreach ($remainingExpressions as $key => $expression) {
                     $processedBracket[][$key] = $expression;
                 }
             }
@@ -123,12 +127,12 @@ class SQLChunkProcessor extends AbstractProcessor {
         if (!empty($out['GROUP'])) {
             // set empty array if we have partial SQL statement
             $processor = new GroupByProcessor($this->options);
-            $out['GROUP'] = $processor->process($out['GROUP'], isset($out['SELECT']) ? $out['SELECT'] : array());
+            $out['GROUP'] = $processor->process($out['GROUP'], isset($out['SELECT']) ? $out['SELECT'] : []);
         }
         if (!empty($out['ORDER'])) {
             // set empty array if we have partial SQL statement
             $processor = new OrderByProcessor($this->options);
-            $out['ORDER'] = $processor->process($out['ORDER'], isset($out['SELECT']) ? $out['SELECT'] : array());
+            $out['ORDER'] = $processor->process($out['ORDER'], isset($out['SELECT']) ? $out['SELECT'] : []);
         }
         if (!empty($out['LIMIT'])) {
             $processor = new LimitProcessor($this->options);
@@ -140,7 +144,7 @@ class SQLChunkProcessor extends AbstractProcessor {
         }
         if (!empty($out['HAVING'])) {
             $processor = new HavingProcessor($this->options);
-            $out['HAVING'] = $processor->process($out['HAVING'], isset($out['SELECT']) ? $out['SELECT'] : array());
+            $out['HAVING'] = $processor->process($out['HAVING'], isset($out['SELECT']) ? $out['SELECT'] : []);
         }
         if (!empty($out['SET'])) {
             $processor = new SetProcessor($this->options);
@@ -188,11 +192,10 @@ class SQLChunkProcessor extends AbstractProcessor {
             $out['OPTIONS'] = $processor->process($out['OPTIONS']);
         }
         if (!empty($out['WITH'])) {
-        	$processor = new WithProcessor($this->options);
-        	$out['WITH'] = $processor->process($out['WITH']);
+            $processor = new WithProcessor($this->options);
+            $out['WITH'] = $processor->process($out['WITH']);
         }
 
         return $out;
     }
 }
-?>

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * TruncateStatementBuilder.php
  *
@@ -31,12 +33,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * @author    André Rothe <andre.rothe@phosco.info>
  * @copyright 2010-2014 Justin Swanhart and André Rothe
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
- * 
+ *
  */
 
 namespace PHPSQLParser\builders;
@@ -47,25 +49,27 @@ namespace PHPSQLParser\builders;
  *
  * @author  André Rothe <andre.rothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
- *  
+ *
  */
-class TruncateStatementBuilder implements Builder {
-
-    protected function buildTRUNCATE(array $parsed) {
+class TruncateStatementBuilder implements Builder
+{
+    protected function buildTRUNCATE(array $parsed)
+    {
         $builder = new TruncateBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM(array $parsed) {
+    protected function buildFROM(array $parsed)
+    {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
-    
-    public function build(array $parsed) {
+
+    public function build(array $parsed)
+    {
         // $sql .= " " . $this->buildTRUNCATE($parsed) // Uncomment when parser fills in expr_type=table
-        
+
         return $this->buildTRUNCATE($parsed);
     }
 
 }
-?>
