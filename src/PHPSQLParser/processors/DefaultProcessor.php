@@ -74,7 +74,7 @@ class DefaultProcessor extends AbstractProcessor {
         // If there was no UNION or UNION ALL in the query, then the query is
         // stored at $queries[0].
         if (!empty($queries) && !$this->isUnion($queries)) {
-            $queries = $this->processSQL($queries[0]);
+            return $this->processSQL($queries[0]);
         }
 
         return $queries;

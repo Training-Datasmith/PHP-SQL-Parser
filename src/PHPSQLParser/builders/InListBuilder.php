@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class InListBuilder implements Builder {
 
-    protected function buildSubTree($parsed, $delim) {
+    protected function buildSubTree(array $parsed, $delim) {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }

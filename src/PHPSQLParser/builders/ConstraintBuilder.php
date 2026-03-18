@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ConstraintBuilder implements Builder {
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }

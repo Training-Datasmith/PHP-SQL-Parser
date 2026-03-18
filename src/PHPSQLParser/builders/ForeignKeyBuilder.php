@@ -53,22 +53,22 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ForeignKeyBuilder implements Builder {
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildForeignRef($parsed) {
+    protected function buildForeignRef(array $parsed) {
         $builder = new ForeignRefBuilder();
         return $builder->build($parsed);
     }

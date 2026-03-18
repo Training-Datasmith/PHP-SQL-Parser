@@ -51,7 +51,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class InsertProcessor extends AbstractProcessor {
 
-    protected function processOptions($tokenList) {
+    protected function processOptions(array $tokenList) {
         if (!isset($tokenList['OPTIONS'])) {
             return array();
         }
@@ -62,7 +62,7 @@ class InsertProcessor extends AbstractProcessor {
         return $result;
     }
 
-    protected function processKeyword($keyword, $tokenList) {
+    protected function processKeyword($keyword, array $tokenList) {
         if (!isset($tokenList[$keyword])) {
             return array('', false, array());
         }

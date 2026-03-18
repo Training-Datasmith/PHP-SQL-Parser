@@ -53,27 +53,27 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class DropExpressionBuilder implements Builder {
 
-    protected function buildTable($parsed, $index) {
+    protected function buildTable(array $parsed, $index) {
         $builder = new TableBuilder();
         return $builder->build($parsed, $index);
     }
 
-    protected function buildDatabase($parsed) {
+    protected function buildDatabase(array $parsed) {
         $builder = new DatabaseBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSchema($parsed) {
+    protected function buildSchema(array $parsed) {
         $builder = new SchemaBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildTemporaryTable($parsed) {
+    protected function buildTemporaryTable(array $parsed) {
         $builder = new TempTableBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildView($parsed) {
+    protected function buildView(array $parsed) {
         $builder = new ViewBuilder();
         return $builder->build($parsed);
     }

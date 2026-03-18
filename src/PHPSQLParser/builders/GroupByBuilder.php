@@ -52,27 +52,27 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class GroupByBuilder implements Builder {
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildPosition($parsed) {
+    protected function buildPosition(array $parsed) {
         $builder = new PositionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildGroupByAlias($parsed) {
+    protected function buildGroupByAlias(array $parsed) {
         $builder = new GroupByAliasBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildGroupByExpression($parsed) {
+    protected function buildGroupByExpression(array $parsed) {
     	$builder = new GroupByExpressionBuilder();
         return $builder->build($parsed);
     }

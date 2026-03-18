@@ -52,42 +52,42 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class RefClauseBuilder implements Builder {
 
-    protected function buildInList($parsed) {
+    protected function buildInList(array $parsed) {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator(array $parsed) {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery(array $parsed) {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }

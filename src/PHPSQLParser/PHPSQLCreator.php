@@ -73,7 +73,7 @@ class PHPSQLCreator {
         }
     }
 
-    public function create($parsed) {
+    public function create(array $parsed) {
         $k = key($parsed);
         switch ($k) {
 
@@ -135,7 +135,6 @@ class PHPSQLCreator {
             break;
         default:
             throw new UnsupportedFeatureException($k);
-            break;
         }
         return $this->created;
     }

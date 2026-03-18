@@ -41,7 +41,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ReferenceDefinitionProcessor extends AbstractProcessor {
 
-    protected function buildReferenceDef($expr, $base_expr, $key) {
+    protected function buildReferenceDef(array $expr, $base_expr, $key) {
         $expr['till'] = $key;
         $expr['base_expr'] = $base_expr;
         return $expr;
@@ -175,7 +175,7 @@ class ReferenceDefinitionProcessor extends AbstractProcessor {
         }
 
         if (!isset($expr['till'])) {
-            $expr = $this->buildReferenceDef($expr, trim($base_expr), -1);
+            return $this->buildReferenceDef($expr, trim($base_expr), -1);
         }
         return $expr;
     }

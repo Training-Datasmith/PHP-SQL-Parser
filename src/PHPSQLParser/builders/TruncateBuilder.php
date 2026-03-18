@@ -59,7 +59,7 @@ class TruncateBuilder implements Builder {
         $parsed['tables'] = array($parsed['TABLE']['base_expr']);
 
         if ($parsed['tables'] !== false) {
-            foreach ($parsed['tables'] as $k => $v) {
+            foreach ($parsed['tables'] as $v) {
                 $sql .= $v . ", ";
                 $right = -2;
             }

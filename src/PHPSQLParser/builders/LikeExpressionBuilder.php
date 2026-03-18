@@ -55,12 +55,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class LikeExpressionBuilder implements Builder {
 
-    protected function buildTable($parsed, $index) {
+    protected function buildTable(array $parsed, $index) {
         $builder = new TableBuilder();
         return $builder->build($parsed, $index);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }

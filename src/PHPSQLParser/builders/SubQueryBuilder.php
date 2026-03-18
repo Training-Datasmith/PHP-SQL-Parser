@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class SubQueryBuilder implements Builder {
 
-    protected function buildRefClause($parsed) {
+    protected function buildRefClause(array $parsed) {
         $builder = new RefClauseBuilder();
         return $builder->build($parsed);
     }
@@ -67,12 +67,12 @@ class SubQueryBuilder implements Builder {
         return $builder->build($parsed);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement(array $parsed) {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }

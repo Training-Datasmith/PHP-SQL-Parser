@@ -51,17 +51,17 @@ namespace PHPSQLParser\builders;
  */
 class CreateStatementBuilder implements Builder {
 
-    protected function buildLIKE($parsed) {
+    protected function buildLIKE(array $parsed) {
         $builder = new LikeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement(array $parsed) {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCREATE($parsed) {
+    protected function buildCREATE(array $parsed) {
         $builder = new CreateBuilder();
         return $builder->build($parsed);
     }

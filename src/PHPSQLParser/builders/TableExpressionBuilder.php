@@ -52,12 +52,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class TableExpressionBuilder implements Builder {
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM(array $parsed) {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
@@ -72,7 +72,7 @@ class TableExpressionBuilder implements Builder {
         return $builder->build($parsed);
     }
 
-    protected function buildRefClause($parsed) {
+    protected function buildRefClause(array $parsed) {
         $builder = new RefClauseBuilder();
         return $builder->build($parsed);
     }

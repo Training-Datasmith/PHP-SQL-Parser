@@ -65,7 +65,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         return $res;
     }
 
-    protected function buildColDef($expr, $base_expr, $options, $refs, $key) {
+    protected function buildColDef($expr, $base_expr, array $options, $refs, $key) {
         $expr = array('expr_type' => ExpressionType::COLUMN_TYPE, 'base_expr' => $base_expr, 'sub_tree' => $expr);
 
         // add options first
@@ -82,7 +82,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
         return $expr;
     }
 
-    protected function peekAtNextToken($tokens, $index)
+    protected function peekAtNextToken(array $tokens, $index)
     {
         $offset = $index + 1;
         while (isset($tokens[$offset])) {
@@ -459,7 +459,7 @@ class ColumnDefinitionProcessor extends AbstractProcessor {
 
         if (!isset($expr['till'])) {
             // end of $tokens array
-            $expr = $this->buildColDef($expr, trim($base_expr), $options, $refs, -1);
+            return $this->buildColDef($expr, trim($base_expr), $options, $refs, -1);
         }
         return $expr;
     }

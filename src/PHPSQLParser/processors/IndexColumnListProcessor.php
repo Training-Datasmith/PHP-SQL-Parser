@@ -53,7 +53,7 @@ class IndexColumnListProcessor extends AbstractProcessor {
         $result = array();
         $base_expr = "";
 
-        foreach ($tokens as $k => $token) {
+        foreach ($tokens as $token) {
 
             $trim = trim($token);
             $base_expr .= $token;

@@ -33,7 +33,7 @@
 namespace PHPSQLParser\utils;
 class PHPSQLParserConstants {
 
-    private static $inst = null;
+    private static $inst;
 
     protected $customFunctions = array();
     protected $reserved = array('ABS', 'ACOS', 'ADDDATE', 'ADDTIME', 'AES_ENCRYPT', 'AES_DECRYPT', 'AGAINST', 'ASCII',

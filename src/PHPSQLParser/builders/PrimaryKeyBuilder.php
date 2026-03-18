@@ -53,32 +53,32 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class PrimaryKeyBuilder implements Builder {
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstraint($parsed) {
+    protected function buildConstraint(array $parsed) {
         $builder = new ConstraintBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexType($parsed) {
+    protected function buildIndexType(array $parsed) {
         $builder = new IndexTypeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexSize($parsed) {
+    protected function buildIndexSize(array $parsed) {
         $builder = new IndexSizeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexParser($parsed) {
+    protected function buildIndexParser(array $parsed) {
         $builder = new IndexParserBuilder();
         return $builder->build($parsed);
     }

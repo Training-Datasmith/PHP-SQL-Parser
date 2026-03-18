@@ -72,15 +72,10 @@ class DropProcessor extends AbstractProcessor {
             case 'SCHEMA':
             case 'DATABASE':
             case 'TABLE':
-                if ($objectType === '') {
+            case 'INDEX':
+	            if ($objectType === '') {
                     $objectType = constant('PHPSQLParser\utils\ExpressionType::' . $upper);
                 }
-                $base_expr = '';
-                break;
-            case 'INDEX':
-	            if ( $objectType === '' ) {
-		            $objectType = constant( 'PHPSQLParser\utils\ExpressionType::' . $upper );
-	            }
 	            $base_expr = '';
 	            break;
             case 'IF':

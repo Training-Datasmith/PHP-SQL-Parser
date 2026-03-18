@@ -53,12 +53,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class CheckBuilder implements Builder {
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }

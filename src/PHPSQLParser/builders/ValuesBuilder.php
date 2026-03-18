@@ -52,7 +52,7 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class ValuesBuilder implements Builder {
 
-    protected function buildRecord($parsed) {
+    protected function buildRecord(array $parsed) {
         $builder = new RecordBuilder();
         return $builder->build($parsed);
     }
@@ -72,7 +72,7 @@ class ValuesBuilder implements Builder {
         return "VALUES " . trim($sql);
     }
 
-    protected function getRecordDelimiter($parsed) {
+    protected function getRecordDelimiter(array $parsed) {
         return empty($parsed['delim']) ? ' ' : $parsed['delim'] . ' ';
     }
 }

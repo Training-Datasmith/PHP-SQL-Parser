@@ -53,7 +53,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class InsertColumnListBuilder implements Builder {
 
-    protected function buildColumn($parsed) {
+    protected function buildColumn(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }

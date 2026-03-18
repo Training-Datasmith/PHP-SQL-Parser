@@ -97,9 +97,6 @@ class CreateProcessor extends AbstractProcessor {
                 break;                
                                 
             case 'IF':
-                // option of CREATE TABLE
-                $expr[] = array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim);
-                break;
 
             case 'NOT':
                 // option of CREATE TABLE

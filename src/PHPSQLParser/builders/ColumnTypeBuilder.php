@@ -53,41 +53,41 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ColumnTypeBuilder implements Builder {
 
-    protected function buildColumnTypeBracketExpression($parsed) {
+    protected function buildColumnTypeBracketExpression(array $parsed) {
         $builder = new ColumnTypeBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildDataType($parsed) {
+    protected function buildDataType(array $parsed) {
         $builder = new DataTypeBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildDefaultValue($parsed) {
+    protected function buildDefaultValue(array $parsed) {
         $builder = new DefaultValueBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCharacterSet($parsed) {
+    protected function buildCharacterSet(array $parsed) {
         if ($parsed['expr_type'] !== ExpressionType::CHARSET) {
             return "";
         }
         return $parsed['base_expr'];
     }
 
-    protected function buildCollation($parsed) {
+    protected function buildCollation(array $parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLLATE) {
             return "";
         }
         return $parsed['base_expr'];
     }
 
-    protected function buildComment($parsed) {
+    protected function buildComment(array $parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COMMENT) {
             return "";
         }

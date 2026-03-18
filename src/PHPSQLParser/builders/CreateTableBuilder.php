@@ -51,17 +51,17 @@ namespace PHPSQLParser\builders;
  */
 class CreateTableBuilder implements Builder {
 
-    protected function buildCreateTableDefinition($parsed) {
+    protected function buildCreateTableDefinition(array $parsed) {
         $builder = new CreateTableDefinitionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCreateTableOptions($parsed) {
+    protected function buildCreateTableOptions(array $parsed) {
         $builder = new CreateTableOptionsBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCreateTableSelectOption($parsed) {
+    protected function buildCreateTableSelectOption(array $parsed) {
         $builder = new CreateTableSelectOptionBuilder();
         return $builder->build($parsed);
     }
@@ -70,8 +70,7 @@ class CreateTableBuilder implements Builder {
         $sql = $parsed['name'];
         $sql .= $this->buildCreateTableDefinition($parsed);
         $sql .= $this->buildCreateTableOptions($parsed);
-        $sql .= $this->buildCreateTableSelectOption($parsed);
-        return $sql;
+        return $sql . $this->buildCreateTableSelectOption($parsed);
     }
 
 }

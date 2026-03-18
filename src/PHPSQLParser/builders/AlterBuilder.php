@@ -28,8 +28,6 @@ class AlterBuilder implements Builder
             $sql .= $term . ' ';
         }
 
-        $sql = rtrim($sql);
-
-        return $sql;
+        return rtrim($sql);
     }
 }

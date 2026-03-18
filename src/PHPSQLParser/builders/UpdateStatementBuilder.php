@@ -51,17 +51,17 @@ namespace PHPSQLParser\builders;
  */
 class UpdateStatementBuilder implements Builder {
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE(array $parsed) {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSET($parsed) {
+    protected function buildSET(array $parsed) {
         $builder = new SetBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildUPDATE($parsed) {
+    protected function buildUPDATE(array $parsed) {
         $builder = new UpdateBuilder();
         return $builder->build($parsed);
     }

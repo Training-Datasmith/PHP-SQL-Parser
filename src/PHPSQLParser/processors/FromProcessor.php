@@ -81,7 +81,7 @@ class FromProcessor extends AbstractProcessor {
                      'base_expr' => false, 'sub_tree' => false, 'subquery' => "");
     }
 
-    protected function processFromExpression(&$parseInfo) {
+    protected function processFromExpression(array &$parseInfo) {
         $res = array();
 
         if ($parseInfo['hints'] === array()) {
@@ -90,7 +90,7 @@ class FromProcessor extends AbstractProcessor {
 
         // exchange the join types (join_type is save now, saved_join_type holds the next one)
         $parseInfo['join_type'] = $parseInfo['saved_join_type']; // initialized with JOIN
-        $parseInfo['saved_join_type'] = ($parseInfo['next_join_type'] ? $parseInfo['next_join_type'] : 'JOIN');
+        $parseInfo['saved_join_type'] = ($parseInfo['next_join_type'] ?: 'JOIN');
 
         // we have a reg_expr, so we have to parse it
         if ($parseInfo['ref_expr'] !== false) {
@@ -167,10 +167,9 @@ class FromProcessor extends AbstractProcessor {
                 $parseInfo['token_count']++;
                 $skip_next = false;
                 continue;
-            } else {
-                if ($skip_next) {
-                    continue;
-                }
+            }
+            if ($skip_next) {
+                continue;
             }
 
             if ($this->isCommentToken($token)) {

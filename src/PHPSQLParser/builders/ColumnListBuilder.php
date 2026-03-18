@@ -53,12 +53,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ColumnListBuilder implements Builder {
 
-    protected function buildIndexColumn($parsed) {
+    protected function buildIndexColumn(array $parsed) {
         $builder = new IndexColumnBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColumnReference($parsed) {
+    protected function buildColumnReference(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }

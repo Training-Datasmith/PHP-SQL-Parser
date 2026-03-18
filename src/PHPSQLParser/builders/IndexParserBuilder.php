@@ -54,12 +54,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class IndexParserBuilder implements Builder {
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }

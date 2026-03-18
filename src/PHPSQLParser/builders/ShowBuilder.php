@@ -52,37 +52,37 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class ShowBuilder implements Builder {
 
-    protected function buildTable($parsed, $delim) {
+    protected function buildTable(array $parsed, $delim) {
         $builder = new TableBuilder();
         return $builder->build($parsed, $delim);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildProcedure($parsed) {
+    protected function buildProcedure(array $parsed) {
         $builder = new ProcedureBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildDatabase($parsed) {
+    protected function buildDatabase(array $parsed) {
         $builder = new DatabaseBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildEngine($parsed) {
+    protected function buildEngine(array $parsed) {
         $builder = new EngineBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }

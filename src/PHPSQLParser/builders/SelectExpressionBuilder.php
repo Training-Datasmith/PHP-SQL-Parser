@@ -52,12 +52,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class SelectExpressionBuilder implements Builder {
 
-    protected function buildSubTree($parsed, $delim) {
+    protected function buildSubTree(array $parsed, $delim) {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
@@ -67,8 +67,7 @@ class SelectExpressionBuilder implements Builder {
             return "";
         }
         $sql = $this->buildSubTree($parsed, " ");
-        $sql .= $this->buildAlias($parsed);
-        return $sql;
+        return $sql . $this->buildAlias($parsed);
     }
 }
 ?>

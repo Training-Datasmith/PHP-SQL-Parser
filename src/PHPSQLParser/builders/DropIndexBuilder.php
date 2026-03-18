@@ -47,7 +47,7 @@ namespace PHPSQLParser\builders;
  */
 class DropIndexBuilder implements Builder {
 
-	protected function buildIndexTable($parsed) {
+	protected function buildIndexTable(array $parsed) {
 		$builder = new DropIndexTableBuilder();
 		return $builder->build($parsed);
 	}

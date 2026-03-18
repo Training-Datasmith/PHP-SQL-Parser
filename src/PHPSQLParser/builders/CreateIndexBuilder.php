@@ -51,17 +51,17 @@ namespace PHPSQLParser\builders;
  */
 class CreateIndexBuilder implements Builder {
 
-    protected function buildIndexType($parsed) {
+    protected function buildIndexType(array $parsed) {
         $builder = new CreateIndexTypeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexTable($parsed) {
+    protected function buildIndexTable(array $parsed) {
         $builder = new CreateIndexTableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexOptions($parsed) {
+    protected function buildIndexOptions(array $parsed) {
         $builder = new CreateIndexOptionsBuilder();
         return $builder->build($parsed);
     }

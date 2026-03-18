@@ -181,7 +181,6 @@ abstract class AbstractProcessor {
 
         $parenthesis = $parenthesisRemoved;
         $i = 0;
-        $string = 0;
         // Whether a string was opened or not, and with which character it was open (' or ")
         $stringOpened = '';
         while ($i < strlen($trim)) {
@@ -259,43 +258,43 @@ abstract class AbstractProcessor {
                 && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
     }
 
-    protected function isColumnReference($out) {
+    protected function isColumnReference(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF);
     }
 
-    protected function isReserved($out) {
+    protected function isReserved(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED);
     }
 
-    protected function isConstant($out) {
+    protected function isConstant(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT);
     }
 
-    protected function isAggregateFunction($out) {
+    protected function isAggregateFunction(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION);
     }
 
-    protected function isCustomFunction($out) {
+    protected function isCustomFunction(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CUSTOM_FUNCTION);
     }
 
-    protected function isFunction($out) {
+    protected function isFunction(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION);
     }
 
-    protected function isExpression($out) {
+    protected function isExpression(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION);
     }
 
-    protected function isBracketExpression($out) {
+    protected function isBracketExpression(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION);
     }
 
-    protected function isSubQuery($out) {
+    protected function isSubQuery(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY);
     }
 
-    protected function isComment($out) {
+    protected function isComment(array $out) {
         return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COMMENT);
     }
 
@@ -323,9 +322,8 @@ abstract class AbstractProcessor {
 
     protected function array_insert_after($array, $key, $entry) {
         $idx = array_search($key, array_keys($array));
-        $array = array_slice($array, 0, $idx + 1, true) + $entry
+        return array_slice($array, 0, $idx + 1, true) + $entry
                 + array_slice($array, $idx + 1, count($array) - 1, true);
-        return $array;
     }
 }
 ?>

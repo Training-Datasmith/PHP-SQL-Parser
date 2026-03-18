@@ -53,22 +53,22 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class IndexKeyBuilder implements Builder {
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildIndexType($parsed) {
+    protected function buildIndexType(array $parsed) {
         $builder = new IndexTypeBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }

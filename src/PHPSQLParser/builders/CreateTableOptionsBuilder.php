@@ -52,17 +52,17 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class CreateTableOptionsBuilder implements Builder {
 
-    protected function buildExpression($parsed) {
+    protected function buildExpression(array $parsed) {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCharacterSet($parsed) {
+    protected function buildCharacterSet(array $parsed) {
         $builder = new CharacterSetBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCollation($parsed) {
+    protected function buildCollation(array $parsed) {
         $builder = new CollationBuilder();
         return $builder->build($parsed);
     }
@@ -74,7 +74,7 @@ class CreateTableOptionsBuilder implements Builder {
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter($parsed) {
+    protected function getDelimiter(array $parsed) {
         return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
     }
 

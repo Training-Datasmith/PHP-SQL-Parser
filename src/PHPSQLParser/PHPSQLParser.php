@@ -66,7 +66,6 @@ class PHPSQLParser {
      *
      * @param String|bool  $sql           The SQL statement.
      * @param bool $calcPositions True, if the output should contain [position], false otherwise.
-     * @param array $options
      */
     public function __construct($sql = false, $calcPositions = false, array $options = array()) {
         $this->options = new Options($options);
@@ -109,8 +108,6 @@ class PHPSQLParser {
      * Add a custom function to the parser.  no return value
      *
      * @param String $token The name of the function to add
-     *
-     * @return null
      */
     public function addCustomFunction($token) {
         PHPSQLParserConstants::getInstance()->addCustomFunction($token);
@@ -120,8 +117,6 @@ class PHPSQLParser {
      * Remove a custom function from the parser.  no return value
      *
      * @param String $token The name of the function to remove
-     *
-     * @return null
      */
     public function removeCustomFunction($token) {
         PHPSQLParserConstants::getInstance()->removeCustomFunction($token);

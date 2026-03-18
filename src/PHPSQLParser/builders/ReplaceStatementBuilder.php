@@ -51,22 +51,22 @@ namespace PHPSQLParser\builders;
  */
 class ReplaceStatementBuilder implements Builder {
 
-    protected function buildVALUES($parsed) {
+    protected function buildVALUES(array $parsed) {
         $builder = new ValuesBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildREPLACE($parsed) {
+    protected function buildREPLACE(array $parsed) {
         $builder = new ReplaceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSELECT($parsed) {
+    protected function buildSELECT(array $parsed) {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildSET($parsed) {
+    protected function buildSET(array $parsed) {
         $builder = new SetBuilder();
         return $builder->build($parsed);
     }

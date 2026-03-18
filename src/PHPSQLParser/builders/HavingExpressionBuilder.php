@@ -54,11 +54,11 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class HavingExpressionBuilder extends WhereExpressionBuilder {
 
-    protected function buildHavingExpression($parsed) {
+    protected function buildHavingExpression(array $parsed) {
         return $this->build($parsed);
     }
 
-    protected function buildHavingBracketExpression($parsed) {
+    protected function buildHavingBracketExpression(array $parsed) {
         $builder = new HavingBracketExpressionBuilder();
         return $builder->build($parsed);
     }
@@ -85,9 +85,7 @@ class HavingExpressionBuilder extends WhereExpressionBuilder {
 
             $sql .= " ";
         }
-
-        $sql = substr($sql, 0, -1);
-        return $sql;
+        return substr($sql, 0, -1);
     }
 
 }

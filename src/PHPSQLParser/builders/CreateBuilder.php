@@ -52,17 +52,17 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class CreateBuilder implements Builder {
 
-    protected function buildCreateTable($parsed) {
+    protected function buildCreateTable(array $parsed) {
         $builder = new CreateTableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildCreateIndex($parsed) {
+    protected function buildCreateIndex(array $parsed) {
         $builder = new CreateIndexBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildSubTree($parsed) {
+    protected function buildSubTree(array $parsed) {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed);
     }

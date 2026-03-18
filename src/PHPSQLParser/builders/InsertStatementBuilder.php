@@ -51,22 +51,22 @@ namespace PHPSQLParser\builders;
  */
 class InsertStatementBuilder implements Builder {
 
-    protected function buildVALUES($parsed) {
+    protected function buildVALUES(array $parsed) {
         $builder = new ValuesBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildINSERT($parsed) {
+    protected function buildINSERT(array $parsed) {
         $builder = new InsertBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSELECT($parsed) {
+    protected function buildSELECT(array $parsed) {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildSET($parsed) {
+    protected function buildSET(array $parsed) {
         $builder = new SetBuilder();
         return $builder->build($parsed);
     }

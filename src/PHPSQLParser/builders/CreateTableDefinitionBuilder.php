@@ -51,13 +51,13 @@ namespace PHPSQLParser\builders;
  */
 class CreateTableDefinitionBuilder implements Builder {
 
-    protected function buildTableBracketExpression($parsed) {
+    protected function buildTableBracketExpression(array $parsed) {
         $builder = new TableBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
     public function build(array $parsed) {
-        if (!isset($parsed) || $parsed['create-def'] === false) {
+        if ($parsed['create-def'] === false) {
             return "";
         }
         return $this->buildTableBracketExpression($parsed['create-def']);

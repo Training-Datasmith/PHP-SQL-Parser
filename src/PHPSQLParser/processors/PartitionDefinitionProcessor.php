@@ -92,7 +92,7 @@ class PartitionDefinitionProcessor extends AbstractProcessor {
         $base_expr = '';
         $skip = 0;
 
-        foreach ($tokens as $tokenKey => $token) {
+        foreach ($tokens as $token) {
             $trim = trim($token);
             $base_expr .= $token;
 
@@ -139,22 +139,16 @@ class PartitionDefinitionProcessor extends AbstractProcessor {
                 break;
 
             case 'LESS':
-                if ($currCategory === 'VALUES') {
-                    $expr[] = $this->getReservedType($trim);
-                    continue 2;
-                }
-                // else ?
-                break;
 
             case 'THAN':
+
+            case 'IN':
                 if ($currCategory === 'VALUES') {
-                    // followed by parenthesis and (value-list or expr)
                     $expr[] = $this->getReservedType($trim);
                     continue 2;
                 }
                 // else ?
                 break;
-
             case 'MAXVALUE':
                 if ($currCategory === 'VALUES') {
                     $expr[] = $this->getConstantType($trim);
@@ -173,14 +167,6 @@ class PartitionDefinitionProcessor extends AbstractProcessor {
                     $currCategory = $prevCategory;
                 }
                 // else ?
-                break;
-
-            case 'IN':
-                if ($currCategory === 'VALUES') {
-                    // followed by parenthesis and value-list
-                    $expr[] = $this->getReservedType($trim);
-                    continue 2;
-                }
                 break;
 
             case 'COMMENT':

@@ -52,57 +52,57 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class SubTreeBuilder implements Builder {
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator(array $parsed) {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildInList($parsed) {
+    protected function buildInList(array $parsed) {
         $builder = new InListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery(array $parsed) {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildQuery($parsed) {
+    protected function buildQuery(array $parsed) {
         $builder = new QueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariable($parsed) {
+    protected function buildUserVariable(array $parsed) {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSign($parsed) {
+    protected function buildSign(array $parsed) {
         $builder = new SignBuilder();
         return $builder->build($parsed);
     }

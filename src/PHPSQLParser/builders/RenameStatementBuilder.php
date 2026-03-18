@@ -52,12 +52,12 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class RenameStatementBuilder implements Builder {
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function processSourceAndDestTable($v) {
+    protected function processSourceAndDestTable(array $v) {
         if (!isset($v['source']) || !isset($v['destination'])) {
             return '';
         }

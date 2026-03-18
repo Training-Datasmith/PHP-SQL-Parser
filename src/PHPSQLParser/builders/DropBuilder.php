@@ -49,25 +49,25 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class DropBuilder implements Builder {
 
-	protected function buildDropIndex( $parsed ) {
+	protected function buildDropIndex( array $parsed ) {
 		$builder = new DropIndexBuilder();
 
 		return $builder->build( $parsed );
 	}
 
-	protected function buildReserved( $parsed ) {
+	protected function buildReserved( array $parsed ) {
 		$builder = new ReservedBuilder();
 
 		return $builder->build( $parsed );
 	}
 
-	protected function buildExpression( $parsed ) {
+	protected function buildExpression( array $parsed ) {
 		$builder = new DropExpressionBuilder();
 
 		return $builder->build( $parsed );
 	}
 
-	protected function buildSubTree( $parsed ) {
+	protected function buildSubTree( array $parsed ) {
 		$sql = '';
 		foreach ( $parsed['sub_tree'] as $k => $v ) {
 			$len = strlen( $sql );

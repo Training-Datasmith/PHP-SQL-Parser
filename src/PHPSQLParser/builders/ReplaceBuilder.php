@@ -52,27 +52,27 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class ReplaceBuilder implements Builder {
 
-    protected function buildTable($parsed) {
+    protected function buildTable(array $parsed) {
         $builder = new TableBuilder();
         return $builder->build($parsed, 0);
     }
 
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery(array $parsed) {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed, 0);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ReplaceColumnListBuilder();
         return $builder->build($parsed, 0);
     }

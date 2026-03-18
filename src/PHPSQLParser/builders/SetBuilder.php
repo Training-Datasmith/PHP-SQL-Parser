@@ -52,7 +52,7 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class SetBuilder implements Builder {
 
-    protected function buildSetExpression($parsed) {
+    protected function buildSetExpression(array $parsed) {
         $builder = new SetExpressionBuilder();
         return $builder->build($parsed);
     }

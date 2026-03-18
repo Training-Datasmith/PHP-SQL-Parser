@@ -53,32 +53,32 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class SetExpressionBuilder implements Builder {
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildOperator($parsed) {
+    protected function buildOperator(array $parsed) {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildSign($parsed) {
+    protected function buildSign(array $parsed) {
         $builder = new SignBuilder();
         return $builder->build($parsed);
     }
@@ -110,8 +110,7 @@ class SetExpressionBuilder implements Builder {
 
             $sql .= $delim;
         }
-        $sql = substr($sql, 0, -1);
-        return $sql;
+        return substr($sql, 0, -1);
     }
 }
 ?>

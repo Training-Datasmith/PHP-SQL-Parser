@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ColumnTypeBracketExpressionBuilder implements Builder {
 
-    protected function buildSubTree($parsed, $delim) {
+    protected function buildSubTree(array $parsed, $delim) {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
@@ -62,8 +62,7 @@ class ColumnTypeBracketExpressionBuilder implements Builder {
             return "";
         }
         $sql = $this->buildSubTree($parsed, ",");
-        $sql = "(" . $sql . ")";
-        return $sql;
+        return "(" . $sql . ")";
     }
 }
 ?>

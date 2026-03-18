@@ -53,17 +53,17 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class IndexAlgorithmBuilder implements Builder {
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildOperator($parsed) {
+    protected function buildOperator(array $parsed) {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }

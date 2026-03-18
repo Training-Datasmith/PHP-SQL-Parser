@@ -92,8 +92,7 @@ class PHPSQLLexer {
         $tokens = $this->balanceParenthesis($tokens);
         $tokens = $this->concatUserDefinedVariables($tokens);
         $tokens = $this->concatScientificNotations($tokens);
-        $tokens = $this->concatNegativeNumbers($tokens);
-        return $tokens;
+        return $this->concatNegativeNumbers($tokens);
     }
 
     protected function concatNegativeNumbers($tokens) {
@@ -306,7 +305,7 @@ class PHPSQLLexer {
 
     // backticks are not balanced within one token, so we have
     // to re-combine some tokens
-    protected function balanceCharacter($tokens, $idx, $char) {
+    protected function balanceCharacter(array $tokens, $idx, $char) {
 
         $token_count = count($tokens);
         $i = $idx + 1;

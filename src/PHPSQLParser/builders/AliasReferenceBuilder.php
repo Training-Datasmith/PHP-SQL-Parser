@@ -56,8 +56,7 @@ class AliasReferenceBuilder implements Builder {
         if ($parsed['expr_type'] !== ExpressionType::ALIAS) {
             return "";
         }
-        $sql = $parsed['base_expr'];
-        return $sql;
+        return $parsed['base_expr'];
     }
 }
 ?>

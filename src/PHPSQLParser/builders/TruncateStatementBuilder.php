@@ -51,21 +51,20 @@ namespace PHPSQLParser\builders;
  */
 class TruncateStatementBuilder implements Builder {
 
-    protected function buildTRUNCATE($parsed) {
+    protected function buildTRUNCATE(array $parsed) {
         $builder = new TruncateBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM(array $parsed) {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
     
     public function build(array $parsed) {
-        $sql = $this->buildTRUNCATE($parsed);
         // $sql .= " " . $this->buildTRUNCATE($parsed) // Uncomment when parser fills in expr_type=table
         
-        return $sql;
+        return $this->buildTRUNCATE($parsed);
     }
 
 }

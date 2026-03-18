@@ -45,7 +45,7 @@ class ColumnListProcessor extends AbstractProcessor {
     public function process($tokens) {
         $columns = explode(",", $tokens);
         $cols = array();
-        foreach ($columns as $k => $v) {
+        foreach ($columns as $v) {
             $cols[] = array('expr_type' => ExpressionType::COLREF, 'base_expr' => trim($v),
                             'no_quotes' => $this->revokeQuotation($v));
         }

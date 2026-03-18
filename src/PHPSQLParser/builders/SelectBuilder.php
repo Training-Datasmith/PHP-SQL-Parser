@@ -52,32 +52,32 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class SelectBuilder implements Builder {
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectExpression($parsed) {
+    protected function buildSelectExpression(array $parsed) {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
@@ -88,7 +88,7 @@ class SelectBuilder implements Builder {
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter($parsed) {
+    protected function getDelimiter(array $parsed) {
         return (!isset($parsed['delim']) || $parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
     }
 

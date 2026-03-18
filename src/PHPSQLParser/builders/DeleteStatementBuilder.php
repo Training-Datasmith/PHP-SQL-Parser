@@ -51,17 +51,17 @@ namespace PHPSQLParser\builders;
  */
 class DeleteStatementBuilder implements Builder {
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE(array $parsed) {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM(array $parsed) {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildDELETE($parsed) {
+    protected function buildDELETE(array $parsed) {
         $builder = new DeleteBuilder();
         return $builder->build($parsed);
     }

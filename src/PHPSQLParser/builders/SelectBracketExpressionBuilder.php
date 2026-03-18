@@ -52,12 +52,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class SelectBracketExpressionBuilder implements Builder {
 
-    protected function buildSubTree($parsed, $delim) {
+    protected function buildSubTree(array $parsed, $delim) {
         $builder = new SubTreeBuilder();
         return $builder->build($parsed, $delim);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }

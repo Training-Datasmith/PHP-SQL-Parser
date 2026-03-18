@@ -53,24 +53,24 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class FulltextIndexBuilder implements Builder {
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildIndexKey($parsed) {
+    protected function buildIndexKey(array $parsed) {
         if ($parsed['expr_type'] !== ExpressionType::INDEX) {
             return "";
         }
         return $parsed['base_expr'];
     }
     
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }

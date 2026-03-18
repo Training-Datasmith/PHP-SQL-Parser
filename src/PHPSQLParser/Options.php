@@ -31,8 +31,6 @@ final class Options
 
     /**
      * Options constructor.
-     *
-     * @param array $options
      */
     public function __construct(array $options)
     {

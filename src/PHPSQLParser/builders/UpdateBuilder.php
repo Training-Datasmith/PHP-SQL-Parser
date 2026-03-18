@@ -53,7 +53,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class UpdateBuilder implements Builder {
 
-    protected function buildTable($parsed, $idx) {
+    protected function buildTable(array $parsed, $idx) {
         $builder = new TableBuilder();
         return $builder->build($parsed, $idx);
     }

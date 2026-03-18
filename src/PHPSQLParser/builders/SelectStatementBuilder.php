@@ -51,47 +51,47 @@ namespace PHPSQLParser\builders;
  */
 class SelectStatementBuilder implements Builder {
 
-    protected function buildSELECT($parsed) {
+    protected function buildSELECT(array $parsed) {
         $builder = new SelectBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFROM($parsed) {
+    protected function buildFROM(array $parsed) {
         $builder = new FromBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE(array $parsed) {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildGROUP($parsed) {
+    protected function buildGROUP(array $parsed) {
         $builder = new GroupByBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildHAVING($parsed) {
+    protected function buildHAVING(array $parsed) {
         $builder = new HavingBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildORDER($parsed) {
+    protected function buildORDER(array $parsed) {
         $builder = new OrderByBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildLIMIT($parsed) {
+    protected function buildLIMIT(array $parsed) {
         $builder = new LimitBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildUNION($parsed) {
+    protected function buildUNION(array $parsed) {
     	$builder = new UnionStatementBuilder();
     	return $builder->build($parsed);
     }
     
-    protected function buildUNIONALL($parsed) {
+    protected function buildUNIONALL(array $parsed) {
     	$builder = new UnionAllStatementBuilder();
     	return $builder->build($parsed);
     }

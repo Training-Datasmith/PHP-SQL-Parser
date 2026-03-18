@@ -53,22 +53,22 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class RecordBuilder implements Builder {
 
-    protected function buildOperator($parsed) {
+    protected function buildOperator(array $parsed) {
         $builder = new OperatorBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new FunctionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }

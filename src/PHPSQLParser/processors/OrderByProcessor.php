@@ -60,7 +60,7 @@ class OrderByProcessor extends AbstractProcessor {
         return array('base_expr' => "", 'dir' => "ASC", 'expr_type' => ExpressionType::EXPRESSION);
     }
 
-    protected function processOrderExpression(&$parseInfo, $select) {
+    protected function processOrderExpression(array &$parseInfo, $select) {
         $parseInfo['base_expr'] = trim($parseInfo['base_expr']);
 
         if ($parseInfo['base_expr'] === "") {

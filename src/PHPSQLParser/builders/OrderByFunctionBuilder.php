@@ -52,7 +52,7 @@ namespace PHPSQLParser\builders;
  */
 class OrderByFunctionBuilder extends FunctionBuilder {
 
-    protected function buildDirection($parsed) {
+    protected function buildDirection(array $parsed) {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }

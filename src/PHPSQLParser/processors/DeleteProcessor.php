@@ -53,7 +53,6 @@ class DeleteProcessor extends AbstractProcessor {
 
     public function process($tokens) {
         $tables = array();
-        $del = $tokens['DELETE'];
 
         foreach ($tokens['DELETE'] as $expression) {
             if (strtoupper($expression) !== 'DELETE' && trim($expression, " \t\n\r\0\x0B.*") !== ""

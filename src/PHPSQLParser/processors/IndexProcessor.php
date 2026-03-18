@@ -77,7 +77,7 @@ class IndexProcessor extends AbstractProcessor {
         $base_expr = '';
         $skip = 0;
 
-        foreach ($tokens as $tokenKey => $token) {
+        foreach ($tokens as $token) {
             $trim = trim($token);
             $base_expr .= $token;
 

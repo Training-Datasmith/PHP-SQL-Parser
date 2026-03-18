@@ -53,22 +53,22 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class FunctionBuilder implements Builder {
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new ColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildConstant($parsed) {
+    protected function buildConstant(array $parsed) {
         $builder = new ConstantBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }
@@ -78,22 +78,22 @@ class FunctionBuilder implements Builder {
         return $builder->isReserved($parsed);
     }
     
-    protected function buildSelectExpression($parsed) {
+    protected function buildSelectExpression(array $parsed) {
         $builder = new SelectExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildSubQuery($parsed) {
+    protected function buildSubQuery(array $parsed) {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildUserVariableExpression($parsed) {
+    protected function buildUserVariableExpression(array $parsed) {
         $builder = new UserVariableBuilder();
         return $builder->build($parsed);
     }

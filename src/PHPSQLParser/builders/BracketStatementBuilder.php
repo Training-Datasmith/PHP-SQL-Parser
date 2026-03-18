@@ -52,12 +52,12 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class BracketStatementBuilder implements Builder {
 
-    protected function buildSelectBracketExpression($parsed) {
+    protected function buildSelectBracketExpression(array $parsed) {
         $builder = new SelectBracketExpressionBuilder();
         return $builder->build($parsed, " ");
     }
 
-    protected function buildSelectStatement($parsed) {
+    protected function buildSelectStatement(array $parsed) {
         $builder = new SelectStatementBuilder();
         return $builder->build($parsed);
     }

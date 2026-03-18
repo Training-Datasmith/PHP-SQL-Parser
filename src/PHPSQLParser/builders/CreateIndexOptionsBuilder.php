@@ -53,32 +53,32 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class CreateIndexOptionsBuilder implements Builder {
 
-    protected function buildIndexParser($parsed) {
+    protected function buildIndexParser(array $parsed) {
         $builder = new IndexParserBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexSize($parsed) {
+    protected function buildIndexSize(array $parsed) {
         $builder = new IndexSizeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexType($parsed) {
+    protected function buildIndexType(array $parsed) {
         $builder = new IndexTypeBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexComment($parsed) {
+    protected function buildIndexComment(array $parsed) {
         $builder = new IndexCommentBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexAlgorithm($parsed) {
+    protected function buildIndexAlgorithm(array $parsed) {
         $builder = new IndexAlgorithmBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildIndexLock($parsed) {
+    protected function buildIndexLock(array $parsed) {
         $builder = new IndexLockBuilder();
         return $builder->build($parsed);
     }

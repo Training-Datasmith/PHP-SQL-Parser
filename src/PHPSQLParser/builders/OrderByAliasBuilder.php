@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class OrderByAliasBuilder implements Builder {
 
-    protected function buildDirection($parsed) {
+    protected function buildDirection(array $parsed) {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }

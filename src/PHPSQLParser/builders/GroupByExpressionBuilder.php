@@ -54,12 +54,12 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class GroupByExpressionBuilder implements Builder {
 
-	protected function buildColRef($parsed) {
+	protected function buildColRef(array $parsed) {
 		$builder = new ColumnReferenceBuilder();
 		return $builder->build($parsed);
 	}
 	
-	protected function buildReserved($parsed) {
+	protected function buildReserved(array $parsed) {
 		$builder = new ReservedBuilder();
 		return $builder->build($parsed);
 	}
@@ -81,9 +81,7 @@ class GroupByExpressionBuilder implements Builder {
 
             $sql .= " ";
         }
-
-        $sql = substr($sql, 0, -1);
-        return $sql;
+        return substr($sql, 0, -1);
     }
 }
 ?>

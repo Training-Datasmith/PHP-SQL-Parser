@@ -51,7 +51,7 @@ namespace PHPSQLParser\builders;
  */
 class DropStatementBuilder implements Builder {
 
-	protected function buildDROP( $parsed ) {
+	protected function buildDROP( array $parsed ) {
 		$builder = new DropBuilder();
 		return $builder->build( $parsed );
 	}

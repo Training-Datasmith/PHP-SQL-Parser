@@ -60,7 +60,7 @@ class UnionProcessor extends AbstractProcessor {
         return $processor->process($token);
     }
 
-    public static function isUnion($queries) {
+    public static function isUnion(array $queries) {
         $unionTypes = array('UNION', 'UNION ALL');
         foreach ($unionTypes as $unionType) {
             if (!empty($queries[$unionType])) {
@@ -80,7 +80,7 @@ class UnionProcessor extends AbstractProcessor {
      * is supported in each UNION block. (select)(select)union(select) is not legal.
      * The extra queries will be silently ignored.
      */
-    protected function processMySQLUnion($queries) {
+    protected function processMySQLUnion(array $queries) {
         $unionTypes = array('UNION', 'UNION ALL');
         foreach ($unionTypes as $unionType) {
 
@@ -89,7 +89,7 @@ class UnionProcessor extends AbstractProcessor {
             }
 
             foreach ($queries[$unionType] as $key => $tokenList) {
-                foreach ($tokenList as $z => $token) {
+                foreach ($tokenList as $token) {
                     $token = trim($token);
                     if ($token === "") {
                         continue;
@@ -114,7 +114,7 @@ class UnionProcessor extends AbstractProcessor {
      * Moves the final union query into a separate output, so the remainder (such as ORDER BY) can
      * be processed separately.
      */
-    protected function splitUnionRemainder($queries, $unionType, $outputArray)
+    protected function splitUnionRemainder(array $queries, $unionType, array $outputArray)
     {
         $finalQuery = [];
 
@@ -140,14 +140,14 @@ class UnionProcessor extends AbstractProcessor {
         }
 
 
-        $finalQueryString = trim(implode($finalQuery));
+        $finalQueryString = trim(implode('', $finalQuery));
 
         if (!empty($finalQuery) && $finalQueryString != '') {
             $queries[$unionType][] = $finalQuery;
         }
 
         $defaultProcessor = new DefaultProcessor($this->options);
-        $rePrepareSqlString = trim(implode($outputArray));
+        $rePrepareSqlString = trim(implode('', $outputArray));
 
         if (!empty($rePrepareSqlString)) {
             $remainingQueries = $defaultProcessor->process($rePrepareSqlString);

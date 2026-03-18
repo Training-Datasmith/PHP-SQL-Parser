@@ -51,7 +51,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ExplainProcessor extends AbstractProcessor {
 
-    protected function isStatement($keys, $needle = "EXPLAIN") {
+    protected function isStatement(array $keys, $needle = "EXPLAIN") {
         $pos = array_search($needle, $keys);
         if (isset($keys[$pos + 1])) {
             return in_array($keys[$pos + 1], array('SELECT', 'DELETE', 'INSERT', 'REPLACE', 'UPDATE'), true);
@@ -83,7 +83,6 @@ class ExplainProcessor extends AbstractProcessor {
                 case 'EXTENDED':
                 case 'PARTITIONS':
                     return array('expr_type' => ExpressionType::RESERVED, 'base_expr' => $token);
-                    break;
 
                 case 'FORMAT':
                     if ($currCategory === '') {

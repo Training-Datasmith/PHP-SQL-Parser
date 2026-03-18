@@ -54,42 +54,42 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class TableBracketExpressionBuilder implements Builder {
 
-    protected function buildColDef($parsed) {
+    protected function buildColDef(array $parsed) {
         $builder = new ColumnDefinitionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildPrimaryKey($parsed) {
+    protected function buildPrimaryKey(array $parsed) {
         $builder = new PrimaryKeyBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildForeignKey($parsed) {
+    protected function buildForeignKey(array $parsed) {
         $builder = new ForeignKeyBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildCheck($parsed) {
+    protected function buildCheck(array $parsed) {
         $builder = new CheckBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildLikeExpression($parsed) {
+    protected function buildLikeExpression(array $parsed) {
         $builder = new LikeExpressionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildIndexKey($parsed) {
+    protected function buildIndexKey(array $parsed) {
         $builder = new IndexKeyBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildUniqueIndex($parsed) {
+    protected function buildUniqueIndex(array $parsed) {
         $builder = new UniqueIndexBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildFulltextIndex($parsed) {
+    protected function buildFulltextIndex(array $parsed) {
         $builder = new FulltextIndexBuilder();
         return $builder->build($parsed);
     }
@@ -116,9 +116,7 @@ class TableBracketExpressionBuilder implements Builder {
 
             $sql .= ", ";
         }
-
-        $sql = " (" . substr($sql, 0, -2) . ")";
-        return $sql;
+        return " (" . substr($sql, 0, -2) . ")";
     }
     
 }

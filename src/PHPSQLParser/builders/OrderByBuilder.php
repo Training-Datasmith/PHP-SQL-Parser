@@ -53,37 +53,37 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class OrderByBuilder implements Builder {
 
-    protected function buildFunction($parsed) {
+    protected function buildFunction(array $parsed) {
         $builder = new OrderByFunctionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new OrderByReservedBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildColRef($parsed) {
+    protected function buildColRef(array $parsed) {
         $builder = new OrderByColumnReferenceBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new OrderByAliasBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildExpression($parsed) {
+    protected function buildExpression(array $parsed) {
         $builder = new OrderByExpressionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildBracketExpression($parsed) {
+    protected function buildBracketExpression(array $parsed) {
         $builder = new OrderByBracketExpressionBuilder();
         return $builder->build($parsed);
     }
     
-    protected function buildPosition($parsed) {
+    protected function buildPosition(array $parsed) {
         $builder = new OrderByPositionBuilder();
         return $builder->build($parsed);
     }

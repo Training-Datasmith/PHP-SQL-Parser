@@ -51,7 +51,7 @@ namespace PHPSQLParser\builders;
  */
 class AliasBuilder implements Builder {
 
-    public function hasAlias($parsed) {
+    public function hasAlias(array $parsed) {
         return isset($parsed['alias']);
     }
 
@@ -63,8 +63,7 @@ class AliasBuilder implements Builder {
         if ($parsed['alias']['as']) {
             $sql .= " AS";
         }
-        $sql .= " " . $parsed['alias']['name'];
-        return $sql;
+        return $sql . (" " . $parsed['alias']['name']);
     }
 }
 ?>

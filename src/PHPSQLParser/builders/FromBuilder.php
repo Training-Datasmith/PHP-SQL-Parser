@@ -52,17 +52,17 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class FromBuilder implements Builder {
 
-    protected function buildTable($parsed, $key) {
+    protected function buildTable(array $parsed, $key) {
         $builder = new TableBuilder();
         return $builder->build($parsed, $key);
     }
 
-    protected function buildTableExpression($parsed, $key) {
+    protected function buildTableExpression(array $parsed, $key) {
         $builder = new TableExpressionBuilder();
         return $builder->build($parsed, $key);
     }
 
-    protected function buildSubQuery($parsed, $key) {
+    protected function buildSubQuery(array $parsed, $key) {
         $builder = new SubQueryBuilder();
         return $builder->build($parsed, $key);
     }

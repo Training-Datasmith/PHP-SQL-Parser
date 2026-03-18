@@ -8,8 +8,6 @@ use PHPSQLParser\processors\DefaultProcessor;
 class ExpressionToken {
 
     private $subTree;
-    private $expression;
-    private $key;
     private $token;
     private $tokenType;
     private $trim;
@@ -18,8 +16,6 @@ class ExpressionToken {
 
     public function __construct($key = "", $token = "") {
         $this->subTree = false;
-        $this->expression = "";
-        $this->key = $key;
         $this->token = $token;
         $this->tokenType = false;
         $this->trim = trim($token);

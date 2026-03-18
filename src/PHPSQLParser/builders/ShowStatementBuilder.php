@@ -51,12 +51,12 @@ namespace PHPSQLParser\builders;
  */
 class ShowStatementBuilder implements Builder {
 
-    protected function buildWHERE($parsed) {
+    protected function buildWHERE(array $parsed) {
         $builder = new WhereBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildSHOW($parsed) {
+    protected function buildSHOW(array $parsed) {
         $builder = new ShowBuilder();
         return $builder->build($parsed);
     }

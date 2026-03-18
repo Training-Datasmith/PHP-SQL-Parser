@@ -53,17 +53,17 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class HavingBuilder extends WhereBuilder {
 
-    protected function buildAliasReference($parsed) {
+    protected function buildAliasReference(array $parsed) {
         $builder = new AliasReferenceBuilder();
         return $builder->build($parsed);
     }
 	
-	protected function buildHavingExpression($parsed) {
+	protected function buildHavingExpression(array $parsed) {
         $builder = new HavingExpressionBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildHavingBracketExpression($parsed) {
+    protected function buildHavingBracketExpression(array $parsed) {
         $builder = new HavingBracketExpressionBuilder();
         return $builder->build($parsed);
     }

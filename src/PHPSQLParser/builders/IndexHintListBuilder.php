@@ -51,7 +51,7 @@ namespace PHPSQLParser\builders;
  */
 class IndexHintListBuilder implements Builder {
 
-    public function hasHint($parsed) {
+    public function hasHint(array $parsed) {
         return isset($parsed['hints']);
     }
 
@@ -61,7 +61,7 @@ class IndexHintListBuilder implements Builder {
             return "";
         }
         $sql = "";
-        foreach ($parsed['hints'] as $k => $v) {
+        foreach ($parsed['hints'] as $v) {
             $sql .= $v['hint_type'] . " " . $v['hint_list'] . " ";
         }
         return " " . substr($sql, 0, -1);

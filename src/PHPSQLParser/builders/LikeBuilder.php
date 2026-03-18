@@ -52,7 +52,7 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  */
 class LikeBuilder implements Builder {
 
-    protected function buildTable($parsed, $index) {
+    protected function buildTable(array $parsed, $index) {
         $builder = new TableBuilder();
         return $builder->build($parsed, $index);
     }

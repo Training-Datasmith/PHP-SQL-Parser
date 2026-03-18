@@ -51,7 +51,7 @@ use PHPSQLParser\utils\ExpressionType;
  *  
  */
 class OrderByPositionBuilder implements Builder {
-    protected function buildDirection($parsed) {
+    protected function buildDirection(array $parsed) {
         $builder = new DirectionBuilder();
         return $builder->build($parsed);
     }

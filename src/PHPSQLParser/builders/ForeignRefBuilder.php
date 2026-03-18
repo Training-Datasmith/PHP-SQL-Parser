@@ -54,17 +54,17 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ForeignRefBuilder implements Builder {
 
-    protected function buildTable($parsed) {
+    protected function buildTable(array $parsed) {
         $builder = new TableBuilder();
         return $builder->build($parsed, 0);
     }
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }
 
-    protected function buildReserved($parsed) {
+    protected function buildReserved(array $parsed) {
         $builder = new ReservedBuilder();
         return $builder->build($parsed);
     }

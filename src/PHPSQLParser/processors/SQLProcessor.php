@@ -127,6 +127,10 @@ class SQLProcessor extends SQLChunkProcessor {
             case 'PURGE':
             case 'EXECUTE':
             case 'PREPARE':
+            case 'EXPLAIN':
+            case 'DESCRIBE':
+            case 'SHOW':
+            case 'RENAME':
                 $token_category = $upper;
                 break;
 
@@ -170,22 +174,12 @@ class SQLProcessor extends SQLChunkProcessor {
                 $token_category = $upper;
                 break;
 
-            case 'EXPLAIN':
-            case 'DESCRIBE':
-            case 'SHOW':
-                $token_category = $upper;
-                break;
-
             case 'DESC':
                 if ($token_category === '') {
                     // short version of DESCRIBE
                     $token_category = $upper;
                 }
                 // else direction of ORDER-BY
-                break;
-
-            case 'RENAME':
-                $token_category = $upper;
                 break;
 
             case 'DATABASE':
@@ -500,11 +494,9 @@ class SQLProcessor extends SQLChunkProcessor {
                 break;
 
             case 'AS':
-                break;
 
             case '':
             case ',':
-                break;
 
             default:
                 break;

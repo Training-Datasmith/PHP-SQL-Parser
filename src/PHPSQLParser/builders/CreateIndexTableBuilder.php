@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class CreateIndexTableBuilder implements Builder {
 
-    protected function buildColumnList($parsed) {
+    protected function buildColumnList(array $parsed) {
         $builder = new ColumnListBuilder();
         return $builder->build($parsed);
     }

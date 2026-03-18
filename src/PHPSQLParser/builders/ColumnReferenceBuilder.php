@@ -52,7 +52,7 @@ use PHPSQLParser\utils\ExpressionType;
  */
 class ColumnReferenceBuilder implements Builder {
 
-    protected function buildAlias($parsed) {
+    protected function buildAlias(array $parsed) {
         $builder = new AliasBuilder();
         return $builder->build($parsed);
     }
@@ -62,8 +62,7 @@ class ColumnReferenceBuilder implements Builder {
             return "";
         }
         $sql = $parsed['base_expr'];
-        $sql .= $this->buildAlias($parsed);
-        return $sql;
+        return $sql . $this->buildAlias($parsed);
     }
 }
 ?>
