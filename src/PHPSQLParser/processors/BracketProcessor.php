@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * BracketProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the parentheses around the statement.
  *
@@ -52,54 +50,43 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class BracketProcessor extends AbstractProcessor
+class Bracket_Processor extends Abstract_Processor
 {
-    protected function processTopLevel($sql)
+    protected function process_top_level($sql)
     {
-        $processor = new DefaultProcessor($this->options);
+        $processor = new Default_Processor($this->options);
         return $processor->process($sql);
     }
-
     public function process($tokens)
     {
-        $token = $this->removeParenthesisFromStart($tokens[0]);
-        $subtree = $this->processTopLevel($token);
-
-        $remainingExpressions = $this->getRemainingNotBracketExpression($subtree);
-
+        $token = $this->remove_parenthesis_from_start($tokens[0]);
+        $subtree = $this->process_top_level($token);
+        $remaining_expressions = $this->get_remaining_not_bracket_expression($subtree);
         if (isset($subtree['BRACKET'])) {
             $subtree = $subtree['BRACKET'];
         }
-
         if (isset($subtree['SELECT'])) {
-            $subtree = [
-                    ['expr_type' => ExpressionType::QUERY, 'base_expr' => $token, 'sub_tree' => $subtree]];
+            $subtree = [['expr_type' => Expression_Type::QUERY, 'base_expr' => $token, 'sub_tree' => $subtree]];
         }
-
-        return [
-                ['expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => trim($tokens[0]),
-                        'sub_tree' => $subtree, 'remaining_expressions' => $remainingExpressions]];
+        return [['expr_type' => Expression_Type::BRACKET_EXPRESSION, 'base_expr' => trim($tokens[0]), 'sub_tree' => $subtree, 'remaining_expressions' => $remaining_expressions]];
     }
-
-    private function getRemainingNotBracketExpression($subtree)
+    private function get_remaining_not_bracket_expression($subtree)
     {
         // https://github.com/greenlion/PHP-SQL-Parser/issues/279
         // https://github.com/sinri/PHP-SQL-Parser/commit/eac592a0e19f1df6f420af3777a6d5504837faa7
         // as there is no pull request for 279 by the user. His solution works and tested.
         if (empty($subtree)) {
             $subtree = [];
-        }// as a fix by Sinri 20180528
-        $remainingExpressions = [];
-        $ignoredKeys = ['BRACKET', 'SELECT', 'FROM'];
-        $subtreeKeys = array_keys($subtree);
-
-        foreach ($subtreeKeys as $key) {
-            if (!in_array($key, $ignoredKeys)) {
-                $remainingExpressions[$key] = $subtree[$key];
+        }
+        // as a fix by Sinri 20180528
+        $remaining_expressions = [];
+        $ignored_keys = ['BRACKET', 'SELECT', 'FROM'];
+        $subtree_keys = array_keys($subtree);
+        foreach ($subtree_keys as $key) {
+            if (!in_array($key, $ignored_keys)) {
+                $remaining_expressions[$key] = $subtree[$key];
             }
         }
-
-        return $remainingExpressions;
+        return $remaining_expressions;
     }
-
 }

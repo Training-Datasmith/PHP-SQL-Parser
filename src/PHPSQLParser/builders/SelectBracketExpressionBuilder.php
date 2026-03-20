@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SelectBracketExpressionBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for bracket expressions within a SELECT statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,26 +51,23 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SelectBracketExpressionBuilder implements Builder
+class Select_Bracket_Expression_Builder implements Builder
 {
-    protected function buildSubTree(array $parsed, $delim)
+    protected function build_sub_tree(array $parsed, $delim)
     {
-        $builder = new SubTreeBuilder();
+        $builder = new Sub_Tree_Builder();
         return $builder->build($parsed, $delim);
     }
-
-    protected function buildAlias(array $parsed)
+    protected function build_alias(array $parsed)
     {
-        $builder = new AliasBuilder();
+        $builder = new Alias_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
+        if ($parsed['expr_type'] !== Expression_Type::BRACKET_EXPRESSION) {
             return '';
         }
-        return '(' . $this->buildSubTree($parsed, ' ') . ')'
-            . $this->buildAlias($parsed);
+        return '(' . $this->build_sub_tree($parsed, ' ') . ')' . $this->build_alias($parsed);
     }
 }

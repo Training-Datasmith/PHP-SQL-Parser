@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * TruncateStatementBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole Truncate statement. You can overwrite
@@ -51,25 +50,21 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class TruncateStatementBuilder implements Builder
+class Truncate_Statement_Builder implements Builder
 {
-    protected function buildTRUNCATE(array $parsed)
+    protected function build_truncate(array $parsed)
     {
-        $builder = new TruncateBuilder();
+        $builder = new Truncate_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFROM(array $parsed)
+    protected function build_from(array $parsed)
     {
-        $builder = new FromBuilder();
+        $builder = new From_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         // $sql .= " " . $this->buildTRUNCATE($parsed) // Uncomment when parser fills in expr_type=table
-
-        return $this->buildTRUNCATE($parsed);
+        return $this->build_truncate($parsed);
     }
-
 }

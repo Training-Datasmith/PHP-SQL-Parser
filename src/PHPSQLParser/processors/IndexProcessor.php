@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * IndexProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the INDEX statements.
  *
@@ -52,262 +50,206 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class IndexProcessor extends AbstractProcessor
+class Index_Processor extends Abstract_Processor
 {
-    protected function getReservedType($token)
+    protected function get_reserved_type($token)
     {
-        return ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $token];
+        return ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $token];
     }
-
-    protected function getConstantType($token)
+    protected function get_constant_type($token)
     {
-        return ['expr_type' => ExpressionType::CONSTANT, 'base_expr' => $token];
+        return ['expr_type' => Expression_Type::CONSTANT, 'base_expr' => $token];
     }
-
-    protected function getOperatorType($token)
+    protected function get_operator_type($token)
     {
-        return ['expr_type' => ExpressionType::OPERATOR, 'base_expr' => $token];
+        return ['expr_type' => Expression_Type::OPERATOR, 'base_expr' => $token];
     }
-
-    protected function processIndexColumnList($parsed)
+    protected function process_index_column_list($parsed)
     {
-        $processor = new IndexColumnListProcessor($this->options);
+        $processor = new Index_Column_List_Processor($this->options);
         return $processor->process($parsed);
     }
-
     public function process($tokens)
     {
-
-        $currCategory = 'INDEX_NAME';
-        $result = ['base_expr' => false, 'name' => false, 'no_quotes' => false, 'index-type' => false, 'on' => false,
-                        'options' => []];
+        $curr_category = 'INDEX_NAME';
+        $result = ['base_expr' => false, 'name' => false, 'no_quotes' => false, 'index-type' => false, 'on' => false, 'options' => []];
         $expr = [];
         $base_expr = '';
         $skip = 0;
-
         foreach ($tokens as $token) {
             $trim = trim($token);
             $base_expr .= $token;
-
             if ($skip > 0) {
                 $skip--;
                 continue;
             }
-
             if ($skip < 0) {
                 break;
             }
-
             if ($trim === '') {
                 continue;
             }
-
             $upper = strtoupper($trim);
             switch ($upper) {
-
                 case 'USING':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'TYPE_OPTION';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'TYPE_OPTION';
                         continue 2;
                     }
-                    if ($prevCategory === 'TYPE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'INDEX_TYPE';
+                    if ($prev_category === 'TYPE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'INDEX_TYPE';
                         continue 2;
                     }
                     // else ?
                     break;
-
                 case 'KEY_BLOCK_SIZE':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'INDEX_OPTION';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'INDEX_OPTION';
                         continue 2;
                     }
                     // else ?
                     break;
-
                 case 'WITH':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'INDEX_PARSER';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'INDEX_PARSER';
                         continue 2;
                     }
                     // else ?
                     break;
-
                 case 'PARSER':
-                    if ($currCategory === 'INDEX_PARSER') {
-                        $expr[] = $this->getReservedType($trim);
+                    if ($curr_category === 'INDEX_PARSER') {
+                        $expr[] = $this->get_reserved_type($trim);
                         continue 2;
                     }
                     // else ?
                     break;
-
                 case 'COMMENT':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'INDEX_COMMENT';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'INDEX_COMMENT';
                         continue 2;
                     }
                     // else ?
                     break;
-
                 case 'ALGORITHM':
                 case 'LOCK':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = $upper . '_OPTION';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = $upper . '_OPTION';
                         continue 2;
                     }
                     // else ?
                     break;
-
                 case '=':
                     // the optional operator
-                    if (substr($currCategory, -7, 7) === '_OPTION') {
-                        $expr[] = $this->getOperatorType($trim);
-                        continue 2; // don't change the category
+                    if (substr($curr_category, -7, 7) === '_OPTION') {
+                        $expr[] = $this->get_operator_type($trim);
+                        continue 2;
+                        // don't change the category
                     }
                     // else ?
                     break;
-
                 case 'ON':
-                    if ($prevCategory === 'CREATE_DEF' || $prevCategory === 'TYPE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'TABLE_DEF';
+                    if ($prev_category === 'CREATE_DEF' || $prev_category === 'TYPE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'TABLE_DEF';
                         continue 2;
                     }
                     // else ?
                     break;
-
                 default:
-                    switch ($currCategory) {
-
+                    switch ($curr_category) {
                         case 'COLUMN_DEF':
                             if ($upper[0] === '(' && substr($upper, -1) === ')') {
-                                $cols = $this->processIndexColumnList($this->removeParenthesisFromStart($trim));
+                                $cols = $this->process_index_column_list($this->remove_parenthesis_from_start($trim));
                                 $result['on']['base_expr'] .= $base_expr;
-                                $result['on']['sub_tree'] = ['expr_type' => ExpressionType::COLUMN_LIST,
-                                                                  'base_expr' => $trim, 'sub_tree' => $cols];
+                                $result['on']['sub_tree'] = ['expr_type' => Expression_Type::COLUMN_LIST, 'base_expr' => $trim, 'sub_tree' => $cols];
                             }
-
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         case 'TABLE_DEF':
                             // the table name
-                            $expr[] = $this->getConstantType($trim);
+                            $expr[] = $this->get_constant_type($trim);
                             // TODO: the base_expr should contain the column-def too
-                            $result['on'] = ['expr_type' => ExpressionType::TABLE, 'base_expr' => $base_expr,
-                                                  'name' => $trim, 'no_quotes' => $this->revokeQuotation($trim),
-                                                  'sub_tree' => false];
+                            $result['on'] = ['expr_type' => Expression_Type::TABLE, 'base_expr' => $base_expr, 'name' => $trim, 'no_quotes' => $this->revoke_quotation($trim), 'sub_tree' => false];
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'COLUMN_DEF';
+                            $curr_category = 'COLUMN_DEF';
                             continue 3;
-
                         case 'INDEX_NAME':
                             $result['base_expr'] = $result['name'] = $trim;
-                            $result['no_quotes'] = $this->revokeQuotation($trim);
-
+                            $result['no_quotes'] = $this->revoke_quotation($trim);
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'TYPE_DEF';
+                            $curr_category = 'TYPE_DEF';
                             break;
-
                         case 'INDEX_PARSER':
                             // the parser name
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::INDEX_PARSER,
-                                                         'base_expr' => trim($base_expr), 'sub_tree' => $expr];
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::INDEX_PARSER, 'base_expr' => trim($base_expr), 'sub_tree' => $expr];
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
-
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         case 'INDEX_COMMENT':
                             // the index comment
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::COMMENT,
-                                                         'base_expr' => trim($base_expr), 'sub_tree' => $expr];
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::COMMENT, 'base_expr' => trim($base_expr), 'sub_tree' => $expr];
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
-
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         case 'INDEX_OPTION':
                             // the key_block_size
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::INDEX_SIZE,
-                                                         'base_expr' => trim($base_expr), 'size' => $upper,
-                                                         'sub_tree' => $expr];
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::INDEX_SIZE, 'base_expr' => trim($base_expr), 'size' => $upper, 'sub_tree' => $expr];
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
-
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         case 'INDEX_TYPE':
                         case 'TYPE_OPTION':
                             // BTREE or HASH
-                            $expr[] = $this->getReservedType($trim);
-                            if ($currCategory === 'INDEX_TYPE') {
-                                $result['index-type'] = ['expr_type' => ExpressionType::INDEX_TYPE,
-                                                              'base_expr' => trim($base_expr), 'using' => $upper,
-                                                              'sub_tree' => $expr];
+                            $expr[] = $this->get_reserved_type($trim);
+                            if ($curr_category === 'INDEX_TYPE') {
+                                $result['index-type'] = ['expr_type' => Expression_Type::INDEX_TYPE, 'base_expr' => trim($base_expr), 'using' => $upper, 'sub_tree' => $expr];
                             } else {
-                                $result['options'][] = ['expr_type' => ExpressionType::INDEX_TYPE,
-                                                             'base_expr' => trim($base_expr), 'using' => $upper,
-                                                             'sub_tree' => $expr];
+                                $result['options'][] = ['expr_type' => Expression_Type::INDEX_TYPE, 'base_expr' => trim($base_expr), 'using' => $upper, 'sub_tree' => $expr];
                             }
-
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         case 'LOCK_OPTION':
                             // DEFAULT|NONE|SHARED|EXCLUSIVE
-                            $expr[] = $this->getReservedType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::INDEX_LOCK,
-                                                         'base_expr' => trim($base_expr), 'lock' => $upper,
-                                                         'sub_tree' => $expr];
-
+                            $expr[] = $this->get_reserved_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::INDEX_LOCK, 'base_expr' => trim($base_expr), 'lock' => $upper, 'sub_tree' => $expr];
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         case 'ALGORITHM_OPTION':
                             // DEFAULT|INPLACE|COPY
-                            $expr[] = $this->getReservedType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::INDEX_ALGORITHM,
-                                                         'base_expr' => trim($base_expr), 'algorithm' => $upper,
-                                                         'sub_tree' => $expr];
-
+                            $expr[] = $this->get_reserved_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::INDEX_ALGORITHM, 'base_expr' => trim($base_expr), 'algorithm' => $upper, 'sub_tree' => $expr];
                             $expr = [];
                             $base_expr = '';
-                            $currCategory = 'CREATE_DEF';
-
+                            $curr_category = 'CREATE_DEF';
                             break;
-
                         default:
                             break;
                     }
-
                     break;
             }
-
-            $prevCategory = $currCategory;
-            $currCategory = '';
+            $prev_category = $curr_category;
+            $curr_category = '';
         }
-
         if ($result['options'] === []) {
             $result['options'] = false;
         }

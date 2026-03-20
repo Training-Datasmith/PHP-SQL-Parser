@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DropIndexTable.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the table part of a DROP INDEX statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,7 +51,7 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DropIndexTableBuilder implements Builder
+class Drop_Index_Table_Builder implements Builder
 {
     public function build(array $parsed)
     {
@@ -61,10 +59,9 @@ class DropIndexTableBuilder implements Builder
             return '';
         }
         $table = $parsed['on'];
-        if ($table['expr_type'] !== ExpressionType::TABLE) {
+        if ($table['expr_type'] !== Expression_Type::TABLE) {
             return '';
         }
         return 'ON ' . $table['name'];
     }
-
 }

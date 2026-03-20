@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ColumnListProcessor.php
  *
@@ -31,11 +31,9 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  *
  * This class processes column-lists.
@@ -43,15 +41,14 @@ use PHPSQLParser\utils\ExpressionType;
  * @author arothe
  *
  */
-class ColumnListProcessor extends AbstractProcessor
+class Column_List_Processor extends Abstract_Processor
 {
     public function process($tokens)
     {
         $columns = explode(',', $tokens);
         $cols = [];
         foreach ($columns as $v) {
-            $cols[] = ['expr_type' => ExpressionType::COLREF, 'base_expr' => trim($v),
-                            'no_quotes' => $this->revokeQuotation($v)];
+            $cols[] = ['expr_type' => Expression_Type::COLREF, 'base_expr' => trim($v), 'no_quotes' => $this->revoke_quotation($v)];
         }
         return $cols;
     }

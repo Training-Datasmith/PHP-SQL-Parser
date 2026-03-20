@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * IndexColumnBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for index column entries of the column-list
  * parts of CREATE TABLE.
@@ -54,26 +52,23 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class IndexColumnBuilder implements Builder
+class Index_Column_Builder implements Builder
 {
-    protected function buildLength($parsed)
+    protected function build_length($parsed)
     {
-        return ($parsed === false ? '' : ('(' . $parsed . ')'));
+        return $parsed === false ? '' : '(' . $parsed . ')';
     }
-
-    protected function buildDirection($parsed)
+    protected function build_direction($parsed)
     {
-        return ($parsed === false ? '' : (' ' . $parsed));
+        return $parsed === false ? '' : ' ' . $parsed;
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::INDEX_COLUMN) {
+        if ($parsed['expr_type'] !== Expression_Type::INDEX_COLUMN) {
             return '';
         }
         $sql = $parsed['name'];
-        $sql .= $this->buildLength($parsed['length']);
-        return $sql . $this->buildDirection($parsed['dir']);
+        $sql .= $this->build_length($parsed['length']);
+        return $sql . $this->build_direction($parsed['dir']);
     }
-
 }

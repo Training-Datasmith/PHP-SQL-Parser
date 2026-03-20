@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * UnsupportedFeatureException.php
  *
@@ -41,11 +41,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\exceptions;
+namespace Phpsql_Parser\exceptions;
 
 use Exception;
-
 /**
  * This exception will occur in the PHPSQLCreator, if the creator finds
  * a field name, which is unknown. The developers have created some
@@ -56,17 +54,15 @@ use Exception;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UnsupportedFeatureException extends Exception
+class Unsupported_Feature_Exception extends Exception
 {
     protected $key;
-
     public function __construct($key)
     {
         $this->key = $key;
         parent::__construct($key . ' not implemented.', 20);
     }
-
-    public function getKey()
+    public function get_key()
     {
         return $this->key;
     }

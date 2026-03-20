@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * LikeBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the LIKE statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
@@ -53,19 +51,18 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class LikeBuilder implements Builder
+class Like_Builder implements Builder
 {
-    protected function buildTable(array $parsed, $index)
+    protected function build_table(array $parsed, $index)
     {
-        $builder = new TableBuilder();
+        $builder = new Table_Builder();
         return $builder->build($parsed, $index);
     }
-
     public function build(array $parsed)
     {
-        $sql = $this->buildTable($parsed, 0);
+        $sql = $this->build_table($parsed, 0);
         if (strlen($sql) === 0) {
-            throw new UnableToCreateSQLException('LIKE', '', $parsed, 'table');
+            throw new Unable_To_Create_Sql_Exception('LIKE', '', $parsed, 'table');
         }
         return 'LIKE ' . $sql;
     }

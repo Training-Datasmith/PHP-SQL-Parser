@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * RefTypeBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnsupportedFeatureException;
-
+use Phpsql_Parser\exceptions\Unsupported_Feature_Exception;
 /**
  * This class implements the references type within a JOIN.
  * You can overwrite all functions to achieve another handling.
@@ -53,7 +51,7 @@ use PHPSQLParser\exceptions\UnsupportedFeatureException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RefTypeBuilder
+class Ref_Type_Builder
 {
     public function build($parsed)
     {
@@ -67,6 +65,6 @@ class RefTypeBuilder
             return ' USING ';
         }
         // TODO: add more
-        throw new UnsupportedFeatureException($parsed);
+        throw new Unsupported_Feature_Exception($parsed);
     }
 }

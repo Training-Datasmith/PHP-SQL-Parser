@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CharacterSetBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the CHARACTER SET statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
@@ -54,42 +52,37 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CharacterSetBuilder implements Builder
+class Character_Set_Builder implements Builder
 {
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator(array $parsed)
+    protected function build_operator(array $parsed)
     {
-        $builder = new OperatorBuilder();
+        $builder = new Operator_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::CHARSET) {
+        if ($parsed['expr_type'] !== Expression_Type::CHARSET) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildConstant($v);
-
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_constant($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE options CHARACTER SET subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE options CHARACTER SET subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return substr($sql, 0, -1);

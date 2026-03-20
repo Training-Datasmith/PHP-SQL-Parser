@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateTableOptionsBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the table-options statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
@@ -53,26 +51,23 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateTableOptionsBuilder implements Builder
+class Create_Table_Options_Builder implements Builder
 {
-    protected function buildExpression(array $parsed)
+    protected function build_expression(array $parsed)
     {
-        $builder = new SelectExpressionBuilder();
+        $builder = new Select_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCharacterSet(array $parsed)
+    protected function build_character_set(array $parsed)
     {
-        $builder = new CharacterSetBuilder();
+        $builder = new Character_Set_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCollation(array $parsed)
+    protected function build_collation(array $parsed)
     {
-        $builder = new CollationBuilder();
+        $builder = new Collation_Builder();
         return $builder->build($parsed);
     }
-
     /**
      * Returns a well-formatted delimiter string. If you don't need nice SQL,
      * you could simply return $parsed['delim'].
@@ -80,11 +75,10 @@ class CreateTableOptionsBuilder implements Builder
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter(array $parsed)
+    protected function get_delimiter(array $parsed)
     {
-        return ($parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+        return $parsed['delim'] === false ? '' : trim($parsed['delim']) . ' ';
     }
-
     public function build(array $parsed)
     {
         if (!isset($parsed['options']) || $parsed['options'] === false) {
@@ -94,15 +88,13 @@ class CreateTableOptionsBuilder implements Builder
         $sql = '';
         foreach ($options as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildExpression($v);
-            $sql .= $this->buildCharacterSet($v);
-            $sql .= $this->buildCollation($v);
-
+            $sql .= $this->build_expression($v);
+            $sql .= $this->build_character_set($v);
+            $sql .= $this->build_collation($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE options', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE options', $k, $v, 'expr_type');
             }
-
-            $sql .= $this->getDelimiter($v);
+            $sql .= $this->get_delimiter($v);
         }
         return ' ' . substr($sql, 0, -1);
     }

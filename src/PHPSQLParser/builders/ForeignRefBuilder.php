@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ForeignRefBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the FOREIGN KEY REFERENCES statement
  * part of CREATE TABLE.
@@ -55,42 +53,37 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ForeignRefBuilder implements Builder
+class Foreign_Ref_Builder implements Builder
 {
-    protected function buildTable(array $parsed)
+    protected function build_table(array $parsed)
     {
-        $builder = new TableBuilder();
+        $builder = new Table_Builder();
         return $builder->build($parsed, 0);
     }
-
-    protected function buildColumnList(array $parsed)
+    protected function build_column_list(array $parsed)
     {
-        $builder = new ColumnListBuilder();
+        $builder = new Column_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::REFERENCE) {
+        if ($parsed['expr_type'] !== Expression_Type::REFERENCE) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildTable($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildColumnList($v);
-
+            $sql .= $this->build_table($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_column_list($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE foreign ref subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE foreign ref subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return substr($sql, 0, -1);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ReplaceProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the REPLACE statements.
@@ -50,11 +49,10 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ReplaceProcessor extends InsertProcessor
+class Replace_Processor extends Insert_Processor
 {
-    public function process($tokenList, $token_category = 'REPLACE')
+    public function process($token_list, $token_category = 'REPLACE')
     {
-        return parent::process($tokenList, $token_category);
+        return parent::process($token_list, $token_category);
     }
-
 }

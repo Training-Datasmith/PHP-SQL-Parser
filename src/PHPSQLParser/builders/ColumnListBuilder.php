@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ColumnListBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for column-list parts of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
@@ -54,38 +52,33 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ColumnListBuilder implements Builder
+class Column_List_Builder implements Builder
 {
-    protected function buildIndexColumn(array $parsed)
+    protected function build_index_column(array $parsed)
     {
-        $builder = new IndexColumnBuilder();
+        $builder = new Index_Column_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColumnReference(array $parsed)
+    protected function build_column_reference(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed, $delim = ', ')
     {
-        if ($parsed['expr_type'] !== ExpressionType::COLUMN_LIST) {
+        if ($parsed['expr_type'] !== Expression_Type::COLUMN_LIST) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildIndexColumn($v);
-            $sql .= $this->buildColumnReference($v);
-
+            $sql .= $this->build_index_column($v);
+            $sql .= $this->build_column_reference($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE column-list subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE column-list subtree', $k, $v, 'expr_type');
             }
-
             $sql .= $delim;
         }
         return '(' . substr($sql, 0, -strlen($delim)) . ')';
     }
-
 }

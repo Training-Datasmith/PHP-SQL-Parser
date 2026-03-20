@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateStatement.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole Create statement. You can overwrite
@@ -51,34 +50,31 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateStatementBuilder implements Builder
+class Create_Statement_Builder implements Builder
 {
-    protected function buildLIKE(array $parsed)
+    protected function build_like(array $parsed)
     {
-        $builder = new LikeBuilder();
+        $builder = new Like_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSelectStatement(array $parsed)
+    protected function build_select_statement(array $parsed)
     {
-        $builder = new SelectStatementBuilder();
+        $builder = new Select_Statement_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCREATE(array $parsed)
+    protected function build_create(array $parsed)
     {
-        $builder = new CreateBuilder();
+        $builder = new Create_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        $sql = $this->buildCREATE($parsed);
+        $sql = $this->build_create($parsed);
         if (isset($parsed['LIKE'])) {
-            $sql .= ' ' . $this->buildLIKE($parsed['LIKE']);
+            $sql .= ' ' . $this->build_like($parsed['LIKE']);
         }
         if (isset($parsed['SELECT'])) {
-            $sql .= ' ' . $this->buildSelectStatement($parsed);
+            $sql .= ' ' . $this->build_select_statement($parsed);
         }
         return $sql;
     }

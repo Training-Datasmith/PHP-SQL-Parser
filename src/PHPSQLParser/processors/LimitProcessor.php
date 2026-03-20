@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * LimitProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the LIMIT statements.
@@ -50,25 +49,21 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class LimitProcessor extends AbstractProcessor
+class Limit_Processor extends Abstract_Processor
 {
     public function process($tokens)
     {
         $rowcount = '';
         $offset = '';
-
         $comma = -1;
         $exchange = false;
-
         $comments = [];
-
         foreach ($tokens as &$token) {
-            if ($this->isCommentToken($token)) {
-                $comments[] = parent::processComment($token);
+            if ($this->is_comment_token($token)) {
+                $comments[] = parent::process_comment($token);
                 $token = '';
             }
         }
-
         for ($i = 0; $i < count($tokens); ++$i) {
             $trim = strtoupper(trim($tokens[$i]));
             if ($trim === ',') {
@@ -81,7 +76,6 @@ class LimitProcessor extends AbstractProcessor
                 break;
             }
         }
-
         for ($i = 0; $i < $comma; ++$i) {
             if ($exchange) {
                 $rowcount .= $tokens[$i];
@@ -89,7 +83,6 @@ class LimitProcessor extends AbstractProcessor
                 $offset .= $tokens[$i];
             }
         }
-
         for ($i = $comma + 1; $i < count($tokens); ++$i) {
             if ($exchange) {
                 $offset .= $tokens[$i];
@@ -97,7 +90,6 @@ class LimitProcessor extends AbstractProcessor
                 $rowcount .= $tokens[$i];
             }
         }
-
         $return = ['offset' => trim($offset), 'rowcount' => trim($rowcount)];
         if (count($comments)) {
             $return['comments'] = $comments;

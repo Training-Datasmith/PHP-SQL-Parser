@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ValuesBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the VALUES part of INSERT statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,31 +51,27 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ValuesBuilder implements Builder
+class Values_Builder implements Builder
 {
-    protected function buildRecord(array $parsed)
+    protected function build_record(array $parsed)
     {
-        $builder = new RecordBuilder();
+        $builder = new Record_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildRecord($v);
-
+            $sql .= $this->build_record($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('VALUES', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('VALUES', $k, $v, 'expr_type');
             }
-
-            $sql .= $this->getRecordDelimiter($v);
+            $sql .= $this->get_record_delimiter($v);
         }
         return 'VALUES ' . trim($sql);
     }
-
-    protected function getRecordDelimiter(array $parsed)
+    protected function get_record_delimiter(array $parsed)
     {
         return empty($parsed['delim']) ? ' ' : $parsed['delim'] . ' ';
     }

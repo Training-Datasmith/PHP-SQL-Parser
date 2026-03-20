@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * OptionsProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the statement options.
  *
@@ -52,28 +50,23 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class OptionsProcessor extends AbstractProcessor
+class Options_Processor extends Abstract_Processor
 {
     public function process($tokens)
     {
-        $resultList = [];
-
+        $result_list = [];
         foreach ($tokens as $token) {
-
-            $tokenList = $this->splitSQLIntoTokens($token);
+            $token_list = $this->split_sql_into_tokens($token);
             $result = [];
-
-            foreach ($tokenList as $reserved) {
+            foreach ($token_list as $reserved) {
                 $trim = trim($reserved);
                 if ($trim === '') {
                     continue;
                 }
-                $result[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                $result[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
             }
-            $resultList[] = ['expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($token),
-                                  'sub_tree' => $result];
+            $result_list[] = ['expr_type' => Expression_Type::EXPRESSION, 'base_expr' => trim($token), 'sub_tree' => $result];
         }
-
-        return $resultList;
+        return $result_list;
     }
 }

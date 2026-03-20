@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateTableSelectOptionBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the select-options statement part of CREATE TABLE.
@@ -51,7 +50,7 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateTableSelectOptionBuilder implements Builder
+class Create_Table_Select_Option_Builder implements Builder
 {
     public function build(array $parsed)
     {
@@ -59,9 +58,8 @@ class CreateTableSelectOptionBuilder implements Builder
             return '';
         }
         $option = $parsed['select-option'];
-
-        $sql = ($option['duplicates'] === false ? '' : (' ' . $option['duplicates']));
-        $sql .= ($option['as'] === false ? '' : ' AS');
+        $sql = $option['duplicates'] === false ? '' : ' ' . $option['duplicates'];
+        $sql .= $option['as'] === false ? '' : ' AS';
         return $sql;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * WhereExpressionBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for expressions within the WHERE part.
  * You can overwrite all functions to achieve another handling.
@@ -54,93 +52,80 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class WhereExpressionBuilder implements Builder
+class Where_Expression_Builder implements Builder
 {
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator(array $parsed)
+    protected function build_operator(array $parsed)
     {
-        $builder = new OperatorBuilder();
+        $builder = new Operator_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildInList(array $parsed)
+    protected function build_in_list(array $parsed)
     {
-        $builder = new InListBuilder();
+        $builder = new In_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildWhereExpression(array $parsed)
+    protected function build_where_expression(array $parsed)
     {
         return $this->build($parsed);
     }
-
-    protected function buildWhereBracketExpression(array $parsed)
+    protected function build_where_bracket_expression(array $parsed)
     {
-        $builder = new WhereBracketExpressionBuilder();
+        $builder = new Where_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUserVariable(array $parsed)
+    protected function build_user_variable(array $parsed)
     {
-        $builder = new UserVariableBuilder();
+        $builder = new User_Variable_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubQuery(array $parsed)
+    protected function build_sub_query(array $parsed)
     {
-        $builder = new SubQueryBuilder();
+        $builder = new Sub_Query_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
+        if ($parsed['expr_type'] !== Expression_Type::EXPRESSION) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildInList($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildWhereExpression($v);
-            $sql .= $this->buildWhereBracketExpression($v);
-            $sql .= $this->buildUserVariable($v);
-            $sql .= $this->buildSubQuery($v);
-            $sql .= $this->buildReserved($v);
-
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_in_list($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_where_expression($v);
+            $sql .= $this->build_where_bracket_expression($v);
+            $sql .= $this->build_user_variable($v);
+            $sql .= $this->build_sub_query($v);
+            $sql .= $this->build_reserved($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('WHERE expression subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('WHERE expression subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return substr($sql, 0, -1);
     }
-
 }

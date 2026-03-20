@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ReplaceStatement.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole Replace statement. You can overwrite
@@ -51,44 +50,40 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ReplaceStatementBuilder implements Builder
+class Replace_Statement_Builder implements Builder
 {
-    protected function buildVALUES(array $parsed)
+    protected function build_values(array $parsed)
     {
-        $builder = new ValuesBuilder();
+        $builder = new Values_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildREPLACE(array $parsed)
+    protected function build_replace(array $parsed)
     {
-        $builder = new ReplaceBuilder();
+        $builder = new Replace_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSELECT(array $parsed)
+    protected function build_select(array $parsed)
     {
-        $builder = new SelectStatementBuilder();
+        $builder = new Select_Statement_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSET(array $parsed)
+    protected function build_set(array $parsed)
     {
-        $builder = new SetBuilder();
+        $builder = new Set_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         // TODO: are there more than one tables possible (like [REPLACE][1])
-        $sql = $this->buildREPLACE($parsed['REPLACE']);
+        $sql = $this->build_replace($parsed['REPLACE']);
         if (isset($parsed['VALUES'])) {
-            $sql .= ' ' . $this->buildVALUES($parsed['VALUES']);
+            $sql .= ' ' . $this->build_values($parsed['VALUES']);
         }
         if (isset($parsed['SET'])) {
-            $sql .= ' ' . $this->buildSET($parsed['SET']);
+            $sql .= ' ' . $this->build_set($parsed['SET']);
         }
         if (isset($parsed['SELECT'])) {
-            $sql .= ' ' . $this->buildSELECT($parsed);
+            $sql .= ' ' . $this->build_select($parsed);
         }
         return $sql;
     }

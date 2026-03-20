@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DuplicateProcessor.php
  *
@@ -31,8 +31,7 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  *
@@ -41,11 +40,10 @@ namespace PHPSQLParser\processors;
  * @author arothe
  *
  */
-class DuplicateProcessor extends SetProcessor
+class Duplicate_Processor extends Set_Processor
 {
-    public function process($tokens, $isUpdate = false)
+    public function process($tokens, $is_update = false)
     {
-        return parent::process($tokens, $isUpdate);
+        return parent::process($tokens, $is_update);
     }
-
 }

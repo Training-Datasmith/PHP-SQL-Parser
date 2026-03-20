@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * RenameStatement.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the RENAME statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,38 +51,34 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RenameStatementBuilder implements Builder
+class Rename_Statement_Builder implements Builder
 {
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function processSourceAndDestTable(array $v)
+    protected function process_source_and_dest_table(array $v)
     {
         if (!isset($v['source']) || !isset($v['destination'])) {
             return '';
         }
         return $v['source']['base_expr'] . ' TO ' . $v['destination']['base_expr'] . ',';
     }
-
     public function build(array $parsed)
     {
         $rename = $parsed['RENAME'];
         $sql = '';
         foreach ($rename['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->processSourceAndDestTable($v);
-
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->process_source_and_dest_table($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('RENAME subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('RENAME subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         $sql = trim('RENAME ' . $sql);
-        return (substr($sql, -1) === ',' ? substr($sql, 0, -1) : $sql);
+        return substr($sql, -1) === ',' ? substr($sql, 0, -1) : $sql;
     }
 }

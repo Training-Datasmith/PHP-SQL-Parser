@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ConstantBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for constants.
  * You can overwrite all functions to achieve another handling.
@@ -53,20 +51,19 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ConstantBuilder implements Builder
+class Constant_Builder implements Builder
 {
-    protected function buildAlias(array $parsed)
+    protected function build_alias(array $parsed)
     {
-        $builder = new AliasBuilder();
+        $builder = new Alias_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::CONSTANT) {
+        if ($parsed['expr_type'] !== Expression_Type::CONSTANT) {
             return '';
         }
         $sql = $parsed['base_expr'];
-        return $sql . $this->buildAlias($parsed);
+        return $sql . $this->build_alias($parsed);
     }
 }

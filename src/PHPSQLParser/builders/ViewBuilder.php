@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ViewBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for a view within DROP statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,11 +51,11 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ViewBuilder implements Builder
+class View_Builder implements Builder
 {
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::VIEW) {
+        if ($parsed['expr_type'] !== Expression_Type::VIEW) {
             return '';
         }
         return $parsed['base_expr'];

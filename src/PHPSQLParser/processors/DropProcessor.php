@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DropProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the DROP statements.
  *
@@ -52,24 +50,21 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DropProcessor extends AbstractProcessor
+class Drop_Processor extends Abstract_Processor
 {
-    public function process($tokenList)
+    public function process($token_list)
     {
         $exists = false;
         $base_expr = '';
-        $objectType = '';
-        $subTree = [];
+        $object_type = '';
+        $sub_tree = [];
         $option = false;
-
-        foreach ($tokenList as $token) {
+        foreach ($token_list as $token) {
             $base_expr .= $token;
             $trim = trim($token);
-
             if ($trim === '') {
                 continue;
             }
-
             $upper = strtoupper($trim);
             switch ($upper) {
                 case 'VIEW':
@@ -77,8 +72,8 @@ class DropProcessor extends AbstractProcessor
                 case 'DATABASE':
                 case 'TABLE':
                 case 'INDEX':
-                    if ($objectType === '') {
-                        $objectType = constant('PHPSQLParser\utils\ExpressionType::' . $upper);
+                    if ($object_type === '') {
+                        $object_type = constant('PHPSQLParser\utils\ExpressionType::' . $upper);
                     }
                     $base_expr = '';
                     break;
@@ -87,54 +82,43 @@ class DropProcessor extends AbstractProcessor
                     $exists = true;
                     $base_expr = '';
                     break;
-
                 case 'TEMPORARY':
-                    $objectType = ExpressionType::TEMPORARY_TABLE;
+                    $object_type = Expression_Type::TEMPORARY_TABLE;
                     $base_expr = '';
                     break;
-
                 case 'RESTRICT':
                 case 'CASCADE':
                     $option = $upper;
-                    if (!empty($objectList)) {
-                        $subTree[] = ['expr_type' => ExpressionType::EXPRESSION,
-                                           'base_expr' => trim(substr($base_expr, 0, -strlen($token))),
-                                           'sub_tree' => $objectList];
-                        $objectList = [];
+                    if (!empty($object_list)) {
+                        $sub_tree[] = ['expr_type' => Expression_Type::EXPRESSION, 'base_expr' => trim(substr($base_expr, 0, -strlen($token))), 'sub_tree' => $object_list];
+                        $object_list = [];
                     }
                     $base_expr = '';
                     break;
-
                 case ',':
-                    $last = array_pop($objectList);
+                    $last = array_pop($object_list);
                     $last['delim'] = $trim;
-                    $objectList[] = $last;
+                    $object_list[] = $last;
                     continue 2;
-
                 default:
                     $object = [];
-                    $object['expr_type'] = $objectType;
-                    if ($objectType === ExpressionType::TABLE || $objectType === ExpressionType::TEMPORARY_TABLE) {
+                    $object['expr_type'] = $object_type;
+                    if ($object_type === Expression_Type::TABLE || $object_type === Expression_Type::TEMPORARY_TABLE) {
                         $object['table'] = $trim;
                         $object['no_quotes'] = false;
                         $object['alias'] = false;
                     }
                     $object['base_expr'] = $trim;
-                    $object['no_quotes'] = $this->revokeQuotation($trim);
+                    $object['no_quotes'] = $this->revoke_quotation($trim);
                     $object['delim'] = false;
-
-                    $objectList[] = $object;
+                    $object_list[] = $object;
                     continue 2;
             }
-
-            $subTree[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+            $sub_tree[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
         }
-
-        if (!empty($objectList)) {
-            $subTree[] = ['expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                               'sub_tree' => $objectList];
+        if (!empty($object_list)) {
+            $sub_tree[] = ['expr_type' => Expression_Type::EXPRESSION, 'base_expr' => trim($base_expr), 'sub_tree' => $object_list];
         }
-
-        return ['expr_type' => $objectType, 'option' => $option, 'if-exists' => $exists, 'sub_tree' => $subTree];
+        return ['expr_type' => $object_type, 'option' => $option, 'if-exists' => $exists, 'sub_tree' => $sub_tree];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * Builder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * A builder can create a part of an SQL statement. The necessary information

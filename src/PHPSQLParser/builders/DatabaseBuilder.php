@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DatabaseBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for a database within SHOW statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,11 +51,11 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DatabaseBuilder implements Builder
+class Database_Builder implements Builder
 {
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::DATABASE) {
+        if ($parsed['expr_type'] !== Expression_Type::DATABASE) {
             return '';
         }
         return $parsed['base_expr'];

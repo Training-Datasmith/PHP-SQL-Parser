@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * InsertColumnListBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for column-list parts of INSERT statements.
  * You can overwrite all functions to achieve another handling.
@@ -54,31 +52,27 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class InsertColumnListBuilder implements Builder
+class Insert_Column_List_Builder implements Builder
 {
-    protected function buildColumn(array $parsed)
+    protected function build_column(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::COLUMN_LIST) {
+        if ($parsed['expr_type'] !== Expression_Type::COLUMN_LIST) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColumn($v);
-
+            $sql .= $this->build_column($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('INSERT column-list subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('INSERT column-list subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ', ';
         }
         return '(' . substr($sql, 0, -2) . ')';
     }
-
 }

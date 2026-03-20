@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * AbstractProcessor.php
  *
@@ -40,13 +40,11 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\lexer\PHPSQLLexer;
-use PHPSQLParser\Options;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\lexer\Phpsql_Lexer;
+use Phpsql_Parser\Options;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class contains some general functions for a processor.
  *
@@ -54,13 +52,12 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-abstract class AbstractProcessor
+abstract class Abstract_Processor
 {
     /**
      * @var Options
      */
     protected $options;
-
     /**
      * AbstractProcessor constructor.
      *
@@ -70,23 +67,20 @@ abstract class AbstractProcessor
     {
         $this->options = $options;
     }
-
     /**
      * This function implements the main functionality of a processor class.
      * Always use default valuses for additional parameters within overridden functions.
      */
     abstract public function process($tokens);
-
     /**
      * this function splits up a SQL statement into easy to "parse"
      * tokens for the SQL processor
      */
-    public function splitSQLIntoTokens($sql)
+    public function split_sql_into_tokens($sql)
     {
-        $lexer = new PHPSQLLexer();
+        $lexer = new Phpsql_Lexer();
         return $lexer->split($sql);
     }
-
     /**
      * Revokes the quoting characters from an expression
      * Possibibilies:
@@ -103,18 +97,15 @@ abstract class AbstractProcessor
      * And you can use whitespace between the parts:
      *   a  .  `b` => [a,b]
      */
-    protected function revokeQuotation($sql)
+    protected function revoke_quotation($sql)
     {
         $tmp = trim($sql);
         $result = [];
-
         $quote = false;
         $start = 0;
         $i = 0;
         $len = strlen($tmp);
-
         while ($i < $len) {
-
             $char = $tmp[$i];
             switch ($char) {
                 case '`':
@@ -129,7 +120,7 @@ abstract class AbstractProcessor
                     if ($quote !== $char) {
                         break;
                     }
-                    if (isset($tmp[$i + 1]) && ($quote === $tmp[$i + 1])) {
+                    if (isset($tmp[$i + 1]) && $quote === $tmp[$i + 1]) {
                         // escaped
                         $i++;
                         break;
@@ -140,7 +131,6 @@ abstract class AbstractProcessor
                     $start = $i + 1;
                     $quote = false;
                     break;
-
                 case '.':
                     if ($quote === false) {
                         // we have found a separator
@@ -151,74 +141,65 @@ abstract class AbstractProcessor
                         $start = $i + 1;
                     }
                     break;
-
                 default:
                     // ignore
                     break;
             }
             $i++;
         }
-
-        if ($quote === false && ($start < $len)) {
+        if ($quote === false && $start < $len) {
             $char = trim(substr($tmp, $start, $i - $start));
             if ($char !== '') {
                 $result[] = $char;
             }
         }
-
-        return ['delim' => (count($result) === 1 ? false : '.'), 'parts' => $result];
+        return ['delim' => count($result) === 1 ? false : '.', 'parts' => $result];
     }
-
     /**
      * This method removes parenthesis from start of the given string.
      * It removes also the associated closing parenthesis.
      */
-    protected function removeParenthesisFromStart($token)
+    protected function remove_parenthesis_from_start($token)
     {
-        $parenthesisRemoved = 0;
-
+        $parenthesis_removed = 0;
         $trim = trim($token);
-        if ($trim !== '' && $trim[0] === '(') { // remove only one parenthesis pair now!
-            $parenthesisRemoved++;
+        if ($trim !== '' && $trim[0] === '(') {
+            // remove only one parenthesis pair now!
+            $parenthesis_removed++;
             $trim[0] = ' ';
             $trim = trim($trim);
         }
-
-        $parenthesis = $parenthesisRemoved;
+        $parenthesis = $parenthesis_removed;
         $i = 0;
         // Whether a string was opened or not, and with which character it was open (' or ")
-        $stringOpened = '';
+        $string_opened = '';
         while ($i < strlen($trim)) {
-
             if ($trim[$i] === '\\') {
-                $i += 2; // an escape character, the next character is irrelevant
+                $i += 2;
+                // an escape character, the next character is irrelevant
                 continue;
             }
-
             if ($trim[$i] === "'") {
-                if ($stringOpened === '') {
-                    $stringOpened = "'";
-                } elseif ($stringOpened === "'") {
-                    $stringOpened = '';
+                if ($string_opened === '') {
+                    $string_opened = "'";
+                } elseif ($string_opened === "'") {
+                    $string_opened = '';
                 }
             }
-
             if ($trim[$i] === '"') {
-                if ($stringOpened === '') {
-                    $stringOpened = '"';
-                } elseif ($stringOpened === '"') {
-                    $stringOpened = '';
+                if ($string_opened === '') {
+                    $string_opened = '"';
+                } elseif ($string_opened === '"') {
+                    $string_opened = '';
                 }
             }
-
-            if (($stringOpened === '') && ($trim[$i] === '(')) {
+            if ($string_opened === '' && $trim[$i] === '(') {
                 $parenthesis++;
             }
-
-            if (($stringOpened === '') && ($trim[$i] === ')')) {
-                if ($parenthesis == $parenthesisRemoved) {
+            if ($string_opened === '' && $trim[$i] === ')') {
+                if ($parenthesis == $parenthesis_removed) {
                     $trim[$i] = ' ';
-                    $parenthesisRemoved--;
+                    $parenthesis_removed--;
                 }
                 $parenthesis--;
             }
@@ -226,125 +207,104 @@ abstract class AbstractProcessor
         }
         return trim($trim);
     }
-
-    protected function getVariableType($expression)
+    protected function get_variable_type($expression)
     {
         // $expression must contain only upper-case characters
         if ($expression[1] !== '@') {
-            return ExpressionType::USER_VARIABLE;
+            return Expression_Type::USER_VARIABLE;
         }
-
         $type = substr($expression, 2, strpos($expression, '.', 2));
-
         switch ($type) {
             case 'GLOBAL':
-                $type = ExpressionType::GLOBAL_VARIABLE;
+                $type = Expression_Type::GLOBAL_VARIABLE;
                 break;
             case 'LOCAL':
-                $type = ExpressionType::LOCAL_VARIABLE;
+                $type = Expression_Type::LOCAL_VARIABLE;
                 break;
             case 'SESSION':
             default:
-                $type = ExpressionType::SESSION_VARIABLE;
+                $type = Expression_Type::SESSION_VARIABLE;
                 break;
         }
         return $type;
     }
-
-    protected function isCommaToken($token)
+    protected function is_comma_token($token)
     {
-        return (trim($token) === ',');
+        return trim($token) === ',';
     }
-
-    protected function isWhitespaceToken($token)
+    protected function is_whitespace_token($token)
     {
-        return (trim($token) === '');
+        return trim($token) === '';
     }
-
-    protected function isCommentToken($token)
+    protected function is_comment_token($token)
     {
-        return isset($token[0]) && isset($token[1])
-                && (($token[0] === '-' && $token[1] === '-') || ($token[0] === '/' && $token[1] === '*'));
+        return isset($token[0]) && isset($token[1]) && ($token[0] === '-' && $token[1] === '-' || $token[0] === '/' && $token[1] === '*');
     }
-
-    protected function isColumnReference(array $out)
+    protected function is_column_reference(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COLREF);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::COLREF;
     }
-
-    protected function isReserved(array $out)
+    protected function is_reserved(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::RESERVED);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::RESERVED;
     }
-
-    protected function isConstant(array $out)
+    protected function is_constant(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CONSTANT);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::CONSTANT;
     }
-
-    protected function isAggregateFunction(array $out)
+    protected function is_aggregate_function(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::AGGREGATE_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::AGGREGATE_FUNCTION;
     }
-
-    protected function isCustomFunction(array $out)
+    protected function is_custom_function(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::CUSTOM_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::CUSTOM_FUNCTION;
     }
-
-    protected function isFunction(array $out)
+    protected function is_function(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SIMPLE_FUNCTION);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::SIMPLE_FUNCTION;
     }
-
-    protected function isExpression(array $out)
+    protected function is_expression(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::EXPRESSION);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::EXPRESSION;
     }
-
-    protected function isBracketExpression(array $out)
+    protected function is_bracket_expression(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::BRACKET_EXPRESSION);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::BRACKET_EXPRESSION;
     }
-
-    protected function isSubQuery(array $out)
+    protected function is_sub_query(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::SUBQUERY);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::SUBQUERY;
     }
-
-    protected function isComment(array $out)
+    protected function is_comment(array $out)
     {
-        return (isset($out['expr_type']) && $out['expr_type'] === ExpressionType::COMMENT);
+        return isset($out['expr_type']) && $out['expr_type'] === Expression_Type::COMMENT;
     }
-
-    public function processComment($expression)
+    public function process_comment($expression)
     {
         $result = [];
-        $result['expr_type'] = ExpressionType::COMMENT;
+        $result['expr_type'] = Expression_Type::COMMENT;
         $result['value'] = $expression;
         return $result;
     }
-
     /**
      * translates an array of objects into an associative array
      */
-    public function toArray($tokenList)
+    public function to_array($token_list)
     {
         $expr = [];
-        foreach ($tokenList as $token) {
-            if ($token instanceof \PHPSQLParser\utils\ExpressionToken) {
-                $expr[] = $token->toArray();
+        foreach ($token_list as $token) {
+            if ($token instanceof \Phpsql_Parser\utils\Expression_Token) {
+                $expr[] = $token->to_array();
             } else {
                 $expr[] = $token;
             }
         }
         return $expr;
     }
-
     protected function array_insert_after($array, $key, $entry)
     {
         $idx = array_search($key, array_keys($array));
-        return array_slice($array, 0, $idx + 1, true) + $entry
-                + array_slice($array, $idx + 1, count($array) - 1, true);
+        return array_slice($array, 0, $idx + 1, true) + $entry + array_slice($array, $idx + 1, count($array) - 1, true);
     }
 }

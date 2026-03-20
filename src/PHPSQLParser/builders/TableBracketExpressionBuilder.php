@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * TableBracketExpressionBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the table expressions
  * within the create definitions of CREATE TABLE.
@@ -55,80 +53,69 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class TableBracketExpressionBuilder implements Builder
+class Table_Bracket_Expression_Builder implements Builder
 {
-    protected function buildColDef(array $parsed)
+    protected function build_col_def(array $parsed)
     {
-        $builder = new ColumnDefinitionBuilder();
+        $builder = new Column_Definition_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildPrimaryKey(array $parsed)
+    protected function build_primary_key(array $parsed)
     {
-        $builder = new PrimaryKeyBuilder();
+        $builder = new Primary_Key_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildForeignKey(array $parsed)
+    protected function build_foreign_key(array $parsed)
     {
-        $builder = new ForeignKeyBuilder();
+        $builder = new Foreign_Key_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCheck(array $parsed)
+    protected function build_check(array $parsed)
     {
-        $builder = new CheckBuilder();
+        $builder = new Check_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildLikeExpression(array $parsed)
+    protected function build_like_expression(array $parsed)
     {
-        $builder = new LikeExpressionBuilder();
+        $builder = new Like_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexKey(array $parsed)
+    protected function build_index_key(array $parsed)
     {
-        $builder = new IndexKeyBuilder();
+        $builder = new Index_Key_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUniqueIndex(array $parsed)
+    protected function build_unique_index(array $parsed)
     {
-        $builder = new UniqueIndexBuilder();
+        $builder = new Unique_Index_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFulltextIndex(array $parsed)
+    protected function build_fulltext_index(array $parsed)
     {
-        $builder = new FulltextIndexBuilder();
+        $builder = new Fulltext_Index_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
+        if ($parsed['expr_type'] !== Expression_Type::BRACKET_EXPRESSION) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColDef($v);
-            $sql .= $this->buildPrimaryKey($v);
-            $sql .= $this->buildCheck($v);
-            $sql .= $this->buildLikeExpression($v);
-            $sql .= $this->buildForeignKey($v);
-            $sql .= $this->buildIndexKey($v);
-            $sql .= $this->buildUniqueIndex($v);
-            $sql .= $this->buildFulltextIndex($v);
-
+            $sql .= $this->build_col_def($v);
+            $sql .= $this->build_primary_key($v);
+            $sql .= $this->build_check($v);
+            $sql .= $this->build_like_expression($v);
+            $sql .= $this->build_foreign_key($v);
+            $sql .= $this->build_index_key($v);
+            $sql .= $this->build_unique_index($v);
+            $sql .= $this->build_fulltext_index($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE create-def expression subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ', ';
         }
         return ' (' . substr($sql, 0, -2) . ')';
     }
-
 }

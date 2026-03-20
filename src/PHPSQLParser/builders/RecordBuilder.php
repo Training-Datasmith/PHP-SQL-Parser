@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * RecordBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the records within INSERT statement.
  * You can overwrite all functions to achieve another handling.
@@ -54,53 +52,46 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RecordBuilder implements Builder
+class Record_Builder implements Builder
 {
-    protected function buildOperator(array $parsed)
+    protected function build_operator(array $parsed)
     {
-        $builder = new OperatorBuilder();
+        $builder = new Operator_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::RECORD) {
+        if ($parsed['expr_type'] !== Expression_Type::RECORD) {
             return isset($parsed['base_expr']) ? $parsed['base_expr'] : '';
         }
         $sql = '';
         foreach ($parsed['data'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildColRef($v);
-
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_col_ref($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException(ExpressionType::RECORD, $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception(Expression_Type::RECORD, $k, $v, 'expr_type');
             }
-
             $sql .= ', ';
         }
         $sql = substr($sql, 0, -2);
         return '(' . $sql . ')';
     }
-
 }

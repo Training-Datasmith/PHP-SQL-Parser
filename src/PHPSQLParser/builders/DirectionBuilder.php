@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DirectionBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for directions (e.g. of the order-by clause).
@@ -51,13 +50,13 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DirectionBuilder implements Builder
+class Direction_Builder implements Builder
 {
     public function build(array $parsed)
     {
         if (!isset($parsed['direction']) || $parsed['direction'] === false) {
             return '';
         }
-        return (' ' . $parsed['direction']);
+        return ' ' . $parsed['direction'];
     }
 }

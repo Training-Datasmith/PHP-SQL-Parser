@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-namespace PHPSQLParser\builders;
+declare (strict_types=1);
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole UNION ALL statement. You can overwrite
@@ -12,12 +11,12 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UnionAllStatementBuilder implements Builder
+class Union_All_Statement_Builder implements Builder
 {
     public function build(array $parsed)
     {
         $sql = '';
-        $select_builder = new SelectStatementBuilder();
+        $select_builder = new Select_Statement_Builder();
         $first = true;
         foreach ($parsed['UNION ALL'] as $clause) {
             if (!$first) {
@@ -25,7 +24,6 @@ class UnionAllStatementBuilder implements Builder
             } else {
                 $first = false;
             }
-
             $sql .= $select_builder->build($clause);
         }
         return $sql;

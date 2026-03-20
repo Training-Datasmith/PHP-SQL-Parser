@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * OrderByBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the ORDER-BY clause.
  * You can overwrite all functions to achieve another handling.
@@ -53,67 +51,58 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class OrderByBuilder implements Builder
+class Order_By_Builder implements Builder
 {
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new OrderByFunctionBuilder();
+        $builder = new Order_By_Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new OrderByReservedBuilder();
+        $builder = new Order_By_Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new OrderByColumnReferenceBuilder();
+        $builder = new Order_By_Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildAlias(array $parsed)
+    protected function build_alias(array $parsed)
     {
-        $builder = new OrderByAliasBuilder();
+        $builder = new Order_By_Alias_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildExpression(array $parsed)
+    protected function build_expression(array $parsed)
     {
-        $builder = new OrderByExpressionBuilder();
+        $builder = new Order_By_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildBracketExpression(array $parsed)
+    protected function build_bracket_expression(array $parsed)
     {
-        $builder = new OrderByBracketExpressionBuilder();
+        $builder = new Order_By_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildPosition(array $parsed)
+    protected function build_position(array $parsed)
     {
-        $builder = new OrderByPositionBuilder();
+        $builder = new Order_By_Position_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildAlias($v);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildExpression($v);
-            $sql .= $this->buildBracketExpression($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildPosition($v);
-
+            $sql .= $this->build_alias($v);
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_expression($v);
+            $sql .= $this->build_bracket_expression($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_position($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('ORDER', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('ORDER', $k, $v, 'expr_type');
             }
-
             $sql .= ', ';
         }
         $sql = substr($sql, 0, -2);

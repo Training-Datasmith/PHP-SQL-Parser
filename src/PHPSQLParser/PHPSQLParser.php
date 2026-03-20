@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 /**
  * PHPSQLParser.php
  *
@@ -40,13 +39,11 @@ declare(strict_types=1);
  * @license   http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  * @version   SVN: $Id$
  */
+namespace Phpsql_Parser;
 
-namespace PHPSQLParser;
-
-use PHPSQLParser\positions\PositionCalculator;
-use PHPSQLParser\processors\DefaultProcessor;
-use PHPSQLParser\utils\PHPSQLParserConstants;
-
+use Phpsql_Parser\positions\Position_Calculator;
+use Phpsql_Parser\processors\Default_Processor;
+use Phpsql_Parser\utils\Phpsql_Parser_Constants;
 /**
  * This class implements the parser functionality.
  *
@@ -54,15 +51,13 @@ use PHPSQLParser\utils\PHPSQLParserConstants;
  * @author  André Rothe <arothe@phosco.info>
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  */
-class PHPSQLParser
+class Phpsql_Parser
 {
     public $parsed;
-
     /**
      * @var Options
      */
     private $options;
-
     /**
      * Constructor. It simply calls the parse() function.
      * Use the public variable $parsed to get the output.
@@ -70,15 +65,13 @@ class PHPSQLParser
      * @param String|bool  $sql           The SQL statement.
      * @param bool $calcPositions True, if the output should contain [position], false otherwise.
      */
-    public function __construct($sql = false, $calcPositions = false, array $options = [])
+    public function __construct($sql = false, $calc_positions = false, array $options = [])
     {
         $this->options = new Options($options);
-
         if ($sql) {
-            $this->parse($sql, $calcPositions);
+            $this->parse($sql, $calc_positions);
         }
     }
-
     /**
      * It parses the given SQL statement and generates a detailled
      * output array for every part of the statement. The method can
@@ -92,50 +85,44 @@ class PHPSQLParser
      *
      * @return array An associative array with all meta information about the SQL statement.
      */
-    public function parse($sql, $calcPositions = false)
+    public function parse($sql, $calc_positions = false)
     {
-
-        $processor = new DefaultProcessor($this->options);
+        $processor = new Default_Processor($this->options);
         $queries = $processor->process($sql);
-
         // calc the positions of some important tokens
-        if ($calcPositions) {
-            $calculator = new PositionCalculator();
-            $queries = $calculator->setPositionsWithinSQL($sql, $queries);
+        if ($calc_positions) {
+            $calculator = new Position_Calculator();
+            $queries = $calculator->set_positions_within_sql($sql, $queries);
         }
-
         // store the parsed queries
         $this->parsed = $queries;
         return $this->parsed;
     }
-
     /**
      * Add a custom function to the parser.  no return value
      *
      * @param String $token The name of the function to add
      */
-    public function addCustomFunction($token)
+    public function add_custom_function($token)
     {
-        PHPSQLParserConstants::getInstance()->addCustomFunction($token);
+        Phpsql_Parser_Constants::get_instance()->add_custom_function($token);
     }
-
     /**
      * Remove a custom function from the parser.  no return value
      *
      * @param String $token The name of the function to remove
      */
-    public function removeCustomFunction($token)
+    public function remove_custom_function($token)
     {
-        PHPSQLParserConstants::getInstance()->removeCustomFunction($token);
+        Phpsql_Parser_Constants::get_instance()->remove_custom_function($token);
     }
-
     /**
      * Returns the list of custom functions
      *
      * @return array Returns an array of all custom functions
      */
-    public function getCustomFunctions()
+    public function get_custom_functions()
     {
-        return PHPSQLParserConstants::getInstance()->getCustomFunctions();
+        return Phpsql_Parser_Constants::get_instance()->get_custom_functions();
     }
 }

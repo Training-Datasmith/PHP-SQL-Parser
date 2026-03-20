@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * AliasBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for aliases.
@@ -51,13 +50,12 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class AliasBuilder implements Builder
+class Alias_Builder implements Builder
 {
-    public function hasAlias(array $parsed)
+    public function has_alias(array $parsed)
     {
         return isset($parsed['alias']);
     }
-
     public function build(array $parsed)
     {
         if (!isset($parsed['alias']) || $parsed['alias'] === false) {

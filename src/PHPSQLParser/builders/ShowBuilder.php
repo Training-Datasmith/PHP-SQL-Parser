@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ShowBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the SHOW statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,71 +51,61 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ShowBuilder implements Builder
+class Show_Builder implements Builder
 {
-    protected function buildTable(array $parsed, $delim)
+    protected function build_table(array $parsed, $delim)
     {
-        $builder = new TableBuilder();
+        $builder = new Table_Builder();
         return $builder->build($parsed, $delim);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildProcedure(array $parsed)
+    protected function build_procedure(array $parsed)
     {
-        $builder = new ProcedureBuilder();
+        $builder = new Procedure_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildDatabase(array $parsed)
+    protected function build_database(array $parsed)
     {
-        $builder = new DatabaseBuilder();
+        $builder = new Database_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildEngine(array $parsed)
+    protected function build_engine(array $parsed)
     {
-        $builder = new EngineBuilder();
+        $builder = new Engine_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $show = $parsed['SHOW'];
         $sql = '';
         foreach ($show as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildEngine($v);
-            $sql .= $this->buildDatabase($v);
-            $sql .= $this->buildProcedure($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildTable($v, 0);
-
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_engine($v);
+            $sql .= $this->build_database($v);
+            $sql .= $this->build_procedure($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_table($v, 0);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('SHOW', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('SHOW', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
-
         $sql = substr($sql, 0, -1);
         return 'SHOW ' . $sql;
     }

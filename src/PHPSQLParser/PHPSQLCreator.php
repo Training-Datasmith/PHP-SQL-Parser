@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * PHPSQLCreator.php
  *
@@ -40,25 +40,23 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser;
 
-namespace PHPSQLParser;
-
-use PHPSQLParser\builders\AlterStatementBuilder;
-use PHPSQLParser\builders\BracketStatementBuilder;
-use PHPSQLParser\builders\CreateStatementBuilder;
-use PHPSQLParser\builders\DeleteStatementBuilder;
-use PHPSQLParser\builders\DropStatementBuilder;
-use PHPSQLParser\builders\InsertStatementBuilder;
-use PHPSQLParser\builders\RenameStatementBuilder;
-use PHPSQLParser\builders\ReplaceStatementBuilder;
-use PHPSQLParser\builders\SelectStatementBuilder;
-use PHPSQLParser\builders\ShowStatementBuilder;
-use PHPSQLParser\builders\TruncateStatementBuilder;
-use PHPSQLParser\builders\UnionAllStatementBuilder;
-use PHPSQLParser\builders\UnionStatementBuilder;
-use PHPSQLParser\builders\UpdateStatementBuilder;
-use PHPSQLParser\exceptions\UnsupportedFeatureException;
-
+use Phpsql_Parser\builders\Alter_Statement_Builder;
+use Phpsql_Parser\builders\Bracket_Statement_Builder;
+use Phpsql_Parser\builders\Create_Statement_Builder;
+use Phpsql_Parser\builders\Delete_Statement_Builder;
+use Phpsql_Parser\builders\Drop_Statement_Builder;
+use Phpsql_Parser\builders\Insert_Statement_Builder;
+use Phpsql_Parser\builders\Rename_Statement_Builder;
+use Phpsql_Parser\builders\Replace_Statement_Builder;
+use Phpsql_Parser\builders\Select_Statement_Builder;
+use Phpsql_Parser\builders\Show_Statement_Builder;
+use Phpsql_Parser\builders\Truncate_Statement_Builder;
+use Phpsql_Parser\builders\Union_All_Statement_Builder;
+use Phpsql_Parser\builders\Union_Statement_Builder;
+use Phpsql_Parser\builders\Update_Statement_Builder;
+use Phpsql_Parser\exceptions\Unsupported_Feature_Exception;
 /**
  * This class generates SQL from the output of the PHPSQLParser.
  *
@@ -66,80 +64,77 @@ use PHPSQLParser\exceptions\UnsupportedFeatureException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class PHPSQLCreator
+class Phpsql_Creator
 {
     public $created;
-
     public function __construct($parsed = false)
     {
         if ($parsed) {
             $this->create($parsed);
         }
     }
-
     public function create(array $parsed)
     {
         $k = key($parsed);
         switch ($k) {
-
             case 'UNION':
-                $builder = new UnionStatementBuilder();
+                $builder = new Union_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'UNION ALL':
-                $builder = new UnionAllStatementBuilder();
+                $builder = new Union_All_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'SELECT':
-                $builder = new SelectStatementBuilder();
+                $builder = new Select_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'INSERT':
-                $builder = new InsertStatementBuilder();
+                $builder = new Insert_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'REPLACE':
-                $builder = new ReplaceStatementBuilder();
+                $builder = new Replace_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'DELETE':
-                $builder = new DeleteStatementBuilder();
+                $builder = new Delete_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'TRUNCATE':
-                $builder = new TruncateStatementBuilder();
+                $builder = new Truncate_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'UPDATE':
-                $builder = new UpdateStatementBuilder();
+                $builder = new Update_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'RENAME':
-                $builder = new RenameStatementBuilder();
+                $builder = new Rename_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'SHOW':
-                $builder = new ShowStatementBuilder();
+                $builder = new Show_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'CREATE':
-                $builder = new CreateStatementBuilder();
+                $builder = new Create_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'BRACKET':
-                $builder = new BracketStatementBuilder();
+                $builder = new Bracket_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'DROP':
-                $builder = new DropStatementBuilder();
+                $builder = new Drop_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             case 'ALTER':
-                $builder = new AlterStatementBuilder();
+                $builder = new Alter_Statement_Builder();
                 $this->created = $builder->build($parsed);
                 break;
             default:
-                throw new UnsupportedFeatureException($k);
+                throw new Unsupported_Feature_Exception($k);
         }
         return $this->created;
     }

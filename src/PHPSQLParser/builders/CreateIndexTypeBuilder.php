@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateIndexTypeBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the index type of a CREATE INDEX
@@ -52,7 +51,7 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateIndexTypeBuilder extends IndexTypeBuilder
+class Create_Index_Type_Builder extends Index_Type_Builder
 {
     public function build(array $parsed)
     {

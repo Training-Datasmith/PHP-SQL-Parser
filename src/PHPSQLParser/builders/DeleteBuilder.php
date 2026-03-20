@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DeleteBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the [DELETE] part. You can overwrite
@@ -51,26 +50,23 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DeleteBuilder implements Builder
+class Delete_Builder implements Builder
 {
     public function build(array $parsed)
     {
         $sql = 'DELETE ';
         $right = -1;
-
         if ($parsed['options'] !== false) {
             foreach ($parsed['options'] as $v) {
                 $sql .= $v . ' ';
             }
         }
-
         if ($parsed['tables'] !== false) {
             foreach ($parsed['tables'] as $v) {
                 $sql .= $v . ', ';
                 $right = -2;
             }
         }
-
         return substr($sql, 0, $right);
     }
 }

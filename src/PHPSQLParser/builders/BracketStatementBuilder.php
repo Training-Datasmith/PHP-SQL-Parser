@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * BracketStatementBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the parentheses around a statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,31 +51,28 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class BracketStatementBuilder implements Builder
+class Bracket_Statement_Builder implements Builder
 {
-    protected function buildSelectBracketExpression(array $parsed)
+    protected function build_select_bracket_expression(array $parsed)
     {
-        $builder = new SelectBracketExpressionBuilder();
+        $builder = new Select_Bracket_Expression_Builder();
         return $builder->build($parsed, ' ');
     }
-
-    protected function buildSelectStatement(array $parsed)
+    protected function build_select_statement(array $parsed)
     {
-        $builder = new SelectStatementBuilder();
+        $builder = new Select_Statement_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = '';
         foreach ($parsed['BRACKET'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildSelectBracketExpression($v);
-
+            $sql .= $this->build_select_bracket_expression($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('BRACKET', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('BRACKET', $k, $v, 'expr_type');
             }
         }
-        return trim($sql . ' ' . trim($this->buildSelectStatement($parsed)));
+        return trim($sql . ' ' . trim($this->build_select_statement($parsed)));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * UpdateStatement.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole Update statement. You can overwrite
@@ -51,31 +50,28 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UpdateStatementBuilder implements Builder
+class Update_Statement_Builder implements Builder
 {
-    protected function buildWHERE(array $parsed)
+    protected function build_where(array $parsed)
     {
-        $builder = new WhereBuilder();
+        $builder = new Where_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSET(array $parsed)
+    protected function build_set(array $parsed)
     {
-        $builder = new SetBuilder();
+        $builder = new Set_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUPDATE(array $parsed)
+    protected function build_update(array $parsed)
     {
-        $builder = new UpdateBuilder();
+        $builder = new Update_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        $sql = $this->buildUPDATE($parsed['UPDATE']) . ' ' . $this->buildSET($parsed['SET']);
+        $sql = $this->build_update($parsed['UPDATE']) . ' ' . $this->build_set($parsed['SET']);
         if (isset($parsed['WHERE'])) {
-            $sql .= ' ' . $this->buildWHERE($parsed['WHERE']);
+            $sql .= ' ' . $this->build_where($parsed['WHERE']);
         }
         return $sql;
     }

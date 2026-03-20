@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * IndexHintListBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for index hint lists.
@@ -51,13 +50,12 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class IndexHintListBuilder implements Builder
+class Index_Hint_List_Builder implements Builder
 {
-    public function hasHint(array $parsed)
+    public function has_hint(array $parsed)
     {
         return isset($parsed['hints']);
     }
-
     // TODO: the hint list should be enhanced to get base_expr fro position calculation
     public function build(array $parsed)
     {

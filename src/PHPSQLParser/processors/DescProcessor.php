@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DescProcessor.php
  *
@@ -31,8 +31,7 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  *
@@ -41,10 +40,10 @@ namespace PHPSQLParser\processors;
  * @author arothe
  *
  */
-class DescProcessor extends ExplainProcessor
+class Desc_Processor extends Explain_Processor
 {
-    protected function isStatement($keys, $needle = 'DESC')
+    protected function is_statement($keys, $needle = 'DESC')
     {
-        return parent::isStatement($keys, $needle);
+        return parent::is_statement($keys, $needle);
     }
 }

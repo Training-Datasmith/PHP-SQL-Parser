@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ReferenceDefinitionProcessor.php
  *
@@ -31,146 +31,123 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  *
  * This class processes the reference definition part of the CREATE TABLE statements.
  *
  * @author arothe
  */
-class ReferenceDefinitionProcessor extends AbstractProcessor
+class Reference_Definition_Processor extends Abstract_Processor
 {
-    protected function buildReferenceDef(array $expr, $base_expr, $key)
+    protected function build_reference_def(array $expr, $base_expr, $key)
     {
         $expr['till'] = $key;
         $expr['base_expr'] = $base_expr;
         return $expr;
     }
-
     public function process($tokens)
     {
-
-        $expr = ['expr_type' => ExpressionType::REFERENCE, 'base_expr' => false, 'sub_tree' => []];
+        $expr = ['expr_type' => Expression_Type::REFERENCE, 'base_expr' => false, 'sub_tree' => []];
         $base_expr = '';
-
         foreach ($tokens as $key => $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
-
             if ($trim === '') {
                 continue;
             }
-
             $upper = strtoupper($trim);
-
             switch ($upper) {
-
                 case ',':
                     # we stop on a single comma
                     # or at the end of the array $tokens
-                    $expr = $this->buildReferenceDef($expr, trim(substr($base_expr, 0, -strlen($token))), $key - 1);
+                    $expr = $this->build_reference_def($expr, trim(substr($base_expr, 0, -strlen($token))), $key - 1);
                     break 2;
-
                 case 'REFERENCES':
-                    $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                    $currCategory = $upper;
+                    $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                    $curr_category = $upper;
                     break;
-
                 case 'MATCH':
-                    if ($currCategory === 'REF_COL_LIST') {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $currCategory = 'REF_MATCH';
+                    if ($curr_category === 'REF_COL_LIST') {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $curr_category = 'REF_MATCH';
                         continue 2;
                     }
                     # else?
                     break;
-
                 case 'FULL':
                 case 'PARTIAL':
                 case 'SIMPLE':
-                    if ($currCategory === 'REF_MATCH') {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    if ($curr_category === 'REF_MATCH') {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                         $expr['match'] = $upper;
-                        $currCategory = 'REF_COL_LIST';
+                        $curr_category = 'REF_COL_LIST';
                         continue 2;
                     }
                     # else?
                     break;
-
                 case 'ON':
-                    if ($currCategory === 'REF_COL_LIST') {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $currCategory = 'REF_ACTION';
+                    if ($curr_category === 'REF_COL_LIST') {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $curr_category = 'REF_ACTION';
                         continue 2;
                     }
                     # else ?
                     break;
-
                 case 'UPDATE':
                 case 'DELETE':
-                    if ($currCategory === 'REF_ACTION') {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $currCategory = 'REF_OPTION_' . $upper;
+                    if ($curr_category === 'REF_ACTION') {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $curr_category = 'REF_OPTION_' . $upper;
                         continue 2;
                     }
                     # else ?
                     break;
-
                 case 'RESTRICT':
                 case 'CASCADE':
-                    if (strpos($currCategory, 'REF_OPTION_') === 0) {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $expr['on_' . strtolower(substr($currCategory, -6))] = $upper;
+                    if (strpos($curr_category, 'REF_OPTION_') === 0) {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $expr['on_' . strtolower(substr($curr_category, -6))] = $upper;
                         continue 2;
                     }
                     # else ?
                     break;
-
                 case 'SET':
                 case 'NO':
-                    if (strpos($currCategory, 'REF_OPTION_') === 0) {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $expr['on_' . strtolower(substr($currCategory, -6))] = $upper;
-                        $currCategory = 'SEC_' . $currCategory;
+                    if (strpos($curr_category, 'REF_OPTION_') === 0) {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $expr['on_' . strtolower(substr($curr_category, -6))] = $upper;
+                        $curr_category = 'SEC_' . $curr_category;
                         continue 2;
                     }
                     # else ?
                     break;
-
                 case 'NULL':
                 case 'ACTION':
-                    if (strpos($currCategory, 'SEC_REF_OPTION_') === 0) {
-                        $expr['sub_tree'][] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $expr['on_' . strtolower(substr($currCategory, -6))] .= ' ' . $upper;
-                        $currCategory = 'REF_COL_LIST';
+                    if (strpos($curr_category, 'SEC_REF_OPTION_') === 0) {
+                        $expr['sub_tree'][] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $expr['on_' . strtolower(substr($curr_category, -6))] .= ' ' . $upper;
+                        $curr_category = 'REF_COL_LIST';
                         continue 2;
                     }
                     # else ?
                     break;
-
                 default:
-                    switch ($currCategory) {
-
+                    switch ($curr_category) {
                         case 'REFERENCES':
                             if ($upper[0] === '(' && substr($upper, -1) === ')') {
                                 # index_col_name list
-                                $processor = new IndexColumnListProcessor($this->options);
-                                $cols = $processor->process($this->removeParenthesisFromStart($trim));
-                                $expr['sub_tree'][] = ['expr_type' => ExpressionType::COLUMN_LIST, 'base_expr' => $trim,
-                                                            'sub_tree' => $cols];
-                                $currCategory = 'REF_COL_LIST';
+                                $processor = new Index_Column_List_Processor($this->options);
+                                $cols = $processor->process($this->remove_parenthesis_from_start($trim));
+                                $expr['sub_tree'][] = ['expr_type' => Expression_Type::COLUMN_LIST, 'base_expr' => $trim, 'sub_tree' => $cols];
+                                $curr_category = 'REF_COL_LIST';
                                 continue 3;
                             }
                             # foreign key reference table name
-                            $expr['sub_tree'][] = ['expr_type' => ExpressionType::TABLE, 'table' => $trim,
-                                                        'base_expr' => $trim, 'no_quotes' => $this->revokeQuotation($trim)];
+                            $expr['sub_tree'][] = ['expr_type' => Expression_Type::TABLE, 'table' => $trim, 'base_expr' => $trim, 'no_quotes' => $this->revoke_quotation($trim)];
                             continue 3;
-
                         default:
                             # else ?
                             break;
@@ -178,9 +155,8 @@ class ReferenceDefinitionProcessor extends AbstractProcessor
                     break;
             }
         }
-
         if (!isset($expr['till'])) {
-            return $this->buildReferenceDef($expr, trim($base_expr), -1);
+            return $this->build_reference_def($expr, trim($base_expr), -1);
         }
         return $expr;
     }

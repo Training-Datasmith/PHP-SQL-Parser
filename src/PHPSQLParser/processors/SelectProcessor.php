@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SelectProcessor.php
  *
@@ -31,8 +31,7 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  *
@@ -41,23 +40,22 @@ namespace PHPSQLParser\processors;
  * @author arothe
  *
  */
-class SelectProcessor extends SelectExpressionProcessor
+class Select_Processor extends Select_Expression_Processor
 {
     public function process($tokens)
     {
         $expression = '';
-        $expressionList = [];
+        $expression_list = [];
         foreach ($tokens as $token) {
-            if ($this->isCommaToken($token)) {
+            if ($this->is_comma_token($token)) {
                 $expression = parent::process(trim($expression));
                 $expression['delim'] = ',';
-                $expressionList[] = $expression;
+                $expression_list[] = $expression;
                 $expression = '';
-            } elseif ($this->isCommentToken($token)) {
-                $expressionList[] = parent::processComment($token);
+            } elseif ($this->is_comment_token($token)) {
+                $expression_list[] = parent::process_comment($token);
             } else {
                 switch (strtoupper($token)) {
-
                     // add more SELECT options here
                     case 'DISTINCT':
                     case 'DISTINCTROW':
@@ -71,10 +69,9 @@ class SelectProcessor extends SelectExpressionProcessor
                     case 'SQL_BUFFER_RESULT':
                         $expression = parent::process(trim($token));
                         $expression['delim'] = ' ';
-                        $expressionList[] = $expression;
+                        $expression_list[] = $expression;
                         $expression = '';
                         break;
-
                     default:
                         $expression .= $token;
                 }
@@ -83,8 +80,8 @@ class SelectProcessor extends SelectExpressionProcessor
         if ($expression) {
             $expression = parent::process(trim($expression));
             $expression['delim'] = false;
-            $expressionList[] = $expression;
+            $expression_list[] = $expression;
         }
-        return $expressionList;
+        return $expression_list;
     }
 }

@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-namespace PHPSQLParser\builders;
+declare (strict_types=1);
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the [DELETE] part. You can overwrite
@@ -12,25 +11,20 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class AlterBuilder implements Builder
+class Alter_Builder implements Builder
 {
     public function build(array $parsed)
     {
         $sql = '';
-
         foreach ($parsed as $term) {
             if ($term === ' ') {
                 continue;
             }
-
-            if (substr($term, 0, 1) === '(' ||
-                strpos($term, "\n") !== false) {
+            if (substr($term, 0, 1) === '(' || strpos($term, "\n") !== false) {
                 $sql = rtrim($sql);
             }
-
             $sql .= $term . ' ';
         }
-
         return rtrim($sql);
     }
 }

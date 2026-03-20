@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * RenameProcessor.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionToken;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Token;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the RENAME statements.
  *
@@ -53,59 +51,44 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RenameProcessor extends AbstractProcessor
+class Rename_Processor extends Abstract_Processor
 {
-    public function process($tokenList)
+    public function process($token_list)
     {
         $base_expr = '';
-        $resultList = [];
-        $tablePair = [];
-
-        foreach ($tokenList as $k => $v) {
-            $token = new ExpressionToken($k, $v);
-
-            if ($token->isWhitespaceToken()) {
+        $result_list = [];
+        $table_pair = [];
+        foreach ($token_list as $k => $v) {
+            $token = new Expression_Token($k, $v);
+            if ($token->is_whitespace_token()) {
                 continue;
             }
-
-            switch ($token->getUpper()) {
+            switch ($token->get_upper()) {
                 case 'TO':
                     // separate source table from destination
-                    $tablePair['source'] = ['expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
-                                                 'no_quotes' => $this->revokeQuotation($base_expr),
-                                                 'base_expr' => $base_expr];
+                    $table_pair['source'] = ['expr_type' => Expression_Type::TABLE, 'table' => trim($base_expr), 'no_quotes' => $this->revoke_quotation($base_expr), 'base_expr' => $base_expr];
                     $base_expr = '';
                     break;
-
                 case ',':
                     // split rename operations
-                    $tablePair['destination'] = ['expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
-                                                      'no_quotes' => $this->revokeQuotation($base_expr),
-                                                      'base_expr' => $base_expr];
-                    $resultList[] = $tablePair;
-                    $tablePair = [];
+                    $table_pair['destination'] = ['expr_type' => Expression_Type::TABLE, 'table' => trim($base_expr), 'no_quotes' => $this->revoke_quotation($base_expr), 'base_expr' => $base_expr];
+                    $result_list[] = $table_pair;
+                    $table_pair = [];
                     $base_expr = '';
                     break;
-
                 case 'TABLE':
-                    $objectType = ExpressionType::TABLE;
-                    $resultList[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $token->getTrim()];
+                    $object_type = Expression_Type::TABLE;
+                    $result_list[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $token->get_trim()];
                     continue 2;
-
                 default:
-                    $base_expr .= $token->getToken();
+                    $base_expr .= $token->get_token();
                     break;
             }
         }
-
         if ($base_expr !== '') {
-            $tablePair['destination'] = ['expr_type' => ExpressionType::TABLE, 'table' => trim($base_expr),
-                                              'no_quotes' => $this->revokeQuotation($base_expr),
-                                              'base_expr' => $base_expr];
-            $resultList[] = $tablePair;
+            $table_pair['destination'] = ['expr_type' => Expression_Type::TABLE, 'table' => trim($base_expr), 'no_quotes' => $this->revoke_quotation($base_expr), 'base_expr' => $base_expr];
+            $result_list[] = $table_pair;
         }
-
-        return ['expr_type' => $objectType, 'sub_tree' => $resultList];
+        return ['expr_type' => $object_type, 'sub_tree' => $result_list];
     }
-
 }

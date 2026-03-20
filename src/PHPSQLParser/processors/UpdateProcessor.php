@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * UpdateProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the UPDATE statements.
@@ -50,6 +49,6 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UpdateProcessor extends FromProcessor
+class Update_Processor extends From_Processor
 {
 }

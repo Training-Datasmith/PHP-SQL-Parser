@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * HavingProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the processor for the HAVING statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,14 +51,13 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class HavingProcessor extends ExpressionListProcessor
+class Having_Processor extends Expression_List_Processor
 {
     public function process($tokens, $select = [])
     {
         $parsed = parent::process($tokens);
-
         foreach ($parsed as $k => $v) {
-            if ($v['expr_type'] === ExpressionType::COLREF) {
+            if ($v['expr_type'] === Expression_Type::COLREF) {
                 foreach ($select as $clause) {
                     if (!isset($clause['alias'])) {
                         continue;
@@ -69,13 +66,12 @@ class HavingProcessor extends ExpressionListProcessor
                         continue;
                     }
                     if ($clause['alias']['no_quotes'] === $v['no_quotes']) {
-                        $parsed[$k]['expr_type'] = ExpressionType::ALIAS;
+                        $parsed[$k]['expr_type'] = Expression_Type::ALIAS;
                         break;
                     }
                 }
             }
         }
-
         return $parsed;
     }
 }

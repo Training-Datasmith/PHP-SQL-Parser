@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ShowProcessor.php
  *
@@ -31,13 +31,11 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\Options;
-use PHPSQLParser\utils\ExpressionType;
-use PHPSQLParser\utils\PHPSQLParserConstants;
-
+use Phpsql_Parser\Options;
+use Phpsql_Parser\utils\Expression_Type;
+use Phpsql_Parser\utils\Phpsql_Parser_Constants;
 /**
  *
  * This class processes the SHOW statements.
@@ -45,39 +43,32 @@ use PHPSQLParser\utils\PHPSQLParserConstants;
  * @author arothe
  *
  */
-class ShowProcessor extends AbstractProcessor
+class Show_Processor extends Abstract_Processor
 {
-    private $limitProcessor;
-
+    private $limit_processor;
     public function __construct(Options $options)
     {
         parent::__construct($options);
-        $this->limitProcessor = new LimitProcessor($options);
+        $this->limit_processor = new Limit_Processor($options);
     }
-
     public function process($tokens)
     {
-        $resultList = [];
+        $result_list = [];
         $category = '';
         $prev = '';
-
         foreach ($tokens as $k => $token) {
             $upper = strtoupper(trim($token));
-
-            if ($this->isWhitespaceToken($token)) {
+            if ($this->is_whitespace_token($token)) {
                 continue;
             }
-
             switch ($upper) {
-
                 case 'FROM':
-                    $resultList[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => trim($token)];
+                    $result_list[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => trim($token)];
                     if ($prev === 'INDEX' || $prev === 'COLUMNS') {
                         break;
                     }
                     $category = $upper;
                     break;
-
                 case 'CREATE':
                 case 'DATABASE':
                 case 'SCHEMA':
@@ -113,53 +104,46 @@ class ShowProcessor extends AbstractProcessor
                 case 'CHARACTER':
                 case 'SET':
                 case 'COLLATION':
-                    $resultList[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => trim($token)];
+                    $result_list[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => trim($token)];
                     $category = $upper;
                     break;
-
                 default:
                     switch ($prev) {
                         case 'LIKE':
-                            $resultList[] = ['expr_type' => ExpressionType::CONSTANT, 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => Expression_Type::CONSTANT, 'base_expr' => $token];
                             break;
                         case 'LIMIT':
-                            $limit = array_pop($resultList);
-                            $limit['sub_tree'] = $this->limitProcessor->process(array_slice($tokens, $k));
-                            $resultList[] = $limit;
+                            $limit = array_pop($result_list);
+                            $limit['sub_tree'] = $this->limit_processor->process(array_slice($tokens, $k));
+                            $result_list[] = $limit;
                             break;
                         case 'FROM':
                         case 'SCHEMA':
                         case 'DATABASE':
-                            $resultList[] = ['expr_type' => ExpressionType::DATABASE, 'name' => $token,
-                                                  'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => Expression_Type::DATABASE, 'name' => $token, 'no_quotes' => $this->revoke_quotation($token), 'base_expr' => $token];
                             break;
                         case 'FOR':
-                            $resultList[] = ['expr_type' => ExpressionType::USER, 'name' => $token,
-                                                  'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => Expression_Type::USER, 'name' => $token, 'no_quotes' => $this->revoke_quotation($token), 'base_expr' => $token];
                             break;
                         case 'INDEX':
                         case 'COLUMNS':
                         case 'TABLE':
-                            $resultList[] = ['expr_type' => ExpressionType::TABLE, 'table' => $token,
-                                                  'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => Expression_Type::TABLE, 'table' => $token, 'no_quotes' => $this->revoke_quotation($token), 'base_expr' => $token];
                             $category = 'TABLENAME';
                             break;
                         case 'FUNCTION':
-                            if (PHPSQLParserConstants::getInstance()->isAggregateFunction($upper)) {
-                                $expr_type = ExpressionType::AGGREGATE_FUNCTION;
+                            if (Phpsql_Parser_Constants::get_instance()->is_aggregate_function($upper)) {
+                                $expr_type = Expression_Type::AGGREGATE_FUNCTION;
                             } else {
-                                $expr_type = ExpressionType::SIMPLE_FUNCTION;
+                                $expr_type = Expression_Type::SIMPLE_FUNCTION;
                             }
-                            $resultList[] = ['expr_type' => $expr_type, 'name' => $token,
-                                                  'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => $expr_type, 'name' => $token, 'no_quotes' => $this->revoke_quotation($token), 'base_expr' => $token];
                             break;
                         case 'PROCEDURE':
-                            $resultList[] = ['expr_type' => ExpressionType::PROCEDURE, 'name' => $token,
-                                                  'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => Expression_Type::PROCEDURE, 'name' => $token, 'no_quotes' => $this->revoke_quotation($token), 'base_expr' => $token];
                             break;
                         case 'ENGINE':
-                            $resultList[] = ['expr_type' => ExpressionType::ENGINE, 'name' => $token,
-                                                  'no_quotes' => $this->revokeQuotation($token), 'base_expr' => $token];
+                            $result_list[] = ['expr_type' => Expression_Type::ENGINE, 'name' => $token, 'no_quotes' => $this->revoke_quotation($token), 'base_expr' => $token];
                             break;
                         default:
                             // ignore
@@ -169,6 +153,6 @@ class ShowProcessor extends AbstractProcessor
             }
             $prev = $category;
         }
-        return $resultList;
+        return $result_list;
     }
 }

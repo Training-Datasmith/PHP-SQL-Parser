@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateIndexTable.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the table part of a CREATE INDEX statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,24 +51,22 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateIndexTableBuilder implements Builder
+class Create_Index_Table_Builder implements Builder
 {
-    protected function buildColumnList(array $parsed)
+    protected function build_column_list(array $parsed)
     {
-        $builder = new ColumnListBuilder();
+        $builder = new Column_List_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         if (!isset($parsed['on']) || $parsed['on'] === false) {
             return '';
         }
         $table = $parsed['on'];
-        if ($table['expr_type'] !== ExpressionType::TABLE) {
+        if ($table['expr_type'] !== Expression_Type::TABLE) {
             return '';
         }
-        return 'ON ' . $table['name'] . ' ' . $this->buildColumnList($table['sub_tree']);
+        return 'ON ' . $table['name'] . ' ' . $this->build_column_list($table['sub_tree']);
     }
-
 }

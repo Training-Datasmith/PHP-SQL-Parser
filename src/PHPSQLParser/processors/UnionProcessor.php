@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * WhereProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the UNION statements.
@@ -50,31 +49,28 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class UnionProcessor extends AbstractProcessor
+class Union_Processor extends Abstract_Processor
 {
-    protected function processDefault($token)
+    protected function process_default($token)
     {
-        $processor = new DefaultProcessor($this->options);
+        $processor = new Default_Processor($this->options);
         return $processor->process($token);
     }
-
-    protected function processSQL($token)
+    protected function process_sql($token)
     {
-        $processor = new SQLProcessor($this->options);
+        $processor = new Sql_Processor($this->options);
         return $processor->process($token);
     }
-
-    public static function isUnion(array $queries)
+    public static function is_union(array $queries)
     {
-        $unionTypes = ['UNION', 'UNION ALL'];
-        foreach ($unionTypes as $unionType) {
-            if (!empty($queries[$unionType])) {
+        $union_types = ['UNION', 'UNION ALL'];
+        foreach ($union_types as $union_type) {
+            if (!empty($queries[$union_type])) {
                 return true;
             }
         }
         return false;
     }
-
     /**
      * MySQL supports a special form of UNION:
      * (select ...)
@@ -85,149 +81,128 @@ class UnionProcessor extends AbstractProcessor
      * is supported in each UNION block. (select)(select)union(select) is not legal.
      * The extra queries will be silently ignored.
      */
-    protected function processMySQLUnion(array $queries)
+    protected function process_my_sql_union(array $queries)
     {
-        $unionTypes = ['UNION', 'UNION ALL'];
-        foreach ($unionTypes as $unionType) {
-
-            if (empty($queries[$unionType])) {
+        $union_types = ['UNION', 'UNION ALL'];
+        foreach ($union_types as $union_type) {
+            if (empty($queries[$union_type])) {
                 continue;
             }
-
-            foreach ($queries[$unionType] as $key => $tokenList) {
-                foreach ($tokenList as $token) {
+            foreach ($queries[$union_type] as $key => $token_list) {
+                foreach ($token_list as $token) {
                     $token = trim($token);
                     if ($token === '') {
                         continue;
                     }
-
                     // starts with "(select"
-                    if (preg_match('/^\\(\\s*select\\s*/i', $token)) {
-                        $queries[$unionType][$key] = $this->processDefault($this->removeParenthesisFromStart($token));
+                    if (preg_match('/^\(\s*select\s*/i', $token)) {
+                        $queries[$union_type][$key] = $this->process_default($this->remove_parenthesis_from_start($token));
                         break;
                     }
-                    $queries[$unionType][$key] = $this->processSQL($queries[$unionType][$key]);
+                    $queries[$union_type][$key] = $this->process_sql($queries[$union_type][$key]);
                     break;
                 }
             }
         }
-
         // it can be parsed or not
         return $queries;
     }
-
     /**
      * Moves the final union query into a separate output, so the remainder (such as ORDER BY) can
      * be processed separately.
      */
-    protected function splitUnionRemainder(array $queries, $unionType, array $outputArray)
+    protected function split_union_remainder(array $queries, $union_type, array $output_array)
     {
-        $finalQuery = [];
-
+        $final_query = [];
         //If this token contains a matching pair of brackets at the start and end, use it as the final query
-        $finalQueryFound = false;
-        if (count($outputArray) === 1) {
-            $tokenAsArray = str_split(trim($outputArray[0]));
-            if ($tokenAsArray[0] == '(' && $tokenAsArray[count($tokenAsArray) - 1] == ')') {
-                $queries[$unionType][] = $outputArray;
-                $finalQueryFound = true;
+        $final_query_found = false;
+        if (count($output_array) === 1) {
+            $token_as_array = str_split(trim($output_array[0]));
+            if ($token_as_array[0] == '(' && $token_as_array[count($token_as_array) - 1] == ')') {
+                $queries[$union_type][] = $output_array;
+                $final_query_found = true;
             }
         }
-
-        if (!$finalQueryFound) {
-            foreach ($outputArray as $key => $token) {
+        if (!$final_query_found) {
+            foreach ($output_array as $key => $token) {
                 if (strtoupper($token) == 'ORDER') {
                     break;
                 } else {
-                    $finalQuery[] = $token;
-                    unset($outputArray[$key]);
+                    $final_query[] = $token;
+                    unset($output_array[$key]);
                 }
             }
         }
-
-        $finalQueryString = trim(implode('', $finalQuery));
-
-        if (!empty($finalQuery) && $finalQueryString != '') {
-            $queries[$unionType][] = $finalQuery;
+        $final_query_string = trim(implode('', $final_query));
+        if (!empty($final_query) && $final_query_string != '') {
+            $queries[$union_type][] = $final_query;
         }
-
-        $defaultProcessor = new DefaultProcessor($this->options);
-        $rePrepareSqlString = trim(implode('', $outputArray));
-
-        if (!empty($rePrepareSqlString)) {
-            $remainingQueries = $defaultProcessor->process($rePrepareSqlString);
-            $queries[] = $remainingQueries;
+        $default_processor = new Default_Processor($this->options);
+        $re_prepare_sql_string = trim(implode('', $output_array));
+        if (!empty($re_prepare_sql_string)) {
+            $remaining_queries = $default_processor->process($re_prepare_sql_string);
+            $queries[] = $remaining_queries;
         }
-
         return $queries;
     }
-
-    public function process($inputArray)
+    public function process($input_array)
     {
-        $outputArray = [];
-
+        $output_array = [];
         // ometimes the parser needs to skip ahead until a particular
         // oken is found
-        $skipUntilToken = false;
-
+        $skip_until_token = false;
         // his is the last type of union used (UNION or UNION ALL)
         // ndicates a) presence of at least one union in this query
         // b) the type of union if this is the first or last query
-        $unionType = false;
-
+        $union_type = false;
         // ometimes a "query" consists of more than one query (like a UNION query)
         // his array holds all the queries
         $queries = [];
-
-        foreach ($inputArray as $key => $token) {
+        foreach ($input_array as $key => $token) {
             $trim = trim($token);
-
             // overread all tokens till that given token
-            if ($skipUntilToken) {
+            if ($skip_until_token) {
                 if ($trim === '') {
-                    continue; // read the next token
+                    continue;
+                    // read the next token
                 }
-                if (strtoupper($trim) === $skipUntilToken) {
-                    $skipUntilToken = false;
-                    continue; // read the next token
+                if (strtoupper($trim) === $skip_until_token) {
+                    $skip_until_token = false;
+                    continue;
+                    // read the next token
                 }
             }
-
             if (strtoupper($trim) !== 'UNION') {
-                $outputArray[] = $token; // here we get empty tokens, if we remove these, we get problems in parse_sql()
+                $output_array[] = $token;
+                // here we get empty tokens, if we remove these, we get problems in parse_sql()
                 continue;
             }
-
-            $unionType = 'UNION';
-
+            $union_type = 'UNION';
             // we are looking for an ALL token right after UNION
-            for ($i = $key + 1; $i < count($inputArray); ++$i) {
-                if (trim($inputArray[$i]) === '') {
+            for ($i = $key + 1; $i < count($input_array); ++$i) {
+                if (trim($input_array[$i]) === '') {
                     continue;
                 }
-                if (strtoupper($inputArray[$i]) !== 'ALL') {
+                if (strtoupper($input_array[$i]) !== 'ALL') {
                     break;
                 }
                 // the other for-loop should overread till "ALL"
-                $skipUntilToken = 'ALL';
-                $unionType = 'UNION ALL';
+                $skip_until_token = 'ALL';
+                $union_type = 'UNION ALL';
             }
-
             // store the tokens related to the unionType
-            $queries[$unionType][] = $outputArray;
-            $outputArray = [];
+            $queries[$union_type][] = $output_array;
+            $output_array = [];
         }
-
         // the query tokens after the last UNION or UNION ALL
         // or we don't have an UNION/UNION ALL
-        if (!empty($outputArray)) {
-            if ($unionType) {
-                $queries = $this->splitUnionRemainder($queries, $unionType, $outputArray);
+        if (!empty($output_array)) {
+            if ($union_type) {
+                $queries = $this->split_union_remainder($queries, $union_type, $output_array);
             } else {
-                $queries[] = $outputArray;
+                $queries[] = $output_array;
             }
         }
-
-        return $this->processMySQLUnion($queries);
+        return $this->process_my_sql_union($queries);
     }
 }

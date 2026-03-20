@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * TruncateBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the [TRUNCATE] part. You can overwrite
@@ -51,23 +50,20 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class TruncateBuilder implements Builder
+class Truncate_Builder implements Builder
 {
     public function build(array $parsed)
     {
         $sql = 'TRUNCATE TABLE ';
         $right = -1;
-
         // works for one table only
         $parsed['tables'] = [$parsed['TABLE']['base_expr']];
-
         if ($parsed['tables'] !== false) {
             foreach ($parsed['tables'] as $v) {
                 $sql .= $v . ', ';
                 $right = -2;
             }
         }
-
         return substr($sql, 0, $right);
     }
 }

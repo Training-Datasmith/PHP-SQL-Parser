@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SelectBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the [SELECT] field. You can overwrite
  * all functions to achieve another handling.
@@ -53,41 +51,36 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SelectBuilder implements Builder
+class Select_Builder implements Builder
 {
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSelectExpression(array $parsed)
+    protected function build_select_expression(array $parsed)
     {
-        $builder = new SelectExpressionBuilder();
+        $builder = new Select_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSelectBracketExpression(array $parsed)
+    protected function build_select_bracket_expression(array $parsed)
     {
-        $builder = new SelectBracketExpressionBuilder();
+        $builder = new Select_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
     /**
@@ -97,28 +90,25 @@ class SelectBuilder implements Builder
      * @param array $parsed The part of the output array, which contains the current expression.
      * @return a string, which is added right after the expression
      */
-    protected function getDelimiter(array $parsed)
+    protected function get_delimiter(array $parsed)
     {
-        return (!isset($parsed['delim']) || $parsed['delim'] === false ? '' : (trim($parsed['delim']) . ' '));
+        return !isset($parsed['delim']) || $parsed['delim'] === false ? '' : trim($parsed['delim']) . ' ';
     }
-
     public function build(array $parsed)
     {
         $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildSelectBracketExpression($v);
-            $sql .= $this->buildSelectExpression($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildReserved($v);
-
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_select_bracket_expression($v);
+            $sql .= $this->build_select_expression($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_reserved($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('SELECT', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('SELECT', $k, $v, 'expr_type');
             }
-
-            $sql .= $this->getDelimiter($v);
+            $sql .= $this->get_delimiter($v);
         }
         return 'SELECT ' . $sql;
     }

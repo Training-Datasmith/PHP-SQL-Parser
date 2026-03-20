@@ -1,27 +1,23 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-class AlterStatementBuilder implements Builder
+class Alter_Statement_Builder implements Builder
 {
-    protected function buildSubTree(array $parsed)
+    protected function build_sub_tree(array $parsed)
     {
-        $builder = new SubTreeBuilder();
+        $builder = new Sub_Tree_Builder();
         return $builder->build($parsed);
     }
-
-    private function buildAlter(array $parsed)
+    private function build_alter(array $parsed)
     {
-        $builder = new AlterBuilder();
+        $builder = new Alter_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $alter = $parsed['ALTER'];
-
-        return $this->buildAlter($alter);
+        return $this->build_alter($alter);
     }
 }

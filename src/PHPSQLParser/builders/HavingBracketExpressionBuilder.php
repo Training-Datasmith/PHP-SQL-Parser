@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * HavingBracketExpressionBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for bracket expressions within the HAVING part.
  * You can overwrite all functions to achieve another handling.
@@ -55,38 +53,34 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class HavingBracketExpressionBuilder extends WhereBracketExpressionBuilder
+class Having_Bracket_Expression_Builder extends Where_Bracket_Expression_Builder
 {
-    protected function buildHavingExpression(array $parsed)
+    protected function build_having_expression(array $parsed)
     {
-        $builder = new HavingExpressionBuilder();
+        $builder = new Having_Expression_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::BRACKET_EXPRESSION) {
+        if ($parsed['expr_type'] !== Expression_Type::BRACKET_EXPRESSION) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildInList($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildHavingExpression($v);
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_in_list($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_having_expression($v);
             $sql .= $this->build($v);
-            $sql .= $this->buildUserVariable($v);
-
+            $sql .= $this->build_user_variable($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('HAVING expression subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('HAVING expression subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return '(' . substr($sql, 0, -1) . ')';
     }
-
 }

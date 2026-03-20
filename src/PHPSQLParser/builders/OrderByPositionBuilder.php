@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * PositionBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for positions of the GROUP-BY clause.
  * You can overwrite all functions to achieve another handling.
@@ -53,19 +51,18 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class OrderByPositionBuilder implements Builder
+class Order_By_Position_Builder implements Builder
 {
-    protected function buildDirection(array $parsed)
+    protected function build_direction(array $parsed)
     {
-        $builder = new DirectionBuilder();
+        $builder = new Direction_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::POSITION) {
+        if ($parsed['expr_type'] !== Expression_Type::POSITION) {
             return '';
         }
-        return $parsed['base_expr'] . $this->buildDirection($parsed);
+        return $parsed['base_expr'] . $this->build_direction($parsed);
     }
 }

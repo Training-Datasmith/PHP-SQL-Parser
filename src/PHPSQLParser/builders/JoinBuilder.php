@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * JoinBuilder.php
  *
@@ -41,8 +41,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the JOIN statement parts (within FROM).
@@ -53,7 +52,7 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class JoinBuilder
+class Join_Builder
 {
     public function build($parsed)
     {
@@ -73,6 +72,6 @@ class JoinBuilder
             return ' STRAIGHT_JOIN ';
         }
         // TODO: add more
-        throw new UnsupportedFeatureException($parsed);
+        throw new Unsupported_Feature_Exception($parsed);
     }
 }

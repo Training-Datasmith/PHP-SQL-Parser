@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * LimitBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder LIMIT statement.
  * You can overwrite all functions to achieve another handling.
@@ -53,13 +51,13 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class LimitBuilder implements Builder
+class Limit_Builder implements Builder
 {
     public function build(array $parsed)
     {
-        $sql = ($parsed['rowcount']) . ($parsed['offset'] ? ' OFFSET ' . $parsed['offset'] : '');
+        $sql = $parsed['rowcount'] . ($parsed['offset'] ? ' OFFSET ' . $parsed['offset'] : '');
         if ($sql === '') {
-            throw new UnableToCreateSQLException('LIMIT', 'rowcount', $parsed, 'rowcount');
+            throw new Unable_To_Create_Sql_Exception('LIMIT', 'rowcount', $parsed, 'rowcount');
         }
         return 'LIMIT ' . $sql;
     }

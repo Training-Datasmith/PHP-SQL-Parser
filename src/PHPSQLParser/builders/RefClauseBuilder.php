@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * RefClauseBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the references clause within a JOIN.
  * You can overwrite all functions to achieve another handling.
@@ -53,56 +51,48 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class RefClauseBuilder implements Builder
+class Ref_Clause_Builder implements Builder
 {
-    protected function buildInList(array $parsed)
+    protected function build_in_list(array $parsed)
     {
-        $builder = new InListBuilder();
+        $builder = new In_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator(array $parsed)
+    protected function build_operator(array $parsed)
     {
-        $builder = new OperatorBuilder();
+        $builder = new Operator_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildBracketExpression(array $parsed)
+    protected function build_bracket_expression(array $parsed)
     {
-        $builder = new SelectBracketExpressionBuilder();
+        $builder = new Select_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColumnList(array $parsed)
+    protected function build_column_list(array $parsed)
     {
-        $builder = new ColumnListBuilder();
+        $builder = new Column_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubQuery(array $parsed)
+    protected function build_sub_query(array $parsed)
     {
-        $builder = new SubQueryBuilder();
+        $builder = new Sub_Query_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         if ($parsed === false) {
@@ -111,19 +101,17 @@ class RefClauseBuilder implements Builder
         $sql = '';
         foreach ($parsed as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildBracketExpression($v);
-            $sql .= $this->buildInList($v);
-            $sql .= $this->buildColumnList($v);
-            $sql .= $this->buildSubQuery($v);
-
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_bracket_expression($v);
+            $sql .= $this->build_in_list($v);
+            $sql .= $this->build_column_list($v);
+            $sql .= $this->build_sub_query($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('expression ref_clause', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('expression ref_clause', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return substr($sql, 0, -1);

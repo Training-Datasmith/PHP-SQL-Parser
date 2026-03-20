@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * LexerSplitter.php
  *
@@ -41,8 +41,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\lexer;
+namespace Phpsql_Parser\lexer;
 
 /**
  * This class holds a sorted array of characters, which are used as stop token.
@@ -53,17 +52,13 @@ namespace PHPSQLParser\lexer;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class LexerSplitter
+class Lexer_Splitter
 {
-    protected static $splitters = ['<=>', "\r\n", '!=', '>=', '<=', '<>', '<<', '>>', ':=', '\\', '&&', '||', ':=',
-                                       '/*', '*/', '--', '>', '<', '|', '=', '^', '(', ')', "\t", "\n", "'", '"', '`',
-                                       ',', '@', ' ', '+', '-', '*', '/', ';'];
-
+    protected static $splitters = ['<=>', "\r\n", '!=', '>=', '<=', '<>', '<<', '>>', ':=', '\\', '&&', '||', ':=', '/*', '*/', '--', '>', '<', '|', '=', '^', '(', ')', "\t", "\n", "'", '"', '`', ',', '@', ' ', '+', '-', '*', '/', ';'];
     /**
      * @var string Regex string pattern of splitters.
      */
-    protected $splitterPattern;
-
+    protected $splitter_pattern;
     /**
      * Constructor.
      *
@@ -71,19 +66,17 @@ class LexerSplitter
      */
     public function __construct()
     {
-        $this->splitterPattern = $this->convertSplittersToRegexPattern(self::$splitters);
+        $this->splitter_pattern = $this->convert_splitters_to_regex_pattern(self::$splitters);
     }
-
     /**
      * Get the regex pattern string of all the splitters
      *
      * @return string
      */
-    public function getSplittersRegexPattern()
+    public function get_splitters_regex_pattern()
     {
-        return $this->splitterPattern;
+        return $this->splitter_pattern;
     }
-
     /**
      * Convert an array of splitter tokens to a regex pattern string.
      *
@@ -91,12 +84,11 @@ class LexerSplitter
      *
      * @return string
      */
-    public function convertSplittersToRegexPattern($splitters)
+    public function convert_splitters_to_regex_pattern($splitters)
     {
         $regex_parts = [];
         foreach ($splitters as $part) {
             $part = preg_quote($part);
-
             switch ($part) {
                 case "\r\n":
                     $part = '\r\n';
@@ -111,21 +103,18 @@ class LexerSplitter
                     $part = '\s';
                     break;
                 case '/':
-                    $part = "\/";
+                    $part = "\\/";
                     break;
-                case "/\*":
-                    $part = "\/\*";
+                case "/\\*":
+                    $part = "\\/\\*";
                     break;
-                case "\*/":
-                    $part = "\*\/";
+                case "\\*/":
+                    $part = "\\*\\/";
                     break;
             }
-
             $regex_parts[] = $part;
         }
-
         $pattern = implode('|', $regex_parts);
-
         return '/(' . $pattern . ')/';
     }
 }

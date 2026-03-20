@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the [CREATE] part. You can overwrite
  * all functions to achieve another handling.
@@ -53,41 +51,34 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateBuilder implements Builder
+class Create_Builder implements Builder
 {
-    protected function buildCreateTable(array $parsed)
+    protected function build_create_table(array $parsed)
     {
-        $builder = new CreateTableBuilder();
+        $builder = new Create_Table_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCreateIndex(array $parsed)
+    protected function build_create_index(array $parsed)
     {
-        $builder = new CreateIndexBuilder();
+        $builder = new Create_Index_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubTree(array $parsed)
+    protected function build_sub_tree(array $parsed)
     {
-        $builder = new SubTreeBuilder();
+        $builder = new Sub_Tree_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $create = $parsed['CREATE'];
-        $sql = $this->buildSubTree($create);
-
-        if (($create['expr_type'] === ExpressionType::TABLE)
-            || ($create['expr_type'] === ExpressionType::TEMPORARY_TABLE)) {
-            $sql .= ' ' . $this->buildCreateTable($parsed['TABLE']);
+        $sql = $this->build_sub_tree($create);
+        if ($create['expr_type'] === Expression_Type::TABLE || $create['expr_type'] === Expression_Type::TEMPORARY_TABLE) {
+            $sql .= ' ' . $this->build_create_table($parsed['TABLE']);
         }
-        if ($create['expr_type'] === ExpressionType::INDEX) {
-            $sql .= ' ' . $this->buildCreateIndex($parsed['INDEX']);
+        if ($create['expr_type'] === Expression_Type::INDEX) {
+            $sql .= ' ' . $this->build_create_index($parsed['INDEX']);
         }
-
         // TODO: add more expr_types here (like VIEW), if available in parser output
         return 'CREATE ' . $sql;
     }
-
 }

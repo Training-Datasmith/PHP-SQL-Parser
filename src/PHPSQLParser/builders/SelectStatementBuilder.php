@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SelectStatement.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole Select statement. You can overwrite
@@ -51,93 +50,83 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SelectStatementBuilder implements Builder
+class Select_Statement_Builder implements Builder
 {
-    protected function buildSELECT(array $parsed)
+    protected function build_select(array $parsed)
     {
-        $builder = new SelectBuilder();
+        $builder = new Select_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFROM(array $parsed)
+    protected function build_from(array $parsed)
     {
-        $builder = new FromBuilder();
+        $builder = new From_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildWHERE(array $parsed)
+    protected function build_where(array $parsed)
     {
-        $builder = new WhereBuilder();
+        $builder = new Where_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildGROUP(array $parsed)
+    protected function build_group(array $parsed)
     {
-        $builder = new GroupByBuilder();
+        $builder = new Group_By_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildHAVING(array $parsed)
+    protected function build_having(array $parsed)
     {
-        $builder = new HavingBuilder();
+        $builder = new Having_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildORDER(array $parsed)
+    protected function build_order(array $parsed)
     {
-        $builder = new OrderByBuilder();
+        $builder = new Order_By_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildLIMIT(array $parsed)
+    protected function build_limit(array $parsed)
     {
-        $builder = new LimitBuilder();
+        $builder = new Limit_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUNION(array $parsed)
+    protected function build_union(array $parsed)
     {
-        $builder = new UnionStatementBuilder();
+        $builder = new Union_Statement_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUNIONALL(array $parsed)
+    protected function build_unionall(array $parsed)
     {
-        $builder = new UnionAllStatementBuilder();
+        $builder = new Union_All_Statement_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = '';
         if (isset($parsed['SELECT'])) {
-            $sql .= $this->buildSELECT($parsed['SELECT']);
+            $sql .= $this->build_select($parsed['SELECT']);
         }
         if (isset($parsed['FROM'])) {
-            $sql .= ' ' . $this->buildFROM($parsed['FROM']);
+            $sql .= ' ' . $this->build_from($parsed['FROM']);
         }
         if (isset($parsed['WHERE'])) {
-            $sql .= ' ' . $this->buildWHERE($parsed['WHERE']);
+            $sql .= ' ' . $this->build_where($parsed['WHERE']);
         }
         if (isset($parsed['GROUP'])) {
-            $sql .= ' ' . $this->buildGROUP($parsed['GROUP']);
+            $sql .= ' ' . $this->build_group($parsed['GROUP']);
         }
         if (isset($parsed['HAVING'])) {
-            $sql .= ' ' . $this->buildHAVING($parsed['HAVING']);
+            $sql .= ' ' . $this->build_having($parsed['HAVING']);
         }
         if (isset($parsed['ORDER'])) {
-            $sql .= ' ' . $this->buildORDER($parsed['ORDER']);
+            $sql .= ' ' . $this->build_order($parsed['ORDER']);
         }
         if (isset($parsed['LIMIT'])) {
-            $sql .= ' ' . $this->buildLIMIT($parsed['LIMIT']);
+            $sql .= ' ' . $this->build_limit($parsed['LIMIT']);
         }
         if (isset($parsed['UNION'])) {
-            $sql .= ' ' . $this->buildUNION($parsed);
+            $sql .= ' ' . $this->build_union($parsed);
         }
         if (isset($parsed['UNION ALL'])) {
-            $sql .= ' ' . $this->buildUNIONALL($parsed);
+            $sql .= ' ' . $this->build_unionall($parsed);
         }
         return $sql;
     }
-
 }

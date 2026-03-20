@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * OrderByProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the ORDER-BY statements.
  *
@@ -52,97 +50,82 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class OrderByProcessor extends AbstractProcessor
+class Order_By_Processor extends Abstract_Processor
 {
-    protected function processSelectExpression($unparsed)
+    protected function process_select_expression($unparsed)
     {
-        $processor = new SelectExpressionProcessor($this->options);
+        $processor = new Select_Expression_Processor($this->options);
         return $processor->process($unparsed);
     }
-
-    protected function initParseInfo()
+    protected function init_parse_info()
     {
-        return ['base_expr' => '', 'dir' => 'ASC', 'expr_type' => ExpressionType::EXPRESSION];
+        return ['base_expr' => '', 'dir' => 'ASC', 'expr_type' => Expression_Type::EXPRESSION];
     }
-
-    protected function processOrderExpression(array &$parseInfo, $select)
+    protected function process_order_expression(array &$parse_info, $select)
     {
-        $parseInfo['base_expr'] = trim($parseInfo['base_expr']);
-
-        if ($parseInfo['base_expr'] === '') {
+        $parse_info['base_expr'] = trim($parse_info['base_expr']);
+        if ($parse_info['base_expr'] === '') {
             return false;
         }
-
-        if (is_numeric($parseInfo['base_expr'])) {
-            $parseInfo['expr_type'] = ExpressionType::POSITION;
+        if (is_numeric($parse_info['base_expr'])) {
+            $parse_info['expr_type'] = Expression_Type::POSITION;
         } else {
-            $parseInfo['no_quotes'] = $this->revokeQuotation($parseInfo['base_expr']);
+            $parse_info['no_quotes'] = $this->revoke_quotation($parse_info['base_expr']);
             // search to see if the expression matches an alias
             foreach ($select as $clause) {
                 if (empty($clause['alias'])) {
                     continue;
                 }
-
-                if ($clause['alias']['no_quotes'] === $parseInfo['no_quotes']) {
-                    $parseInfo['expr_type'] = ExpressionType::ALIAS;
+                if ($clause['alias']['no_quotes'] === $parse_info['no_quotes']) {
+                    $parse_info['expr_type'] = Expression_Type::ALIAS;
                     break;
                 }
             }
         }
-
-        if ($parseInfo['expr_type'] === ExpressionType::EXPRESSION) {
-            $expr = $this->processSelectExpression($parseInfo['base_expr']);
-            $expr['direction'] = $parseInfo['dir'];
+        if ($parse_info['expr_type'] === Expression_Type::EXPRESSION) {
+            $expr = $this->process_select_expression($parse_info['base_expr']);
+            $expr['direction'] = $parse_info['dir'];
             unset($expr['alias']);
             return $expr;
         }
-
         $result = [];
-        $result['expr_type'] = $parseInfo['expr_type'];
-        $result['base_expr'] = $parseInfo['base_expr'];
-        if (isset($parseInfo['no_quotes'])) {
-            $result['no_quotes'] = $parseInfo['no_quotes'];
+        $result['expr_type'] = $parse_info['expr_type'];
+        $result['base_expr'] = $parse_info['base_expr'];
+        if (isset($parse_info['no_quotes'])) {
+            $result['no_quotes'] = $parse_info['no_quotes'];
         }
-        $result['direction'] = $parseInfo['dir'];
+        $result['direction'] = $parse_info['dir'];
         return $result;
     }
-
     public function process($tokens, $select = [])
     {
         $out = [];
-        $parseInfo = $this->initParseInfo();
-
+        $parse_info = $this->init_parse_info();
         if (!$tokens) {
             return false;
         }
-
         foreach ($tokens as $token) {
             $upper = strtoupper(trim($token));
             switch ($upper) {
                 case ',':
-                    $out[] = $this->processOrderExpression($parseInfo, $select);
-                    $parseInfo = $this->initParseInfo();
+                    $out[] = $this->process_order_expression($parse_info, $select);
+                    $parse_info = $this->init_parse_info();
                     break;
-
                 case 'DESC':
-                    $parseInfo['dir'] = 'DESC';
+                    $parse_info['dir'] = 'DESC';
                     break;
-
                 case 'ASC':
-                    $parseInfo['dir'] = 'ASC';
+                    $parse_info['dir'] = 'ASC';
                     break;
-
                 default:
-                    if ($this->isCommentToken($token)) {
-                        $out[] = parent::processComment($token);
+                    if ($this->is_comment_token($token)) {
+                        $out[] = parent::process_comment($token);
                         break;
                     }
-
-                    $parseInfo['base_expr'] .= $token;
+                    $parse_info['base_expr'] .= $token;
             }
         }
-
-        $out[] = $this->processOrderExpression($parseInfo, $select);
+        $out[] = $this->process_order_expression($parse_info, $select);
         return $out;
     }
 }

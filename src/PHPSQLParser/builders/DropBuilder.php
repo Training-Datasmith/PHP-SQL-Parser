@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DropBuilder.php
  *
@@ -40,67 +40,52 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the [DROP] part. You can overwrite
  * all functions to achieve another handling.
  */
-class DropBuilder implements Builder
+class Drop_Builder implements Builder
 {
-    protected function buildDropIndex(array $parsed)
+    protected function build_drop_index(array $parsed)
     {
-        $builder = new DropIndexBuilder();
-
+        $builder = new Drop_Index_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
-
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildExpression(array $parsed)
+    protected function build_expression(array $parsed)
     {
-        $builder = new DropExpressionBuilder();
-
+        $builder = new Drop_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubTree(array $parsed)
+    protected function build_sub_tree(array $parsed)
     {
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildExpression($v);
-
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_expression($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('DROP subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('DROP subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
-
         return $sql;
     }
-
     public function build(array $parsed)
     {
         $drop = $parsed['DROP'];
-        $sql  = $this->buildSubTree($drop);
-
-        if ($drop['expr_type'] === ExpressionType::INDEX) {
-            $sql .= '' . $this->buildDropIndex($parsed['INDEX']) . ' ';
+        $sql = $this->build_sub_tree($drop);
+        if ($drop['expr_type'] === Expression_Type::INDEX) {
+            $sql .= '' . $this->build_drop_index($parsed['INDEX']) . ' ';
         }
-
         return 'DROP ' . substr($sql, 0, -1);
     }
-
 }

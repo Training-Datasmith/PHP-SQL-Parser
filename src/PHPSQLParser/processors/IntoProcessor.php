@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * IntoProcessor.php
  *
@@ -31,8 +31,7 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  *
@@ -41,21 +40,21 @@ namespace PHPSQLParser\processors;
  * @author arothe
  *
  */
-class IntoProcessor extends AbstractProcessor
+class Into_Processor extends Abstract_Processor
 {
     /**
      * TODO: This is a dummy function, we cannot parse INTO as part of SELECT
      * at the moment
      */
-    public function process($tokenList)
+    public function process($token_list)
     {
-        $unparsed = $tokenList['INTO'];
+        $unparsed = $token_list['INTO'];
         foreach ($unparsed as $k => $token) {
-            if ($this->isWhitespaceToken($token) || $this->isCommaToken($token)) {
+            if ($this->is_whitespace_token($token) || $this->is_comma_token($token)) {
                 unset($unparsed[$k]);
             }
         }
-        $tokenList['INTO'] = array_values($unparsed);
-        return $tokenList;
+        $token_list['INTO'] = array_values($unparsed);
+        return $token_list;
     }
 }

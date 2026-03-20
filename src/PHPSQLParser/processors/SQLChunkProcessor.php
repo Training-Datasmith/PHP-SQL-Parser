@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SQLChunkProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the SQL chunks.
@@ -50,9 +49,9 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SQLChunkProcessor extends AbstractProcessor
+class Sql_Chunk_Processor extends Abstract_Processor
 {
-    protected function moveLIKE(&$out)
+    protected function move_like(&$out)
     {
         if (!isset($out['TABLE']['like'])) {
             return;
@@ -60,7 +59,6 @@ class SQLChunkProcessor extends AbstractProcessor
         $out = $this->array_insert_after($out, 'TABLE', ['LIKE' => $out['TABLE']['like']]);
         unset($out['TABLE']['like']);
     }
-
     public function process($out)
     {
         if (!$out) {
@@ -69,133 +67,129 @@ class SQLChunkProcessor extends AbstractProcessor
         if (!empty($out['BRACKET'])) {
             // TODO: this field should be a global STATEMENT field within the output
             // we could add all other categories as sub_tree, it could also work with multipe UNIONs
-            $processor = new BracketProcessor($this->options);
-            $processedBracket = $processor->process($out['BRACKET']);
-            $remainingExpressions = $processedBracket[0]['remaining_expressions'];
-
-            unset($processedBracket[0]['remaining_expressions']);
-
-            if (!empty($remainingExpressions)) {
-                foreach ($remainingExpressions as $key => $expression) {
-                    $processedBracket[][$key] = $expression;
+            $processor = new Bracket_Processor($this->options);
+            $processed_bracket = $processor->process($out['BRACKET']);
+            $remaining_expressions = $processed_bracket[0]['remaining_expressions'];
+            unset($processed_bracket[0]['remaining_expressions']);
+            if (!empty($remaining_expressions)) {
+                foreach ($remaining_expressions as $key => $expression) {
+                    $processed_bracket[][$key] = $expression;
                 }
             }
-
-            $out['BRACKET'] = $processedBracket;
+            $out['BRACKET'] = $processed_bracket;
         }
         if (!empty($out['CREATE'])) {
-            $processor = new CreateProcessor($this->options);
+            $processor = new Create_Processor($this->options);
             $out['CREATE'] = $processor->process($out['CREATE']);
         }
         if (!empty($out['TABLE'])) {
-            $processor = new TableProcessor($this->options);
+            $processor = new Table_Processor($this->options);
             $out['TABLE'] = $processor->process($out['TABLE']);
-            $this->moveLIKE($out);
+            $this->move_like($out);
         }
         if (!empty($out['INDEX'])) {
-            $processor = new IndexProcessor($this->options);
+            $processor = new Index_Processor($this->options);
             $out['INDEX'] = $processor->process($out['INDEX']);
         }
         if (!empty($out['EXPLAIN'])) {
-            $processor = new ExplainProcessor($this->options);
+            $processor = new Explain_Processor($this->options);
             $out['EXPLAIN'] = $processor->process($out['EXPLAIN'], array_keys($out));
         }
         if (!empty($out['DESCRIBE'])) {
-            $processor = new DescribeProcessor($this->options);
+            $processor = new Describe_Processor($this->options);
             $out['DESCRIBE'] = $processor->process($out['DESCRIBE'], array_keys($out));
         }
         if (!empty($out['DESC'])) {
-            $processor = new DescProcessor($this->options);
+            $processor = new Desc_Processor($this->options);
             $out['DESC'] = $processor->process($out['DESC'], array_keys($out));
         }
         if (!empty($out['SELECT'])) {
-            $processor = new SelectProcessor($this->options);
+            $processor = new Select_Processor($this->options);
             $out['SELECT'] = $processor->process($out['SELECT']);
         }
         if (!empty($out['FROM'])) {
-            $processor = new FromProcessor($this->options);
+            $processor = new From_Processor($this->options);
             $out['FROM'] = $processor->process($out['FROM']);
         }
         if (!empty($out['USING'])) {
-            $processor = new UsingProcessor($this->options);
+            $processor = new Using_Processor($this->options);
             $out['USING'] = $processor->process($out['USING']);
         }
         if (!empty($out['UPDATE'])) {
-            $processor = new UpdateProcessor($this->options);
+            $processor = new Update_Processor($this->options);
             $out['UPDATE'] = $processor->process($out['UPDATE']);
         }
         if (!empty($out['GROUP'])) {
             // set empty array if we have partial SQL statement
-            $processor = new GroupByProcessor($this->options);
+            $processor = new Group_By_Processor($this->options);
             $out['GROUP'] = $processor->process($out['GROUP'], isset($out['SELECT']) ? $out['SELECT'] : []);
         }
         if (!empty($out['ORDER'])) {
             // set empty array if we have partial SQL statement
-            $processor = new OrderByProcessor($this->options);
+            $processor = new Order_By_Processor($this->options);
             $out['ORDER'] = $processor->process($out['ORDER'], isset($out['SELECT']) ? $out['SELECT'] : []);
         }
         if (!empty($out['LIMIT'])) {
-            $processor = new LimitProcessor($this->options);
+            $processor = new Limit_Processor($this->options);
             $out['LIMIT'] = $processor->process($out['LIMIT']);
         }
         if (!empty($out['WHERE'])) {
-            $processor = new WhereProcessor($this->options);
+            $processor = new Where_Processor($this->options);
             $out['WHERE'] = $processor->process($out['WHERE']);
         }
         if (!empty($out['HAVING'])) {
-            $processor = new HavingProcessor($this->options);
+            $processor = new Having_Processor($this->options);
             $out['HAVING'] = $processor->process($out['HAVING'], isset($out['SELECT']) ? $out['SELECT'] : []);
         }
         if (!empty($out['SET'])) {
-            $processor = new SetProcessor($this->options);
+            $processor = new Set_Processor($this->options);
             $out['SET'] = $processor->process($out['SET'], isset($out['UPDATE']));
         }
         if (!empty($out['DUPLICATE'])) {
-            $processor = new DuplicateProcessor($this->options);
+            $processor = new Duplicate_Processor($this->options);
             $out['ON DUPLICATE KEY UPDATE'] = $processor->process($out['DUPLICATE']);
             unset($out['DUPLICATE']);
         }
         if (!empty($out['INSERT'])) {
-            $processor = new InsertProcessor($this->options);
+            $processor = new Insert_Processor($this->options);
             $out = $processor->process($out);
         }
         if (!empty($out['REPLACE'])) {
-            $processor = new ReplaceProcessor($this->options);
+            $processor = new Replace_Processor($this->options);
             $out = $processor->process($out);
         }
         if (!empty($out['DELETE'])) {
-            $processor = new DeleteProcessor($this->options);
+            $processor = new Delete_Processor($this->options);
             $out = $processor->process($out);
         }
         if (!empty($out['VALUES'])) {
-            $processor = new ValuesProcessor($this->options);
+            $processor = new Values_Processor($this->options);
             $out = $processor->process($out);
         }
         if (!empty($out['INTO'])) {
-            $processor = new IntoProcessor($this->options);
+            $processor = new Into_Processor($this->options);
             $out = $processor->process($out);
         }
         if (!empty($out['DROP'])) {
-            $processor = new DropProcessor($this->options);
+            $processor = new Drop_Processor($this->options);
             $out['DROP'] = $processor->process($out['DROP']);
         }
         if (!empty($out['RENAME'])) {
-            $processor = new RenameProcessor($this->options);
+            $processor = new Rename_Processor($this->options);
             $out['RENAME'] = $processor->process($out['RENAME']);
         }
         if (!empty($out['SHOW'])) {
-            $processor = new ShowProcessor($this->options);
+            $processor = new Show_Processor($this->options);
             $out['SHOW'] = $processor->process($out['SHOW']);
         }
         if (!empty($out['OPTIONS'])) {
-            $processor = new OptionsProcessor($this->options);
+            $processor = new Options_Processor($this->options);
             $out['OPTIONS'] = $processor->process($out['OPTIONS']);
         }
         if (!empty($out['WITH'])) {
-            $processor = new WithProcessor($this->options);
+            $processor = new With_Processor($this->options);
             $out['WITH'] = $processor->process($out['WITH']);
         }
-
         return $out;
     }
 }

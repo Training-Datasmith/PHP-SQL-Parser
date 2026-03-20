@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * TableBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the table name and join options.
  * You can overwrite all functions to achieve another handling.
@@ -53,52 +51,45 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class TableBuilder implements Builder
+class Table_Builder implements Builder
 {
-    protected function buildAlias(array $parsed)
+    protected function build_alias(array $parsed)
     {
-        $builder = new AliasBuilder();
+        $builder = new Alias_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexHintList(array $parsed)
+    protected function build_index_hint_list(array $parsed)
     {
-        $builder = new IndexHintListBuilder();
+        $builder = new Index_Hint_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildJoin($parsed)
+    protected function build_join($parsed)
     {
-        $builder = new JoinBuilder();
+        $builder = new Join_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildRefType($parsed)
+    protected function build_ref_type($parsed)
     {
-        $builder = new RefTypeBuilder();
+        $builder = new Ref_Type_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildRefClause(array $parsed)
+    protected function build_ref_clause(array $parsed)
     {
-        $builder = new RefClauseBuilder();
+        $builder = new Ref_Clause_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed, $index = 0)
     {
-        if ($parsed['expr_type'] !== ExpressionType::TABLE) {
+        if ($parsed['expr_type'] !== Expression_Type::TABLE) {
             return '';
         }
-
         $sql = $parsed['table'];
-        $sql .= $this->buildAlias($parsed);
-        $sql .= $this->buildIndexHintList($parsed);
-
+        $sql .= $this->build_alias($parsed);
+        $sql .= $this->build_index_hint_list($parsed);
         if ($index !== 0) {
-            $sql = $this->buildJoin($parsed['join_type']) . $sql;
-            $sql .= $this->buildRefType($parsed['ref_type']);
-            $sql .= $parsed['ref_clause'] === false ? '' : $this->buildRefClause($parsed['ref_clause']);
+            $sql = $this->build_join($parsed['join_type']) . $sql;
+            $sql .= $this->build_ref_type($parsed['ref_type']);
+            $sql .= $parsed['ref_clause'] === false ? '' : $this->build_ref_clause($parsed['ref_clause']);
         }
         return $sql;
     }

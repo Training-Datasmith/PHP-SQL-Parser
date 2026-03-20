@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DropIndexBuilder.php
  *
@@ -40,27 +40,24 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the DROP INDEX statement. You can overwrite
  * all functions to achieve another handling.
  */
-class DropIndexBuilder implements Builder
+class Drop_Index_Builder implements Builder
 {
-    protected function buildIndexTable(array $parsed)
+    protected function build_index_table(array $parsed)
     {
-        $builder = new DropIndexTableBuilder();
+        $builder = new Drop_Index_Table_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = $parsed['name'];
         $sql = trim($sql);
-        $sql .= ' ' . $this->buildIndexTable($parsed);
+        $sql .= ' ' . $this->build_index_table($parsed);
         return trim($sql);
     }
-
 }

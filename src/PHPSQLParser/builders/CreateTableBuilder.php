@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateTable.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the CREATE TABLE statement. You can overwrite
@@ -51,32 +50,28 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateTableBuilder implements Builder
+class Create_Table_Builder implements Builder
 {
-    protected function buildCreateTableDefinition(array $parsed)
+    protected function build_create_table_definition(array $parsed)
     {
-        $builder = new CreateTableDefinitionBuilder();
+        $builder = new Create_Table_Definition_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCreateTableOptions(array $parsed)
+    protected function build_create_table_options(array $parsed)
     {
-        $builder = new CreateTableOptionsBuilder();
+        $builder = new Create_Table_Options_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCreateTableSelectOption(array $parsed)
+    protected function build_create_table_select_option(array $parsed)
     {
-        $builder = new CreateTableSelectOptionBuilder();
+        $builder = new Create_Table_Select_Option_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = $parsed['name'];
-        $sql .= $this->buildCreateTableDefinition($parsed);
-        $sql .= $this->buildCreateTableOptions($parsed);
-        return $sql . $this->buildCreateTableSelectOption($parsed);
+        $sql .= $this->build_create_table_definition($parsed);
+        $sql .= $this->build_create_table_options($parsed);
+        return $sql . $this->build_create_table_select_option($parsed);
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateIndexOptionsBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for the index options of a CREATE INDEX
  * statement.
@@ -54,44 +52,38 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateIndexOptionsBuilder implements Builder
+class Create_Index_Options_Builder implements Builder
 {
-    protected function buildIndexParser(array $parsed)
+    protected function build_index_parser(array $parsed)
     {
-        $builder = new IndexParserBuilder();
+        $builder = new Index_Parser_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexSize(array $parsed)
+    protected function build_index_size(array $parsed)
     {
-        $builder = new IndexSizeBuilder();
+        $builder = new Index_Size_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexType(array $parsed)
+    protected function build_index_type(array $parsed)
     {
-        $builder = new IndexTypeBuilder();
+        $builder = new Index_Type_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexComment(array $parsed)
+    protected function build_index_comment(array $parsed)
     {
-        $builder = new IndexCommentBuilder();
+        $builder = new Index_Comment_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexAlgorithm(array $parsed)
+    protected function build_index_algorithm(array $parsed)
     {
-        $builder = new IndexAlgorithmBuilder();
+        $builder = new Index_Algorithm_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexLock(array $parsed)
+    protected function build_index_lock(array $parsed)
     {
-        $builder = new IndexLockBuilder();
+        $builder = new Index_Lock_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         if ($parsed['options'] === false) {
@@ -100,17 +92,15 @@ class CreateIndexOptionsBuilder implements Builder
         $sql = '';
         foreach ($parsed['options'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildIndexAlgorithm($v);
-            $sql .= $this->buildIndexLock($v);
-            $sql .= $this->buildIndexComment($v);
-            $sql .= $this->buildIndexParser($v);
-            $sql .= $this->buildIndexSize($v);
-            $sql .= $this->buildIndexType($v);
-
+            $sql .= $this->build_index_algorithm($v);
+            $sql .= $this->build_index_lock($v);
+            $sql .= $this->build_index_comment($v);
+            $sql .= $this->build_index_parser($v);
+            $sql .= $this->build_index_size($v);
+            $sql .= $this->build_index_type($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE INDEX options', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE INDEX options', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return ' ' . substr($sql, 0, -1);

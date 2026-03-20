@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DeleteStatementBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the whole Delete statement. You can overwrite
@@ -51,33 +50,29 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DeleteStatementBuilder implements Builder
+class Delete_Statement_Builder implements Builder
 {
-    protected function buildWHERE(array $parsed)
+    protected function build_where(array $parsed)
     {
-        $builder = new WhereBuilder();
+        $builder = new Where_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFROM(array $parsed)
+    protected function build_from(array $parsed)
     {
-        $builder = new FromBuilder();
+        $builder = new From_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildDELETE(array $parsed)
+    protected function build_delete(array $parsed)
     {
-        $builder = new DeleteBuilder();
+        $builder = new Delete_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        $sql = $this->buildDELETE($parsed['DELETE']) . ' ' . $this->buildFROM($parsed['FROM']);
+        $sql = $this->build_delete($parsed['DELETE']) . ' ' . $this->build_from($parsed['FROM']);
         if (isset($parsed['WHERE'])) {
-            $sql .= ' ' . $this->buildWHERE($parsed['WHERE']);
+            $sql .= ' ' . $this->build_where($parsed['WHERE']);
         }
         return $sql;
     }
-
 }

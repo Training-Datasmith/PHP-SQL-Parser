@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SetExpressionBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the SET part of INSERT statement.
  * You can overwrite all functions to achieve another handling.
@@ -54,70 +52,61 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SetExpressionBuilder implements Builder
+class Set_Expression_Builder implements Builder
 {
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator(array $parsed)
+    protected function build_operator(array $parsed)
     {
-        $builder = new OperatorBuilder();
+        $builder = new Operator_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildBracketExpression(array $parsed)
+    protected function build_bracket_expression(array $parsed)
     {
-        $builder = new SelectBracketExpressionBuilder();
+        $builder = new Select_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSign(array $parsed)
+    protected function build_sign(array $parsed)
     {
-        $builder = new SignBuilder();
+        $builder = new Sign_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::EXPRESSION) {
+        if ($parsed['expr_type'] !== Expression_Type::EXPRESSION) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $delim = ' ';
             $len = strlen($sql);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildBracketExpression($v);
-
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_bracket_expression($v);
             // we don't need whitespace between the sign and
             // the following part
-            if ($this->buildSign($v) !== '') {
+            if ($this->build_sign($v) !== '') {
                 $delim = '';
             }
-            $sql .= $this->buildSign($v);
-
+            $sql .= $this->build_sign($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('SET expression subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('SET expression subtree', $k, $v, 'expr_type');
             }
-
             $sql .= $delim;
         }
         return substr($sql, 0, -1);

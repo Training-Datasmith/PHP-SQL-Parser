@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * InsertProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the INSERT statements.
  *
@@ -52,53 +50,45 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class InsertProcessor extends AbstractProcessor
+class Insert_Processor extends Abstract_Processor
 {
-    protected function processOptions(array $tokenList)
+    protected function process_options(array $token_list)
     {
-        if (!isset($tokenList['OPTIONS'])) {
+        if (!isset($token_list['OPTIONS'])) {
             return [];
         }
         $result = [];
-        foreach ($tokenList['OPTIONS'] as $token) {
-            $result[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => trim($token)];
+        foreach ($token_list['OPTIONS'] as $token) {
+            $result[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => trim($token)];
         }
         return $result;
     }
-
-    protected function processKeyword($keyword, array $tokenList)
+    protected function process_keyword($keyword, array $token_list)
     {
-        if (!isset($tokenList[$keyword])) {
+        if (!isset($token_list[$keyword])) {
             return ['', false, []];
         }
-
         $table = '';
         $cols = false;
         $result = [];
-
-        foreach ($tokenList[$keyword] as $token) {
+        foreach ($token_list[$keyword] as $token) {
             $trim = trim($token);
-
             if ($trim === '') {
                 continue;
             }
-
             $upper = strtoupper($trim);
             switch ($upper) {
                 case 'INTO':
-                    $result[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $result[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 case 'INSERT':
                 case 'REPLACE':
                     break;
-
                 default:
                     if ($table === '') {
                         $table = $trim;
                         break;
                     }
-
                     if ($cols === false) {
                         $cols = $trim;
                     }
@@ -107,70 +97,56 @@ class InsertProcessor extends AbstractProcessor
         }
         return [$table, $cols, $result];
     }
-
-    protected function processColumns($cols)
+    protected function process_columns($cols)
     {
         if ($cols === false) {
             return $cols;
         }
         if ($cols[0] === '(' && substr($cols, -1) === ')') {
-            $parsed = ['expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => $cols,
-                            'sub_tree' => false];
+            $parsed = ['expr_type' => Expression_Type::BRACKET_EXPRESSION, 'base_expr' => $cols, 'sub_tree' => false];
         }
-        $cols = $this->removeParenthesisFromStart($cols);
+        $cols = $this->remove_parenthesis_from_start($cols);
         if (stripos($cols, 'SELECT') === 0) {
-            $processor = new DefaultProcessor($this->options);
-            $parsed['sub_tree'] = [
-                    ['expr_type' => ExpressionType::QUERY, 'base_expr' => $cols,
-                            'sub_tree' => $processor->process($cols)]];
+            $processor = new Default_Processor($this->options);
+            $parsed['sub_tree'] = [['expr_type' => Expression_Type::QUERY, 'base_expr' => $cols, 'sub_tree' => $processor->process($cols)]];
         } else {
-            $processor = new ColumnListProcessor($this->options);
+            $processor = new Column_List_Processor($this->options);
             $parsed['sub_tree'] = $processor->process($cols);
-            $parsed['expr_type'] = ExpressionType::COLUMN_LIST;
+            $parsed['expr_type'] = Expression_Type::COLUMN_LIST;
         }
         return $parsed;
     }
-
-    public function process($tokenList, $token_category = 'INSERT')
+    public function process($token_list, $token_category = 'INSERT')
     {
         $table = '';
         $cols = false;
         $comments = [];
-
-        foreach ($tokenList as $key => &$token) {
+        foreach ($token_list as $key => &$token) {
             if ($key == 'VALUES') {
                 continue;
             }
             foreach ($token as &$value) {
-                if ($this->isCommentToken($value)) {
-                    $comments[] = parent::processComment($value);
+                if ($this->is_comment_token($value)) {
+                    $comments[] = parent::process_comment($value);
                     $value = '';
                 }
             }
         }
-
-        $parsed = $this->processOptions($tokenList);
-        unset($tokenList['OPTIONS']);
-
-        list($table, $cols, $key) = $this->processKeyword('INTO', $tokenList);
+        $parsed = $this->process_options($token_list);
+        unset($token_list['OPTIONS']);
+        list($table, $cols, $key) = $this->process_keyword('INTO', $token_list);
         $parsed = array_merge($parsed, $key);
-        unset($tokenList['INTO']);
-
+        unset($token_list['INTO']);
         if ($table === '' && in_array($token_category, ['INSERT', 'REPLACE'])) {
-            list($table, $cols, $key) = $this->processKeyword($token_category, $tokenList);
+            list($table, $cols, $key) = $this->process_keyword($token_category, $token_list);
         }
-
-        $parsed[] = ['expr_type' => ExpressionType::TABLE, 'table' => $table,
-                          'no_quotes' => $this->revokeQuotation($table), 'alias' => false, 'base_expr' => $table];
-
-        $cols = $this->processColumns($cols);
+        $parsed[] = ['expr_type' => Expression_Type::TABLE, 'table' => $table, 'no_quotes' => $this->revoke_quotation($table), 'alias' => false, 'base_expr' => $table];
+        $cols = $this->process_columns($cols);
         if ($cols !== false) {
             $parsed[] = $cols;
         }
-
         $parsed = array_merge($parsed, $comments);
-
-        $tokenList[$token_category] = $parsed;
-        return $tokenList;
+        $token_list[$token_category] = $parsed;
+        return $token_list;
     }
 }

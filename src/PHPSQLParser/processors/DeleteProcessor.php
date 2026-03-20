@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * DeleteProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the DELETE statements.
@@ -51,35 +50,29 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DeleteProcessor extends AbstractProcessor
+class Delete_Processor extends Abstract_Processor
 {
     public function process($tokens)
     {
         $tables = [];
-
         foreach ($tokens['DELETE'] as $expression) {
-            if (strtoupper($expression) !== 'DELETE' && trim($expression, " \t\n\r\0\x0B.*") !== ''
-                && !$this->isCommaToken($expression)) {
-                $tables[] = trim($expression, " \t\n\r\0\x0B.*");
+            if (strtoupper($expression) !== 'DELETE' && trim($expression, " \t\n\r\x00\v.*") !== '' && !$this->is_comma_token($expression)) {
+                $tables[] = trim($expression, " \t\n\r\x00\v.*");
             }
         }
-
         if (empty($tables) && isset($tokens['USING'])) {
             foreach ($tokens['FROM'] as $table) {
-                $tables[] = trim($table['table'], " \t\n\r\0\x0B.*");
+                $tables[] = trim($table['table'], " \t\n\r\x00\v.*");
             }
             $tokens['FROM'] = $tokens['USING'];
             unset($tokens['USING']);
         }
-
         $options = [];
         if (isset($tokens['OPTIONS'])) {
             $options = $tokens['OPTIONS'];
             unset($tokens['OPTIONS']);
         }
-
-        $tokens['DELETE'] = ['options' => (empty($options) ? false : $options),
-                                  'tables' => (empty($tables) ? false : $tables)];
+        $tokens['DELETE'] = ['options' => empty($options) ? false : $options, 'tables' => empty($tables) ? false : $tables];
         return $tokens;
     }
 }

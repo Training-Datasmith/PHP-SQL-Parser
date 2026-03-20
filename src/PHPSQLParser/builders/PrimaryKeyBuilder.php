@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * PrimaryKeyBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the PRIMARY KEY  statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
@@ -54,63 +52,55 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class PrimaryKeyBuilder implements Builder
+class Primary_Key_Builder implements Builder
 {
-    protected function buildColumnList(array $parsed)
+    protected function build_column_list(array $parsed)
     {
-        $builder = new ColumnListBuilder();
+        $builder = new Column_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstraint(array $parsed)
+    protected function build_constraint(array $parsed)
     {
-        $builder = new ConstraintBuilder();
+        $builder = new Constraint_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexType(array $parsed)
+    protected function build_index_type(array $parsed)
     {
-        $builder = new IndexTypeBuilder();
+        $builder = new Index_Type_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexSize(array $parsed)
+    protected function build_index_size(array $parsed)
     {
-        $builder = new IndexSizeBuilder();
+        $builder = new Index_Size_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexParser(array $parsed)
+    protected function build_index_parser(array $parsed)
     {
-        $builder = new IndexParserBuilder();
+        $builder = new Index_Parser_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::PRIMARY_KEY) {
+        if ($parsed['expr_type'] !== Expression_Type::PRIMARY_KEY) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildConstraint($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildColumnList($v);
-            $sql .= $this->buildIndexType($v);
-            $sql .= $this->buildIndexSize($v);
-            $sql .= $this->buildIndexParser($v);
-
+            $sql .= $this->build_constraint($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_column_list($v);
+            $sql .= $this->build_index_type($v);
+            $sql .= $this->build_index_size($v);
+            $sql .= $this->build_index_parser($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE primary key subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE primary key subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
         return substr($sql, 0, -1);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SetProcessor.php
  *
@@ -31,11 +31,9 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  *
  * This class processes the SET statements.
@@ -43,75 +41,63 @@ use PHPSQLParser\utils\ExpressionType;
  * @author arothe
  *
  */
-class SetProcessor extends AbstractProcessor
+class Set_Processor extends Abstract_Processor
 {
-    protected function processExpressionList($tokens)
+    protected function process_expression_list($tokens)
     {
-        $processor = new ExpressionListProcessor($this->options);
+        $processor = new Expression_List_Processor($this->options);
         return $processor->process($tokens);
     }
-
     /**
      * A SET list is simply a list of key = value expressions separated by comma (,).
      * This function produces a list of the key/value expressions.
      */
-    protected function processAssignment($base_expr)
+    protected function process_assignment($base_expr)
     {
-        $assignment = $this->processExpressionList($this->splitSQLIntoTokens($base_expr));
-
+        $assignment = $this->process_expression_list($this->split_sql_into_tokens($base_expr));
         // TODO: if the left side of the assignment is a reserved keyword, it should be changed to colref
-
-        return ['expr_type' => ExpressionType::EXPRESSION, 'base_expr' => trim($base_expr),
-                     'sub_tree' => (empty($assignment) ? false : $assignment)];
+        return ['expr_type' => Expression_Type::EXPRESSION, 'base_expr' => trim($base_expr), 'sub_tree' => empty($assignment) ? false : $assignment];
     }
-
-    public function process($tokens, $isUpdate = false)
+    public function process($tokens, $is_update = false)
     {
         $result = [];
-        $baseExpr = '';
+        $base_expr = '';
         $assignment = false;
-        $varType = false;
-
+        $var_type = false;
         foreach ($tokens as $token) {
             $trim = trim($token);
             $upper = strtoupper($trim);
-
             switch ($upper) {
                 case 'LOCAL':
                 case 'SESSION':
                 case 'GLOBAL':
-                    if (!$isUpdate) {
-                        $result[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
-                        $varType = $this->getVariableType('@@' . $upper . '.');
-                        $baseExpr = '';
+                    if (!$is_update) {
+                        $result[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
+                        $var_type = $this->get_variable_type('@@' . $upper . '.');
+                        $base_expr = '';
                         continue 2;
                     }
                     break;
-
                 case ',':
-                    $assignment = $this->processAssignment($baseExpr);
-                    if (!$isUpdate && $varType !== false) {
-                        $assignment['sub_tree'][0]['expr_type'] = $varType;
+                    $assignment = $this->process_assignment($base_expr);
+                    if (!$is_update && $var_type !== false) {
+                        $assignment['sub_tree'][0]['expr_type'] = $var_type;
                     }
                     $result[] = $assignment;
-                    $baseExpr = '';
-                    $varType = false;
+                    $base_expr = '';
+                    $var_type = false;
                     continue 2;
-
                 default:
             }
-            $baseExpr .= $token;
+            $base_expr .= $token;
         }
-
-        if (trim($baseExpr) !== '') {
-            $assignment = $this->processAssignment($baseExpr);
-            if (!$isUpdate && $varType !== false) {
-                $assignment['sub_tree'][0]['expr_type'] = $varType;
+        if (trim($base_expr) !== '') {
+            $assignment = $this->process_assignment($base_expr);
+            if (!$is_update && $var_type !== false) {
+                $assignment['sub_tree'][0]['expr_type'] = $var_type;
             }
             $result[] = $assignment;
         }
-
         return $result;
     }
-
 }

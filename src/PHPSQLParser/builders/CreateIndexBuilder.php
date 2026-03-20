@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateIndex.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for the CREATE INDEX statement. You can overwrite
@@ -51,35 +50,31 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateIndexBuilder implements Builder
+class Create_Index_Builder implements Builder
 {
-    protected function buildIndexType(array $parsed)
+    protected function build_index_type(array $parsed)
     {
-        $builder = new CreateIndexTypeBuilder();
+        $builder = new Create_Index_Type_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexTable(array $parsed)
+    protected function build_index_table(array $parsed)
     {
-        $builder = new CreateIndexTableBuilder();
+        $builder = new Create_Index_Table_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildIndexOptions(array $parsed)
+    protected function build_index_options(array $parsed)
     {
-        $builder = new CreateIndexOptionsBuilder();
+        $builder = new Create_Index_Options_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = $parsed['name'];
-        $sql .= ' ' . $this->buildIndexType($parsed);
+        $sql .= ' ' . $this->build_index_type($parsed);
         $sql = trim($sql);
-        $sql .= ' ' . $this->buildIndexTable($parsed);
+        $sql .= ' ' . $this->build_index_table($parsed);
         $sql = trim($sql);
-        $sql .= $this->buildIndexOptions($parsed);
+        $sql .= $this->build_index_options($parsed);
         return trim($sql);
     }
-
 }

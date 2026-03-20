@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ColumnTypeBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for the column type statement part of CREATE TABLE.
  * You can overwrite all functions to achieve another handling.
@@ -54,80 +52,69 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class ColumnTypeBuilder implements Builder
+class Column_Type_Builder implements Builder
 {
-    protected function buildColumnTypeBracketExpression(array $parsed)
+    protected function build_column_type_bracket_expression(array $parsed)
     {
-        $builder = new ColumnTypeBracketExpressionBuilder();
+        $builder = new Column_Type_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildDataType(array $parsed)
+    protected function build_data_type(array $parsed)
     {
-        $builder = new DataTypeBuilder();
+        $builder = new Data_Type_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildDefaultValue(array $parsed)
+    protected function build_default_value(array $parsed)
     {
-        $builder = new DefaultValueBuilder();
+        $builder = new Default_Value_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildCharacterSet(array $parsed)
+    protected function build_character_set(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::CHARSET) {
+        if ($parsed['expr_type'] !== Expression_Type::CHARSET) {
             return '';
         }
         return $parsed['base_expr'];
     }
-
-    protected function buildCollation(array $parsed)
+    protected function build_collation(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::COLLATE) {
+        if ($parsed['expr_type'] !== Expression_Type::COLLATE) {
             return '';
         }
         return $parsed['base_expr'];
     }
-
-    protected function buildComment(array $parsed)
+    protected function build_comment(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::COMMENT) {
+        if ($parsed['expr_type'] !== Expression_Type::COMMENT) {
             return '';
         }
         return $parsed['base_expr'];
     }
-
     public function build(array $parsed)
     {
-        if ($parsed['expr_type'] !== ExpressionType::COLUMN_TYPE) {
+        if ($parsed['expr_type'] !== Expression_Type::COLUMN_TYPE) {
             return '';
         }
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildDataType($v);
-            $sql .= $this->buildColumnTypeBracketExpression($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildDefaultValue($v);
-            $sql .= $this->buildCharacterSet($v);
-            $sql .= $this->buildCollation($v);
-            $sql .= $this->buildComment($v);
-
+            $sql .= $this->build_data_type($v);
+            $sql .= $this->build_column_type_bracket_expression($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_default_value($v);
+            $sql .= $this->build_character_set($v);
+            $sql .= $this->build_collation($v);
+            $sql .= $this->build_comment($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('CREATE TABLE column-type subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('CREATE TABLE column-type subtree', $k, $v, 'expr_type');
             }
-
             $sql .= ' ';
         }
-
         return substr($sql, 0, -1);
     }
-
 }

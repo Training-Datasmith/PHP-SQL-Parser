@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * ExplainProcessor.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  * This class processes the DESCRIBE statements.
@@ -50,10 +49,10 @@ namespace PHPSQLParser\processors;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class DescribeProcessor extends ExplainProcessor
+class Describe_Processor extends Explain_Processor
 {
-    protected function isStatement($keys, $needle = 'DESCRIBE')
+    protected function is_statement($keys, $needle = 'DESCRIBE')
     {
-        return parent::isStatement($keys, $needle);
+        return parent::is_statement($keys, $needle);
     }
 }

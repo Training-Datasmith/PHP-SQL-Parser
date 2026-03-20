@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * GroupByProcessor.php
  *
@@ -31,8 +31,7 @@ declare(strict_types=1);
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
-
-namespace PHPSQLParser\processors;
+namespace Phpsql_Parser\processors;
 
 /**
  *
@@ -41,36 +40,31 @@ namespace PHPSQLParser\processors;
  * @author arothe
  *
  */
-class GroupByProcessor extends OrderByProcessor
+class Group_By_Processor extends Order_By_Processor
 {
     public function process($tokens, $select = [])
     {
         $out = [];
-        $parseInfo = $this->initParseInfo();
-
+        $parse_info = $this->init_parse_info();
         if (!$tokens) {
             return false;
         }
-
         foreach ($tokens as $token) {
             $trim = strtoupper(trim($token));
             switch ($trim) {
                 case ',':
-                    $parsed = $this->processOrderExpression($parseInfo, $select);
+                    $parsed = $this->process_order_expression($parse_info, $select);
                     unset($parsed['direction']);
-
                     $out[] = $parsed;
-                    $parseInfo = $this->initParseInfo();
+                    $parse_info = $this->init_parse_info();
                     break;
                 default:
-                    $parseInfo['base_expr'] .= $token;
+                    $parse_info['base_expr'] .= $token;
             }
         }
-
-        $parsed = $this->processOrderExpression($parseInfo, $select);
+        $parsed = $this->process_order_expression($parse_info, $select);
         unset($parsed['direction']);
         $out[] = $parsed;
-
         return $out;
     }
 }

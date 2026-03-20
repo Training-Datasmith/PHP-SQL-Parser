@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * FunctionBuilder.php
  *
@@ -40,12 +40,10 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class implements the builder for function calls.
  * You can overwrite all functions to achieve another handling.
@@ -54,93 +52,77 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class FunctionBuilder implements Builder
+class Function_Builder implements Builder
 {
-    protected function buildAlias(array $parsed)
+    protected function build_alias(array $parsed)
     {
-        $builder = new AliasBuilder();
+        $builder = new Alias_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function isReserved($parsed)
+    protected function is_reserved($parsed)
     {
-        $builder = new ReservedBuilder();
-        return $builder->isReserved($parsed);
+        $builder = new Reserved_Builder();
+        return $builder->is_reserved($parsed);
     }
-
-    protected function buildSelectExpression(array $parsed)
+    protected function build_select_expression(array $parsed)
     {
-        $builder = new SelectExpressionBuilder();
+        $builder = new Select_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSelectBracketExpression(array $parsed)
+    protected function build_select_bracket_expression(array $parsed)
     {
-        $builder = new SelectBracketExpressionBuilder();
+        $builder = new Select_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubQuery(array $parsed)
+    protected function build_sub_query(array $parsed)
     {
-        $builder = new SubQueryBuilder();
+        $builder = new Sub_Query_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUserVariableExpression(array $parsed)
+    protected function build_user_variable_expression(array $parsed)
     {
-        $builder = new UserVariableBuilder();
+        $builder = new User_Variable_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
-        if (($parsed['expr_type'] !== ExpressionType::AGGREGATE_FUNCTION)
-            && ($parsed['expr_type'] !== ExpressionType::SIMPLE_FUNCTION)
-            && ($parsed['expr_type'] !== ExpressionType::CUSTOM_FUNCTION)) {
+        if ($parsed['expr_type'] !== Expression_Type::AGGREGATE_FUNCTION && $parsed['expr_type'] !== Expression_Type::SIMPLE_FUNCTION && $parsed['expr_type'] !== Expression_Type::CUSTOM_FUNCTION) {
             return '';
         }
-
         if ($parsed['sub_tree'] === false) {
-            return $parsed['base_expr'] . '()' . $this->buildAlias($parsed);
+            return $parsed['base_expr'] . '()' . $this->build_alias($parsed);
         }
-
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
             $sql .= $this->build($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildSubQuery($v);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildSelectBracketExpression($v);
-            $sql .= $this->buildSelectExpression($v);
-            $sql .= $this->buildUserVariableExpression($v);
-
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_sub_query($v);
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_select_bracket_expression($v);
+            $sql .= $this->build_select_expression($v);
+            $sql .= $this->build_user_variable_expression($v);
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('function subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('function subtree', $k, $v, 'expr_type');
             }
-
-            $sql .= ($this->isReserved($v) ? ' ' : ',');
+            $sql .= $this->is_reserved($v) ? ' ' : ',';
         }
-        return $parsed['base_expr'] . '(' . substr($sql, 0, -1) . ')' . $this->buildAlias($parsed);
+        return $parsed['base_expr'] . '(' . substr($sql, 0, -1) . ')' . $this->build_alias($parsed);
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * OrderByFunctionBuilder.php
  *
@@ -40,8 +40,7 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
-
-namespace PHPSQLParser\builders;
+namespace Phpsql_Parser\builders;
 
 /**
  * This class implements the builder for functions within the ORDER-BY part.
@@ -52,21 +51,19 @@ namespace PHPSQLParser\builders;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class OrderByFunctionBuilder extends FunctionBuilder
+class Order_By_Function_Builder extends Function_Builder
 {
-    protected function buildDirection(array $parsed)
+    protected function build_direction(array $parsed)
     {
-        $builder = new DirectionBuilder();
+        $builder = new Direction_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed)
     {
         $sql = parent::build($parsed);
         if ($sql !== '') {
-            $sql .= $this->buildDirection($parsed);
+            $sql .= $this->build_direction($parsed);
         }
         return $sql;
     }
-
 }

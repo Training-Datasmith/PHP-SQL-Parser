@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * CreateProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the CREATE statements.
  *
@@ -52,67 +50,55 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class CreateProcessor extends AbstractProcessor
+class Create_Processor extends Abstract_Processor
 {
     public function process($tokens)
     {
         $result = $expr = [];
         $base_expr = '';
-
         foreach ($tokens as $token) {
-
             $trim = trim($token);
             $base_expr .= $token;
-
             if ($trim === '') {
                 continue;
             }
-
             $upper = strtoupper($trim);
             switch ($upper) {
-
                 case 'TEMPORARY':
                     // CREATE TEMPORARY TABLE
-                    $result['expr_type'] = ExpressionType::TEMPORARY_TABLE;
+                    $result['expr_type'] = Expression_Type::TEMPORARY_TABLE;
                     $result['not-exists'] = false;
-                    $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $expr[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 case 'TABLE':
                     // CREATE TABLE
-                    $result['expr_type'] = ExpressionType::TABLE;
+                    $result['expr_type'] = Expression_Type::TABLE;
                     $result['not-exists'] = false;
-                    $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $expr[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 case 'INDEX':
                     // CREATE INDEX
-                    $result['expr_type'] = ExpressionType::INDEX;
-                    $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $result['expr_type'] = Expression_Type::INDEX;
+                    $expr[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 case 'UNIQUE':
                 case 'FULLTEXT':
                 case 'SPATIAL':
                     // options of CREATE INDEX
                     $result['base_expr'] = $result['expr_type'] = false;
                     $result['constraint'] = $upper;
-                    $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $expr[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 case 'IF':
-
                 case 'NOT':
                     // option of CREATE TABLE
-                    $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $expr[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 case 'EXISTS':
                     // option of CREATE TABLE
                     $result['not-exists'] = true;
-                    $expr[] = ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $trim];
+                    $expr[] = ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $trim];
                     break;
-
                 default:
                     break;
             }

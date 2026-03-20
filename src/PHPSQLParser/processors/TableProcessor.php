@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * TableProcessor.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\processors;
 
-namespace PHPSQLParser\processors;
-
-use PHPSQLParser\utils\ExpressionType;
-
+use Phpsql_Parser\utils\Expression_Type;
 /**
  * This class processes the TABLE statements.
  *
@@ -52,161 +50,138 @@ use PHPSQLParser\utils\ExpressionType;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class TableProcessor extends AbstractProcessor
+class Table_Processor extends Abstract_Processor
 {
-    protected function getReservedType($token)
+    protected function get_reserved_type($token)
     {
-        return ['expr_type' => ExpressionType::RESERVED, 'base_expr' => $token];
+        return ['expr_type' => Expression_Type::RESERVED, 'base_expr' => $token];
     }
-
-    protected function getConstantType($token)
+    protected function get_constant_type($token)
     {
-        return ['expr_type' => ExpressionType::CONSTANT, 'base_expr' => $token];
+        return ['expr_type' => Expression_Type::CONSTANT, 'base_expr' => $token];
     }
-
-    protected function getOperatorType($token)
+    protected function get_operator_type($token)
     {
-        return ['expr_type' => ExpressionType::OPERATOR, 'base_expr' => $token];
+        return ['expr_type' => Expression_Type::OPERATOR, 'base_expr' => $token];
     }
-
-    protected function processPartitionOptions($tokens)
+    protected function process_partition_options($tokens)
     {
-        $processor = new PartitionOptionsProcessor($this->options);
+        $processor = new Partition_Options_Processor($this->options);
         return $processor->process($tokens);
     }
-
-    protected function processCreateDefinition($tokens)
+    protected function process_create_definition($tokens)
     {
-        $processor = new CreateDefinitionProcessor($this->options);
+        $processor = new Create_Definition_Processor($this->options);
         return $processor->process($tokens);
     }
-
     protected function clear(&$expr, &$base_expr, &$category)
     {
         $expr = [];
         $base_expr = '';
         $category = 'CREATE_DEF';
     }
-
     public function process($tokens)
     {
-
-        $currCategory = 'TABLE_NAME';
-        $result = ['base_expr' => false, 'name' => false, 'no_quotes' => false, 'create-def' => false,
-                        'options' => [], 'like' => false, 'select-option' => false];
+        $curr_category = 'TABLE_NAME';
+        $result = ['base_expr' => false, 'name' => false, 'no_quotes' => false, 'create-def' => false, 'options' => [], 'like' => false, 'select-option' => false];
         $expr = [];
         $base_expr = '';
         $skip = 0;
-
-        foreach ($tokens as $tokenKey => $token) {
+        foreach ($tokens as $token_key => $token) {
             $trim = trim($token);
             $base_expr .= $token;
-
             if ($skip > 0) {
                 $skip--;
                 continue;
             }
-
             if ($skip < 0) {
                 break;
             }
-
             if ($trim === '') {
                 continue;
             }
-
             $upper = strtoupper($trim);
             switch ($upper) {
-
                 case ',':
                     // it is possible to separate the table options with comma!
-                    if ($prevCategory === 'CREATE_DEF') {
+                    if ($prev_category === 'CREATE_DEF') {
                         $last = array_pop($result['options']);
                         $last['delim'] = ',';
                         $result['options'][] = $last;
                         $base_expr = '';
                     }
                     continue 2;
-
                 case 'UNION':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'UNION';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'UNION';
                         continue 2;
                     }
                     break;
-
                 case 'LIKE':
                     // like without parenthesis
-                    if ($prevCategory === 'TABLE_NAME') {
-                        $currCategory = $upper;
+                    if ($prev_category === 'TABLE_NAME') {
+                        $curr_category = $upper;
                         continue 2;
                     }
                     break;
-
                 case '=':
                     // the optional operator
-                    if ($prevCategory === 'TABLE_OPTION') {
-                        $expr[] = $this->getOperatorType($trim);
-                        continue 2; // don't change the category
+                    if ($prev_category === 'TABLE_OPTION') {
+                        $expr[] = $this->get_operator_type($trim);
+                        continue 2;
+                        // don't change the category
                     }
                     break;
-
                 case 'CHARACTER':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'TABLE_OPTION';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'TABLE_OPTION';
                     }
-                    if ($prevCategory === 'TABLE_OPTION') {
+                    if ($prev_category === 'TABLE_OPTION') {
                         // add it to the previous DEFAULT
-                        $expr[] = $this->getReservedType($trim);
+                        $expr[] = $this->get_reserved_type($trim);
                         continue 2;
                     }
                     break;
-
                 case 'SET':
                 case 'CHARSET':
-                    if ($prevCategory === 'TABLE_OPTION') {
+                    if ($prev_category === 'TABLE_OPTION') {
                         // add it to a previous CHARACTER
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'CHARSET';
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'CHARSET';
                         continue 2;
                     }
                     break;
-
                 case 'COLLATE':
-                    if ($prevCategory === 'TABLE_OPTION' || $prevCategory === 'CREATE_DEF') {
+                    if ($prev_category === 'TABLE_OPTION' || $prev_category === 'CREATE_DEF') {
                         // add it to the previous DEFAULT
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'COLLATE';
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'COLLATE';
                         continue 2;
                     }
                     break;
-
                 case 'DIRECTORY':
-                    if ($currCategory === 'INDEX_DIRECTORY' || $currCategory === 'DATA_DIRECTORY') {
+                    if ($curr_category === 'INDEX_DIRECTORY' || $curr_category === 'DATA_DIRECTORY') {
                         // after INDEX or DATA
-                        $expr[] = $this->getReservedType($trim);
+                        $expr[] = $this->get_reserved_type($trim);
                         continue 2;
                     }
                     break;
-
                 case 'INDEX':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'INDEX_DIRECTORY';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'INDEX_DIRECTORY';
                         continue 2;
                     }
                     break;
-
                 case 'DATA':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'DATA_DIRECTORY';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'DATA_DIRECTORY';
                         continue 2;
                     }
                     break;
-
                 case 'INSERT_METHOD':
                 case 'DELAY_KEY_WRITE':
                 case 'ROW_FORMAT':
@@ -224,13 +199,12 @@ class TableProcessor extends AbstractProcessor
                 case 'STATS_AUTO_RECALC':
                 case 'STATS_PERSISTENT':
                 case 'KEY_BLOCK_SIZE':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = $prevCategory = 'TABLE_OPTION';
+                    if ($prev_category === 'CREATE_DEF') {
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = $prev_category = 'TABLE_OPTION';
                         continue 2;
                     }
                     break;
-
                 case 'DYNAMIC':
                 case 'FIXED':
                 case 'COMPRESSED':
@@ -240,29 +214,25 @@ class TableProcessor extends AbstractProcessor
                 case 'FIRST':
                 case 'LAST':
                 case 'DEFAULT':
-                    if ($prevCategory === 'CREATE_DEF') {
+                    if ($prev_category === 'CREATE_DEF') {
                         // DEFAULT before CHARACTER SET and COLLATE
-                        $expr[] = $this->getReservedType($trim);
-                        $currCategory = 'TABLE_OPTION';
+                        $expr[] = $this->get_reserved_type($trim);
+                        $curr_category = 'TABLE_OPTION';
                     }
-                    if ($prevCategory === 'TABLE_OPTION') {
+                    if ($prev_category === 'TABLE_OPTION') {
                         // all assignments with the keywords
-                        $expr[] = $this->getReservedType($trim);
-                        $result['options'][] = ['expr_type' => ExpressionType::EXPRESSION,
-                                                     'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
-                        $this->clear($expr, $base_expr, $currCategory);
+                        $expr[] = $this->get_reserved_type($trim);
+                        $result['options'][] = ['expr_type' => Expression_Type::EXPRESSION, 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                        $this->clear($expr, $base_expr, $curr_category);
                     }
                     break;
-
                 case 'IGNORE':
                 case 'REPLACE':
-                    $expr[] = $this->getReservedType($trim);
-                    $result['select-option'] = ['base_expr' => trim($base_expr), 'duplicates' => $trim, 'as' => false,
-                                                     'sub_tree' => $expr];
+                    $expr[] = $this->get_reserved_type($trim);
+                    $result['select-option'] = ['base_expr' => trim($base_expr), 'duplicates' => $trim, 'as' => false, 'sub_tree' => $expr];
                     continue 2;
-
                 case 'AS':
-                    $expr[] = $this->getReservedType($trim);
+                    $expr[] = $this->get_reserved_type($trim);
                     if (!isset($result['select-option']['duplicates'])) {
                         $result['select-option']['duplicates'] = false;
                     }
@@ -270,106 +240,83 @@ class TableProcessor extends AbstractProcessor
                     $result['select-option']['base_expr'] = trim($base_expr);
                     $result['select-option']['sub_tree'] = $expr;
                     continue 2;
-
                 case 'PARTITION':
-                    if ($prevCategory === 'CREATE_DEF') {
-                        $part = $this->processPartitionOptions(array_slice($tokens, $tokenKey - 1, null, true));
-                        $skip = $part['last-parsed'] - $tokenKey;
+                    if ($prev_category === 'CREATE_DEF') {
+                        $part = $this->process_partition_options(array_slice($tokens, $token_key - 1, null, true));
+                        $skip = $part['last-parsed'] - $token_key;
                         $result['partition-options'] = $part['partition-options'];
                         continue 2;
                     }
                     // else
                     break;
-
                 default:
-                    switch ($currCategory) {
-
+                    switch ($curr_category) {
                         case 'CHARSET':
                             // the charset name
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::CHARSET,
-                                                         'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
-                            $this->clear($expr, $base_expr, $currCategory);
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::CHARSET, 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                            $this->clear($expr, $base_expr, $curr_category);
                             break;
-
                         case 'COLLATE':
                             // the collate name
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::COLLATE,
-                                                         'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
-                            $this->clear($expr, $base_expr, $currCategory);
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::COLLATE, 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                            $this->clear($expr, $base_expr, $curr_category);
                             break;
-
                         case 'DATA_DIRECTORY':
                             // we have the directory name
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::DIRECTORY, 'kind' => 'DATA',
-                                                         'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
-                            $this->clear($expr, $base_expr, $prevCategory);
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::DIRECTORY, 'kind' => 'DATA', 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                            $this->clear($expr, $base_expr, $prev_category);
                             continue 3;
-
                         case 'INDEX_DIRECTORY':
                             // we have the directory name
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::DIRECTORY, 'kind' => 'INDEX',
-                                                         'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
-                            $this->clear($expr, $base_expr, $prevCategory);
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::DIRECTORY, 'kind' => 'INDEX', 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                            $this->clear($expr, $base_expr, $prev_category);
                             continue 3;
-
                         case 'TABLE_NAME':
                             $result['base_expr'] = $result['name'] = $trim;
-                            $result['no_quotes'] = $this->revokeQuotation($trim);
-                            $this->clear($expr, $base_expr, $prevCategory);
+                            $result['no_quotes'] = $this->revoke_quotation($trim);
+                            $this->clear($expr, $base_expr, $prev_category);
                             break;
-
                         case 'LIKE':
-                            $result['like'] = ['expr_type' => ExpressionType::TABLE, 'table' => $trim,
-                                                    'base_expr' => $trim, 'no_quotes' => $this->revokeQuotation($trim)];
-                            $this->clear($expr, $base_expr, $currCategory);
+                            $result['like'] = ['expr_type' => Expression_Type::TABLE, 'table' => $trim, 'base_expr' => $trim, 'no_quotes' => $this->revoke_quotation($trim)];
+                            $this->clear($expr, $base_expr, $curr_category);
                             break;
-
                         case '':
                             // after table name
-                            if ($prevCategory === 'TABLE_NAME' && $upper[0] === '(' && substr($upper, -1) === ')') {
-                                $unparsed = $this->splitSQLIntoTokens($this->removeParenthesisFromStart($trim));
-                                $coldef = $this->processCreateDefinition($unparsed);
-                                $result['create-def'] = ['expr_type' => ExpressionType::BRACKET_EXPRESSION,
-                                                              'base_expr' => $base_expr, 'sub_tree' => $coldef['create-def']];
+                            if ($prev_category === 'TABLE_NAME' && $upper[0] === '(' && substr($upper, -1) === ')') {
+                                $unparsed = $this->split_sql_into_tokens($this->remove_parenthesis_from_start($trim));
+                                $coldef = $this->process_create_definition($unparsed);
+                                $result['create-def'] = ['expr_type' => Expression_Type::BRACKET_EXPRESSION, 'base_expr' => $base_expr, 'sub_tree' => $coldef['create-def']];
                                 $expr = [];
                                 $base_expr = '';
-                                $currCategory = 'CREATE_DEF';
+                                $curr_category = 'CREATE_DEF';
                             }
                             break;
-
                         case 'UNION':
                             // TODO: this token starts and ends with parenthesis
                             // and contains a list of table names (comma-separated)
                             // split the token and add the list as subtree
                             // we must change the DefaultProcessor
-
-                            $unparsed = $this->splitSQLIntoTokens($this->removeParenthesisFromStart($trim));
-                            $expr[] = ['expr_type' => ExpressionType::BRACKET_EXPRESSION, 'base_expr' => $trim,
-                                            'sub_tree' => '***TODO***'];
-                            $result['options'][] = ['expr_type' => ExpressionType::UNION, 'base_expr' => trim($base_expr),
-                                                         'delim' => ' ', 'sub_tree' => $expr];
-                            $this->clear($expr, $base_expr, $currCategory);
+                            $unparsed = $this->split_sql_into_tokens($this->remove_parenthesis_from_start($trim));
+                            $expr[] = ['expr_type' => Expression_Type::BRACKET_EXPRESSION, 'base_expr' => $trim, 'sub_tree' => '***TODO***'];
+                            $result['options'][] = ['expr_type' => Expression_Type::UNION, 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                            $this->clear($expr, $base_expr, $curr_category);
                             break;
-
                         default:
                             // strings and numeric constants
-                            $expr[] = $this->getConstantType($trim);
-                            $result['options'][] = ['expr_type' => ExpressionType::EXPRESSION,
-                                                         'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
-                            $this->clear($expr, $base_expr, $currCategory);
+                            $expr[] = $this->get_constant_type($trim);
+                            $result['options'][] = ['expr_type' => Expression_Type::EXPRESSION, 'base_expr' => trim($base_expr), 'delim' => ' ', 'sub_tree' => $expr];
+                            $this->clear($expr, $base_expr, $curr_category);
                             break;
                     }
                     break;
             }
-
-            $prevCategory = $currCategory;
-            $currCategory = '';
+            $prev_category = $curr_category;
+            $curr_category = '';
         }
-
         if ($result['like'] === false) {
             unset($result['like']);
         }
@@ -379,7 +326,6 @@ class TableProcessor extends AbstractProcessor
         if ($result['options'] === []) {
             $result['options'] = false;
         }
-
         return $result;
     }
 }

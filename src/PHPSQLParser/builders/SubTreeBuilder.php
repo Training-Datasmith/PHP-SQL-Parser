@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
 /**
  * SubTreeBuilder.php
  *
@@ -40,11 +40,9 @@ declare(strict_types=1);
  * @version   SVN: $Id$
  *
  */
+namespace Phpsql_Parser\builders;
 
-namespace PHPSQLParser\builders;
-
-use PHPSQLParser\exceptions\UnableToCreateSQLException;
-
+use Phpsql_Parser\exceptions\Unable_To_Create_Sql_Exception;
 /**
  * This class implements the builder for [sub_tree] fields.
  * You can overwrite all functions to achieve another handling.
@@ -53,74 +51,63 @@ use PHPSQLParser\exceptions\UnableToCreateSQLException;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
-class SubTreeBuilder implements Builder
+class Sub_Tree_Builder implements Builder
 {
-    protected function buildColRef(array $parsed)
+    protected function build_col_ref(array $parsed)
     {
-        $builder = new ColumnReferenceBuilder();
+        $builder = new Column_Reference_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildFunction(array $parsed)
+    protected function build_function(array $parsed)
     {
-        $builder = new FunctionBuilder();
+        $builder = new Function_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildOperator(array $parsed)
+    protected function build_operator(array $parsed)
     {
-        $builder = new OperatorBuilder();
+        $builder = new Operator_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildConstant(array $parsed)
+    protected function build_constant(array $parsed)
     {
-        $builder = new ConstantBuilder();
+        $builder = new Constant_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildInList(array $parsed)
+    protected function build_in_list(array $parsed)
     {
-        $builder = new InListBuilder();
+        $builder = new In_List_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildReserved(array $parsed)
+    protected function build_reserved(array $parsed)
     {
-        $builder = new ReservedBuilder();
+        $builder = new Reserved_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSubQuery(array $parsed)
+    protected function build_sub_query(array $parsed)
     {
-        $builder = new SubQueryBuilder();
+        $builder = new Sub_Query_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildQuery(array $parsed)
+    protected function build_query(array $parsed)
     {
-        $builder = new QueryBuilder();
+        $builder = new Query_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSelectBracketExpression(array $parsed)
+    protected function build_select_bracket_expression(array $parsed)
     {
-        $builder = new SelectBracketExpressionBuilder();
+        $builder = new Select_Bracket_Expression_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildUserVariable(array $parsed)
+    protected function build_user_variable(array $parsed)
     {
-        $builder = new UserVariableBuilder();
+        $builder = new User_Variable_Builder();
         return $builder->build($parsed);
     }
-
-    protected function buildSign(array $parsed)
+    protected function build_sign(array $parsed)
     {
-        $builder = new SignBuilder();
+        $builder = new Sign_Builder();
         return $builder->build($parsed);
     }
-
     public function build(array $parsed, $delim = ' ')
     {
         if ($parsed['sub_tree'] === '' || $parsed['sub_tree'] === false) {
@@ -129,23 +116,21 @@ class SubTreeBuilder implements Builder
         $sql = '';
         foreach ($parsed['sub_tree'] as $k => $v) {
             $len = strlen($sql);
-            $sql .= $this->buildColRef($v);
-            $sql .= $this->buildFunction($v);
-            $sql .= $this->buildOperator($v);
-            $sql .= $this->buildConstant($v);
-            $sql .= $this->buildInList($v);
-            $sql .= $this->buildSubQuery($v);
-            $sql .= $this->buildSelectBracketExpression($v);
-            $sql .= $this->buildReserved($v);
-            $sql .= $this->buildQuery($v);
-            $sql .= $this->buildUserVariable($v);
-            $sign = $this->buildSign($v);
+            $sql .= $this->build_col_ref($v);
+            $sql .= $this->build_function($v);
+            $sql .= $this->build_operator($v);
+            $sql .= $this->build_constant($v);
+            $sql .= $this->build_in_list($v);
+            $sql .= $this->build_sub_query($v);
+            $sql .= $this->build_select_bracket_expression($v);
+            $sql .= $this->build_reserved($v);
+            $sql .= $this->build_query($v);
+            $sql .= $this->build_user_variable($v);
+            $sign = $this->build_sign($v);
             $sql .= $sign;
-
             if ($len == strlen($sql)) {
-                throw new UnableToCreateSQLException('expression subtree', $k, $v, 'expr_type');
+                throw new Unable_To_Create_Sql_Exception('expression subtree', $k, $v, 'expr_type');
             }
-
             // We don't need whitespace between a sign and the following part.
             if ($sign === '') {
                 $sql .= $delim;
