@@ -78,7 +78,20 @@ class Query_Builder implements Builder
         $builder = new Select_Statement_Builder();
         return $builder->build($parsed);
     }
-    public function build(array $parsed, $index = 0)
+    /**
+     * Builds an SQL query-within-parentheses fragment from a parsed node.
+     *
+     * Returns an empty string if the node's expr_type is not QUERY. When $index
+     * is non-zero the JOIN type and ON/USING clause are prepended to the output.
+     *
+     * @param array<string, mixed> $parsed The parsed QUERY expression node
+     * @param int                  $index  Position within the FROM clause (0 = first table reference)
+     *
+     * @return string SQL fragment for this query expression
+     *
+     * @complexity O(n) where n is the size of the sub-tree
+     */
+    public function build(array $parsed, int $index = 0): string
     {
         if ($parsed['expr_type'] !== Expression_Type::QUERY) {
             return '';

@@ -59,33 +59,45 @@ class Phpsql_Parser
      */
     private $options;
     /**
-     * Constructor. It simply calls the parse() function.
-     * Use the public variable $parsed to get the output.
+     * Constructor. Optionally parses an SQL string on construction.
      *
-     * @param String|bool  $sql           The SQL statement.
-     * @param bool $calcPositions True, if the output should contain [position], false otherwise.
+     * Pass a non-empty SQL string to parse immediately; the result will be
+     * stored in the public `$parsed` property. You may also call parse()
+     * separately at any time.
+     *
+     * @param string|false $sql             SQL statement to parse on construction, or false to skip
+     * @param bool         $calc_positions  Whether to annotate every token with its character position
+     * @param array<string, mixed> $options Parser option overrides
+     *
+     * @complexity O(n) where n is the length of the SQL string
      */
-    public function __construct($sql = false, $calc_positions = false, array $options = [])
+    public function __construct(string|false $sql = false, bool $calc_positions = false, array $options = [])
     {
         $this->options = new Options($options);
         if ($sql) {
             $this->parse($sql, $calc_positions);
         }
     }
+
     /**
-     * It parses the given SQL statement and generates a detailled
-     * output array for every part of the statement. The method can
-     * also generate [position] fields within the output, which hold
-     * the character position for every statement part. The calculation
-     * of the positions needs some time, if you don't need positions in
-     * your application, set the parameter to false.
+     * Parses an SQL statement into a structured array representation.
      *
-     * @param String  $sql           The SQL statement.
-     * @param boolean $calcPositions True, if the output should contain [position], false otherwise.
+     * Returns an associative array where each top-level key corresponds to a
+     * SQL clause (SELECT, FROM, WHERE, etc.) and each value is an ordered
+     * list of expression nodes describing that clause's contents.
      *
-     * @return array An associative array with all meta information about the SQL statement.
+     * When $calc_positions is true, every node receives a 'position' key with
+     * the byte offset of that token within the original SQL string. This adds
+     * an O(n) position-calculation pass after parsing.
+     *
+     * @param string $sql            SQL statement to parse (single or multi-statement)
+     * @param bool   $calc_positions Whether to annotate nodes with character positions
+     *
+     * @return array<string, array<int, mixed>> Parsed SQL as a clause-keyed associative array
+     *
+     * @complexity O(n) where n is the length of the SQL string
      */
-    public function parse($sql, $calc_positions = false)
+    public function parse(string $sql, bool $calc_positions = false): array
     {
         $processor = new Default_Processor($this->options);
         $queries = $processor->process($sql);
@@ -99,29 +111,41 @@ class Phpsql_Parser
         return $this->parsed;
     }
     /**
-     * Add a custom function to the parser.  no return value
+     * Registers a custom function name so the parser recognises it as a function call.
      *
-     * @param String $token The name of the function to add
+     * Call this before parse() if your SQL uses UDFs or stored-function names that
+     * the built-in keyword list does not include.
+     *
+     * @param string $token The function name to register (case-insensitive)
+     *
+     * @return void
      */
-    public function add_custom_function($token)
+    public function add_custom_function(string $token): void
     {
         Phpsql_Parser_Constants::get_instance()->add_custom_function($token);
     }
+
     /**
-     * Remove a custom function from the parser.  no return value
+     * Removes a previously-registered custom function name.
      *
-     * @param String $token The name of the function to remove
+     * After calling this, the parser will no longer treat $token as a function call
+     * and may misclassify it depending on context.
+     *
+     * @param string $token The function name to deregister (case-insensitive)
+     *
+     * @return void
      */
-    public function remove_custom_function($token)
+    public function remove_custom_function(string $token): void
     {
         Phpsql_Parser_Constants::get_instance()->remove_custom_function($token);
     }
+
     /**
-     * Returns the list of custom functions
+     * Returns the list of all registered custom function names.
      *
-     * @return array Returns an array of all custom functions
+     * @return string[] Custom function tokens registered via add_custom_function()
      */
-    public function get_custom_functions()
+    public function get_custom_functions(): array
     {
         return Phpsql_Parser_Constants::get_instance()->get_custom_functions();
     }

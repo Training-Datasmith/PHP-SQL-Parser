@@ -64,16 +64,53 @@ use Phpsql_Parser\exceptions\Unsupported_Feature_Exception;
  * @license http://www.debian.org/misc/bsd.license  BSD License (3 Clause)
  *
  */
+/**
+ * Generates SQL strings from the parsed output of Phpsql_Parser.
+ *
+ * Provides the inverse operation of Phpsql_Parser::parse(): accepts the
+ * array produced by parse() and rebuilds the corresponding SQL string.
+ * The round-trip (parse → create) is symmetric for supported statement types.
+ *
+ * @see Phpsql_Parser For the parser that produces the input to create()
+ */
 class Phpsql_Creator
 {
+    /**
+     * The most recently generated SQL string.
+     *
+     * Populated by create() and optionally by the constructor when $parsed is provided.
+     *
+     * @var string
+     */
     public $created;
-    public function __construct($parsed = false)
+
+    /**
+     * Optionally creates SQL from a parsed array on construction.
+     *
+     * @param array<string, mixed>|false $parsed Parsed SQL array from Phpsql_Parser::parse(), or false to skip
+     */
+    public function __construct(array|false $parsed = false)
     {
         if ($parsed) {
             $this->create($parsed);
         }
     }
-    public function create(array $parsed)
+
+    /**
+     * Generates an SQL string from the array produced by Phpsql_Parser::parse().
+     *
+     * Dispatches to the appropriate statement builder based on the top-level clause
+     * key (SELECT, INSERT, UPDATE, etc.). The result is also stored in $this->created.
+     *
+     * @param array<string, mixed> $parsed Parsed SQL array from Phpsql_Parser::parse()
+     *
+     * @return string The reconstructed SQL statement
+     *
+     * @throws \Phpsql_Parser\exceptions\Unsupported_Feature_Exception If the statement type is not supported
+     *
+     * @complexity O(n) where n is the size of the parsed array
+     */
+    public function create(array $parsed): string
     {
         $k = key($parsed);
         switch ($k) {

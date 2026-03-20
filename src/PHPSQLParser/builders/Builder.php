@@ -53,11 +53,17 @@ namespace Phpsql_Parser\builders;
 interface Builder
 {
     /**
-     * Builds a part of an SQL statement.
+     * Builds an SQL fragment from a parsed sub-tree node.
      *
-     * @param array $parsed a subtree of the PHPSQLParser output array
+     * The $parsed array is a single node from the PHPSQLParser output array,
+     * typically keyed by 'expr_type', 'base_expr', 'sub_tree', etc. The returned
+     * string may include a trailing space as appropriate for the clause position.
      *
-     * @return A string, which contains a part of an SQL statement.
+     * @param array<string, mixed> $parsed A subtree node from the PHPSQLParser output
+     *
+     * @return string The SQL fragment for this node (may be an empty string if not applicable)
+     *
+     * @complexity O(n) where n is the size of the sub-tree
      */
-    public function build(array $parsed);
+    public function build(array $parsed): string;
 }
